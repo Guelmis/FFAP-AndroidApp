@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#607D8B">
+    <ImageView
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:id="@+id/imageV1"
+        android:layout_above="@+id/textView6"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ver Ubicación"
+        android:id="@+id/btnubicacion"
+        android:textSize="14sp"
+        android:background="#D32F2F"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/textView6"
+        android:layout_marginTop="26dp"
+        android:padding="15dp"
+        android:layout_alignEnd="@+id/textView5"
+        android:layout_alignStart="@+id/textView5" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Repuestos AutoParts"
+        android:id="@+id/textView5"
+        android:textColor="#FFFFFF"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Dirección: Calle Marcos Ruiz esq Calle Progreso , Villa Juana, Santo Domingo"
+        android:id="@+id/textView6"
+        android:textColor="#FFFFFF"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comentar"
+        android:id="@+id/btncomment"
+        android:layout_below="@+id/btnubicacion"
+        android:layout_marginTop="25dp"
+        android:layout_alignEnd="@+id/btnubicacion"
+        android:layout_alignStart="@+id/btnubicacion"
+        android:textColor="#FFFFFF"
+        android:background="#D32F2F"
+        android:padding="15dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ver Reseñas"
+        android:id="@+id/btnresena"
+        android:padding="15dp"
+        android:background="#D32F2F"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/btncomment"
+        android:layout_alignStart="@+id/btncomment"
+        android:layout_marginTop="33dp"
+        android:layout_alignEnd="@+id/btncomment" />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ratingBar2"
+        android:layout_above="@+id/imageV1"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

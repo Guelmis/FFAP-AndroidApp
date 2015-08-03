@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#607D8B">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnbuscar"
+        android:textSize="14sp"
+        android:background="@drawable/abc_ic_search_api_mtrl_alpha"
+        android:layout_below="@+id/textViewUser"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="42dp" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listProducts"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editTextPieza" />
+
+    <Spinner
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/spinner1"
+        android:layout_alignTop="@+id/btnbuscar"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/spinner2" />
+
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:id="@+id/spinner2"
+        android:layout_alignTop="@+id/spinner3"
+        android:layout_toStartOf="@+id/spinner3" />
+
+    <Spinner
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:id="@+id/spinner3"
+        android:layout_alignTop="@+id/btnbuscar"
+        android:layout_toStartOf="@+id/btnbuscar"
+        android:layout_above="@+id/editTextPieza" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editTextPieza"
+        android:hint="Producto"
+        android:layout_below="@+id/spinner1"
+        android:layout_alignParentStart="true"
+        android:background="#FFFFFF"
+        android:padding="10dp"
+        android:layout_toStartOf="@+id/spinner3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/textViewUser"
+        android:textSize="20sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFF" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Regristar Vehiculo"
+        android:id="@+id/btnchassis"
+        android:layout_alignEnd="@+id/btnbuscar"
+        android:layout_toEndOf="@+id/editTextPieza"
+        android:layout_below="@+id/btnbuscar"
+        android:textColor="#FFFFFF"
+        android:background="#D32F2F" />
+
+</RelativeLayout>

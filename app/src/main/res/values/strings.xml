@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">FFAP</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_home">Home</string>
+    <string name="action_carrito">Carrito</string>
+    <string name="action_login">LogIn</string>
+</resources>

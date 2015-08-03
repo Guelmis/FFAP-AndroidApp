@@ -1,0 +1,121 @@
+package com.example.guelmis.ffap;
+
+import android.content.BroadcastReceiver;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+public class Product {
+    protected String title;
+    protected String desc;
+    protected String brand;
+    protected String model;
+    protected String imageurl;
+    protected Integer year;
+    protected Double price;
+
+    Product(){
+        title = null;
+        brand = null;
+        model = null;
+        desc = null;
+        imageurl = null;
+        year = null;
+        price = null;
+    }
+
+    Product(String ptitle, String pbrand, String pmodel, String pimageurl, double pprice, int pyear){
+        title = ptitle;
+        brand = pbrand;
+        model = pmodel;
+        desc = ptitle + " " + pbrand + " " + pmodel +" "+ pyear;
+        imageurl = pimageurl;
+        year = pyear;
+        price = pprice;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getImageurl() {
+        return imageurl;
+    }
+
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    @Override
+    public int hashCode(){
+
+        return new HashCodeBuilder(13, 29).append(title).
+                append(brand).
+                append(model).
+                append(year).
+                append(imageurl).
+                toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof Product)){
+            return false;
+        }
+        if(obj == this){
+            return true;
+        }
+
+        Product tocomp = (Product) obj;
+        return new EqualsBuilder().
+                append(brand, tocomp.brand).
+                append(model, tocomp.model).
+                append(year, tocomp.year).
+                append(imageurl, tocomp.imageurl).
+                isEquals();
+    }
+}

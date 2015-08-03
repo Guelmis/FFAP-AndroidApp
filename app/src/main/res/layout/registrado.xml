@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#607D8B"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:text="Su registro ha sido completado exitosamente"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FFFFFF"
+        android:textSize="15dp" />
+
+    <TextView
+        android:id="@+id/Nombre"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:text="Nombre"
+        android:textColor="#FFFFFF"
+        android:textSize="15dp"
+        android:layout_below="@+id/textView" />
+
+    <TextView
+        android:id="@+id/inUsuario"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:textColor="#FFFFFF"
+        android:textSize="15dp"
+        android:layout_above="@+id/Apellido"
+        android:layout_alignEnd="@+id/textView" />
+
+    <TextView
+        android:id="@+id/Apellido"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="Apellido"
+        android:textColor="#FFFFFF"
+        android:textSize="15dp"
+        android:layout_below="@+id/Nombre"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:id="@+id/lname"
+        android:textColor="#000000"
+        android:textSize="15dp"
+        android:layout_below="@+id/inUsuario"
+        android:layout_alignStart="@+id/inUsuario" />
+
+    <TextView
+        android:id="@+id/Email"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:text="E-mail"
+        android:textColor="#FFFFFF"
+        android:textSize="15dp"
+        android:layout_below="@+id/Apellido"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:id="@+id/email"
+        android:textColor="#000000"
+        android:layout_below="@+id/Apellido"
+        android:layout_alignLeft="@+id/inUsuario"
+        android:textSize="15dp"/>
+
+    <TextView
+        android:id="@+id/Usuario"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/Email"
+        android:text="Usuario"
+        android:textColor="#FFFFFF"
+        android:textIsSelectable="false"
+        android:textSize="15dp" />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:id="@+id/uname"
+        android:textColor="#000000"
+        android:layout_below="@+id/email"
+        android:layout_alignLeft="@+id/email"
+        android:textSize="15dp"/>
+
+    <TextView
+        android:id="@+id/Fecharegistro"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/Usuario"
+        android:layout_toLeftOf="@+id/uname"
+        android:text="Se registro a las"
+        android:textColor="#FFFFFF"
+        android:textSize="15dp" />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:id="@+id/regat"
+        android:textColor="#000000"
+        android:textSize="15dp"
+        android:layout_above="@+id/login"
+        android:layout_toEndOf="@+id/Usuario" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:id="@+id/login"
+        android:textColor="#FFFFFF"
+        android:textSize="14dp"
+        android:layout_below="@+id/Fecharegistro"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="37dp"
+        android:background="#D32F2F" />
+
+</RelativeLayout>
