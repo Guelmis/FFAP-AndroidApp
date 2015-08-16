@@ -73,6 +73,14 @@ public class UserFunction {
         return json;
     }
 
+    public JSONObject addToCart(String username, String prod_id) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("username", username));
+        params.add(new BasicNameValuePair("product_id", prod_id));
+        JSONObject json = jsonParser.postJSONFromUrl(cartaddURL, params);
+        return json;
+    }
+
     public JSONObject loginUser(String email, String password){
         // Building Parameters
         List<NameValuePair> params = new ArrayList<NameValuePair>();

@@ -1,6 +1,8 @@
 package com.example.guelmis.ffap;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +13,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Piezas extends ActionBarActivity {
     //private String title;
@@ -43,7 +49,8 @@ public class Piezas extends ActionBarActivity {
         usuario = myIntent.getStringExtra("usuario");
         final LineItem newprod = new LineItem(new Product(myIntent.getStringExtra("title"),
                 myIntent.getStringExtra("brand"), myIntent.getStringExtra("model"), myIntent.getStringExtra("image_url"),
-                Double.parseDouble(myIntent.getStringExtra("price")), Integer.parseInt(myIntent.getStringExtra("year"))));
+                Double.parseDouble(myIntent.getStringExtra("price")), Integer.parseInt(myIntent.getStringExtra("year")),
+                Integer.parseInt(myIntent.getStringExtra("id"))));
         TextView tv = (TextView)findViewById(R.id.textView1);
         TextView tv2 = (TextView)findViewById(R.id.textView2);
         TextView tv3 = (TextView)findViewById(R.id.textView3);
@@ -61,19 +68,60 @@ public class Piezas extends ActionBarActivity {
                 startActivity(myIntent);
             }
         });
+
 	//Esto necesita cambios
+        class QueryCart extends AsyncTask<String,JSONObject,JSONObject>
+        {
+            private ProgressDialog nDialog;
+            private JSONObject json1;
+            private JSONArray jsonArr1;
+
+            @Override
+            protected void onPreExecute(){
+                super.onPreExecute();
+            }
+
+            public JSONObject addtoCart(String username, String pid) {
+
+                UserFunction userFunction = new UserFunction();
+                JSONObject json = userFunction.addToCart(username, pid);
+                return json;
+            }
+
+            @Override
+            protected JSONObject doInBackground(String... args){
+                if(args.length != 0 ){
+                    json1 = addtoCart(args[0], args[1]);
+                }
+                else{
+                    json1 = null;
+                }
+                return json1;
+            }
+            @Override
+            protected void onPostExecute(JSONObject th){
+
+                if(th != null){
+                    //Toast.makeText(getApplicationContext(), jsonArr1.toString(), Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Error, no se especifica usuario.", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
         carrito.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent myIntent = new Intent(Piezas.this, Carrito.class);
                 myIntent.putExtra("usuario", usuario);
-                if(!Home.cart.contains(newprod)){
+                new QueryCart().execute(usuario, Integer.valueOf(newprod.getId()).toString());
+                /*if(!Home.cart.contains(newprod)){
                     Home.cart.add(newprod);
                 }
                 else{
                     Home.cart.get(Home.cart.indexOf(newprod)).addOne();
-                }
-                //myIntent.putExtra("price", price);
+                }*/
                 startActivity(myIntent);
             }
         });

@@ -185,7 +185,8 @@ public class Carrito extends ActionBarActivity {
                         input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("model_name"),
                         input.getJSONObject(i).getString("image_url"),
                         Double.parseDouble(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("price")),
-                        Integer.parseInt(input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("year"))));
+                        Integer.parseInt(input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("year")),
+                        Integer.parseInt(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("id"))));
 
                 current.setQuantity(input.getJSONObject(i).getJSONObject("item").getInt("quantity"));
                 ret.add(current);
