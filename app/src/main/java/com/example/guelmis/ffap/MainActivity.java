@@ -1,6 +1,5 @@
 package com.example.guelmis.ffap;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -16,7 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -183,7 +182,7 @@ public class MainActivity extends ActionBarActivity {
 
         private ProgressDialog pDialog;
 
-        String correo, contrasena;
+        String username, contrasena;
 
         @Override
         protected void onPreExecute() {
@@ -191,7 +190,7 @@ public class MainActivity extends ActionBarActivity {
 
             email = (EditText) findViewById(R.id.editTextEmail);
             password = (EditText) findViewById(R.id.editTextPass);
-            correo = email.getText().toString();
+            username = email.getText().toString();
             contrasena = password.getText().toString();
             pDialog = new ProgressDialog(MainActivity.this);
             pDialog.setTitle("Comunicandose con el servidor");
@@ -205,7 +204,7 @@ public class MainActivity extends ActionBarActivity {
         protected JSONObject doInBackground(String... args) {
 
             UserFunction userFunction = new UserFunction();
-            JSONObject json = userFunction.loginUser(correo, contrasena);
+            JSONObject json = userFunction.loginUser(username, contrasena);
             return json;
         }
 
@@ -220,7 +219,7 @@ public class MainActivity extends ActionBarActivity {
 
                         pDialog.dismiss();
                         Intent intent = new Intent(MainActivity.this, Home.class);
-                        intent.putExtra("usuario", correo);
+                        intent.putExtra("usuario", username);
                         startActivity(intent);
 
                     } else {

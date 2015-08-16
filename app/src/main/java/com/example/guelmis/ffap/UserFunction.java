@@ -17,6 +17,10 @@ public class UserFunction {
     public static final String searchURL = "http://ffap-itt-2015.herokuapp.com/product_query/search";
     public static final String spinnersURL = "http://ffap-itt-2015.herokuapp.com/info_query";
     public static final String proyectoURL = "http://ffap-itt-2015.herokuapp.com/product_query";
+    public static final String cartshowURL = "http://ffap-itt-2015.herokuapp.com/cart_query";
+    public static final String cartaddURL = "http://ffap-itt-2015.herokuapp.com/cart_add";
+    public static final String cartremoveURL = "http://ffap-itt-2015.herokuapp.com/cart_remove";
+    public static final String cartdestroyURL = "http://ffap-itt-2015.herokuapp.com/cart_destroy";
 
     public static final String product_tag = "product";
     public static final String image_tag = "image_url";
@@ -61,6 +65,14 @@ public class UserFunction {
         JSONArray json = jsonParser.getJSONArrFromUrl(proyectoURL, params);
         return json;
     }
+
+    public JSONArray showCart(String username) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("username", username));
+        JSONArray json = jsonParser.postJSONArrFromUrl(cartshowURL, params);
+        return json;
+    }
+
     public JSONObject loginUser(String email, String password){
         // Building Parameters
         List<NameValuePair> params = new ArrayList<NameValuePair>();

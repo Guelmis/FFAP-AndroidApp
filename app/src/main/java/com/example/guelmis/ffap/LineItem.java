@@ -5,6 +5,7 @@ package com.example.guelmis.ffap;
  */
 public class LineItem extends Product {
     private int quantity;
+   // private int id;
 
     LineItem(Product input){
         title = input.title;
@@ -25,6 +26,10 @@ public class LineItem extends Product {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+   // public int getId() {
+   //     return id;
+   // }
 
     public void addOne(){
         this.quantity += 1;

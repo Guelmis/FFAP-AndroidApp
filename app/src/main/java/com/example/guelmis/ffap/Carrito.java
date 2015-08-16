@@ -1,5 +1,7 @@
 package com.example.guelmis.ffap;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -14,9 +16,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-
+import java.util.concurrent.ExecutionException;
 
 
 public class Carrito extends ActionBarActivity {
@@ -30,6 +37,8 @@ public class Carrito extends ActionBarActivity {
     Button eliminar;
     Double itbis;
     Double total;
+    JSONArray cart;
+
     private double calcTotal(ArrayList<LineItem> cart){
         double res = 0;
         for(int i=0; i<cart.size(); i++){
@@ -60,6 +69,62 @@ public class Carrito extends ActionBarActivity {
         Total.setText(total + "$".toString());
         List = (ListView) findViewById(R.id.listofprod);
         datos = new ArrayList<String>();
+
+        class QueryCart extends AsyncTask<String,JSONArray,JSONArray>
+        {
+            private ProgressDialog nDialog;
+            private JSONObject json1;
+            private JSONArray jsonArr1;
+
+            @Override
+            protected void onPreExecute(){
+                super.onPreExecute();
+            }
+
+            public JSONArray showCart(String username) {
+
+                UserFunction userFunction = new UserFunction();
+                JSONArray json = userFunction.showCart(username);
+                return json;
+            }
+
+            @Override
+            protected JSONArray doInBackground(String... args){
+                if(args.length != 0 ){
+                    jsonArr1 = showCart(args[0]);
+                }
+                else{
+                    jsonArr1 = null;
+                }
+                return jsonArr1;
+            }
+            @Override
+            protected void onPostExecute(JSONArray th){
+
+                if(th != null){
+                    //Toast.makeText(getApplicationContext(), jsonArr1.toString(), Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Error, no se especifica usuario.", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+        cart = new JSONArray();
+
+        try {
+            cart = new QueryCart().execute(usuario).get();
+            Home.cart = FillCart(cart);
+            subtotal.setText(new Double(calcTotal(Home.cart)).toString() + "$");
+            itbis = (calcTotal(Home.cart) * 0.18);
+            ITBIS.setText(itbis + "$".toString());
+            total = (calcTotal(Home.cart) + itbis);
+            Total.setText(total + "$".toString());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         for(int i =0; i<Home.cart.size(); i++){
             datos.add(Home.cart.get(i).getQuantity() + " x " + Home.cart.get(i).getTitle() );
@@ -109,5 +174,25 @@ public class Carrito extends ActionBarActivity {
         default:
         return super.onOptionsItemSelected(item);
         }
+    }
+
+    private ArrayList<LineItem> FillCart(JSONArray input){
+        ArrayList<LineItem> ret = new ArrayList<LineItem>();
+        for(int i=0; i<input.length(); i++){
+            try {
+                LineItem current = new LineItem(new Product(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("title"),
+                        input.getJSONObject(i).getJSONObject(UserFunction.brand_tag).getString("brand_name"),
+                        input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("model_name"),
+                        input.getJSONObject(i).getString("image_url"),
+                        Double.parseDouble(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("price")),
+                        Integer.parseInt(input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("year"))));
+
+                current.setQuantity(input.getJSONObject(i).getJSONObject("item").getInt("quantity"));
+                ret.add(current);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return ret;
     }
 }
