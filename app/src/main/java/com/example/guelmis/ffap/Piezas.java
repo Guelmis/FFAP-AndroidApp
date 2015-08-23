@@ -21,6 +21,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.concurrent.ExecutionException;
+
 public class Piezas extends ActionBarActivity {
     //private String title;
     //private String description;
@@ -50,7 +52,8 @@ public class Piezas extends ActionBarActivity {
         final LineItem newprod = new LineItem(new Product(myIntent.getStringExtra("title"),
                 myIntent.getStringExtra("brand"), myIntent.getStringExtra("model"), myIntent.getStringExtra("image_url"),
                 Double.parseDouble(myIntent.getStringExtra("price")), Integer.parseInt(myIntent.getStringExtra("year")),
-                Integer.parseInt(myIntent.getStringExtra("id"))));
+                myIntent.getStringExtra("id")));
+   //     String id = myIntent.getStringExtra("id");
         TextView tv = (TextView)findViewById(R.id.textView1);
         TextView tv2 = (TextView)findViewById(R.id.textView2);
         TextView tv3 = (TextView)findViewById(R.id.textView3);
@@ -69,12 +72,9 @@ public class Piezas extends ActionBarActivity {
             }
         });
 
-	//Esto necesita cambios
-        class QueryCart extends AsyncTask<String,JSONObject,JSONObject>
+        class AddToCart extends AsyncTask<String,JSONObject,JSONObject>
         {
-            private ProgressDialog nDialog;
             private JSONObject json1;
-            private JSONArray jsonArr1;
 
             @Override
             protected void onPreExecute(){
@@ -109,13 +109,18 @@ public class Piezas extends ActionBarActivity {
                 }
             }
         }
-
         carrito.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent myIntent = new Intent(Piezas.this, Carrito.class);
                 myIntent.putExtra("usuario", usuario);
-                new QueryCart().execute(usuario, Integer.valueOf(newprod.getId()).toString());
+                try {
+                   JSONObject success = new AddToCart().execute(usuario, newprod.getId()).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
                 /*if(!Home.cart.contains(newprod)){
                     Home.cart.add(newprod);
                 }

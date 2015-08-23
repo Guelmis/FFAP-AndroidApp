@@ -13,7 +13,7 @@ public class Product {
     protected String imageurl;
     protected Integer year;
     protected Double price;
-    protected Integer id;
+    protected String id;
 
     Product(){
         title = null;
@@ -26,7 +26,7 @@ public class Product {
         id = null;
     }
 
-    Product(String ptitle, String pbrand, String pmodel, String pimageurl, double pprice, int pyear, int pid){
+    Product(String ptitle, String pbrand, String pmodel, String pimageurl, double pprice, int pyear, String pid){
         title = ptitle;
         brand = pbrand;
         model = pmodel;
@@ -93,9 +93,9 @@ public class Product {
         this.price = price;
     }
 
-    public Integer getId() { return id; }
+    public String getId() { return id; }
 
-    public void setId(Integer id) { this.id = id; }
+    public void setId(String id) { this.id = id; }
 
     @Override
     public int hashCode(){

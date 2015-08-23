@@ -15,6 +15,7 @@ public class LineItem extends Product {
         imageurl = input.imageurl;
         year = input.year;
         price = input.price;
+        id = input.id;
 
         quantity = 1;
     }

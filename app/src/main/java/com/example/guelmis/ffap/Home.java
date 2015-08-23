@@ -311,7 +311,7 @@ public class Home extends ActionBarActivity {
                         myIntent.putExtra("model", listofprod.get(position).getModel());
                         myIntent.putExtra("year", listofprod.get(position).getYear().toString());
                         myIntent.putExtra("usuario",usuario);
-                        myIntent.putExtra("id", listofprod.get(position).getId().toString());
+                        myIntent.putExtra("id", listofprod.get(position).getId());
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
@@ -331,7 +331,7 @@ public class Home extends ActionBarActivity {
                         input.getJSONObject(i).getString("image_url"),
                         Double.parseDouble(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("price")),
                         Integer.parseInt(input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("year")),
-                        Integer.parseInt(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("id"))));
+                        (input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("id"))));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

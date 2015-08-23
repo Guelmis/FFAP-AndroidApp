@@ -48,41 +48,6 @@ public class CartProductAdapter extends BaseAdapter implements ListAdapter {
         //just return 0 if your list items do not have an Id variable.
     }
 
-    class Populate extends AsyncTask<String,JSONObject,JSONObject>
-    {
-        private ProgressDialog nDialog;
-        private JSONObject json1;
-        private JSONArray jsonArr1;
-
-        @Override
-        protected void onPreExecute(){
-            super.onPreExecute();
-        }
-
-        public JSONObject populateSpinners(String list) {
-
-            UserFunction userFunction = new UserFunction();
-            JSONObject json = userFunction.spinnerinfo();
-            return json;
-        }
-
-        @Override
-        protected JSONObject doInBackground(String... args){
-            json1 = populateSpinners("");
-            return json1;
-        }
-        @Override
-        protected void onPostExecute(JSONObject th){
-
-            if(th != null){
-                //Toast.makeText(getApplicationContext(), jsonArr1.toString(), Toast.LENGTH_LONG).show();
-            }
-            else{
-                Toast.makeText(context, "Error!", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;

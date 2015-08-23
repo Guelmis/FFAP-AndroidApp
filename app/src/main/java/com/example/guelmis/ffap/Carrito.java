@@ -25,10 +25,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-
 public class Carrito extends ActionBarActivity {
     ListView List;
-    ArrayAdapter<String> adaptador;
+    CartProductAdapter adaptador;
     ArrayList<String> datos;
     //private String description;
     //private Double price;
@@ -57,8 +56,6 @@ public class Carrito extends ActionBarActivity {
         datos = new ArrayList<String>();
         Intent myIntent = getIntent();
         usuario = myIntent.getStringExtra("usuario");
-        //description = myIntent.getStringExtra("description");
-        //price = myIntent.getDoubleExtra("price", 0);
         final TextView subtotal = (TextView) findViewById(R.id.carrito_subtotal);
         final TextView ITBIS = (TextView) findViewById(R.id.carrito_itbis);
         final TextView Total = (TextView) findViewById(R.id.carrito_total);
@@ -105,7 +102,7 @@ public class Carrito extends ActionBarActivity {
                     //Toast.makeText(getApplicationContext(), jsonArr1.toString(), Toast.LENGTH_LONG).show();
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), "Error, no se especifica usuario.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Error, no se especifica usuario", Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -130,11 +127,44 @@ public class Carrito extends ActionBarActivity {
             datos.add(Home.cart.get(i).getQuantity() + " x " + Home.cart.get(i).getTitle() );
         }
 
-        adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, datos);
+        class Delete extends AsyncTask<String,JSONObject,JSONObject>
+        {
+            private JSONObject json1;
+
+            @Override
+            protected void onPreExecute(){
+                super.onPreExecute();
+            }
+
+            public JSONObject delprod(String uname, String pid) {
+
+                UserFunction userFunction = new UserFunction();
+                JSONObject json = userFunction.delFromCart(uname, pid);
+                return json;
+            }
+
+            @Override
+            protected JSONObject doInBackground(String... args){
+                json1 = delprod(args[0], args[1]);
+                return json1;
+            }
+            @Override
+            protected void onPostExecute(JSONObject th){
+
+                if(th != null){
+                    //Toast.makeText(getApplicationContext(), jsonArr1.toString(), Toast.LENGTH_LONG).show();
+                }
+                else{
+                   // Toast.makeText(context, "Error!", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+        adaptador = new CartProductAdapter(datos, this);
         List.setAdapter(adaptador);
         List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext() ,"Presionado", Toast.LENGTH_LONG).show();
             }
         });
         eliminar.setOnClickListener(new View.OnClickListener() {
@@ -186,8 +216,7 @@ public class Carrito extends ActionBarActivity {
                         input.getJSONObject(i).getString("image_url"),
                         Double.parseDouble(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("price")),
                         Integer.parseInt(input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("year")),
-                        Integer.parseInt(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("id"))));
-
+                        (input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("id"))));
                 current.setQuantity(input.getJSONObject(i).getJSONObject("item").getInt("quantity"));
                 ret.add(current);
             } catch (JSONException e) {
