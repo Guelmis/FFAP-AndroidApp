@@ -56,12 +56,6 @@ public class Home extends ActionBarActivity {
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
-           // nDialog = new ProgressDialog(Home.this);
-           // nDialog.setTitle("Checking Network");
-           // nDialog.setMessage("Loading..");
-           // nDialog.setIndeterminate(false);
-           // nDialog.setCancelable(true);
-           // nDialog.show();
         }
         public JSONArray searchProducts(String qstring, String brand, String model, String year) {
 
@@ -76,14 +70,12 @@ public class Home extends ActionBarActivity {
             JSONArray json = userFunction.listObj(list);
             return json;
         }
-
         //public JSONObject populateSpinners(String list) {
 
         //    UserFunction userFunction = new UserFunction();
         //    JSONObject json = userFunction.spinnerinfo();
         //    return json;
-        //}
-
+        // }
         @Override
         protected JSONArray doInBackground(String... args){
             if(args.length != 0 ){
@@ -135,7 +127,6 @@ public class Home extends ActionBarActivity {
             JSONArray json = userFunction.listObj(list);
             return json;
         }*/
-
         public JSONObject populateSpinners(String list) {
 
             UserFunction userFunction = new UserFunction();
@@ -152,14 +143,12 @@ public class Home extends ActionBarActivity {
         protected void onPostExecute(JSONObject th){
 
             if(th != null){
-                //Toast.makeText(getApplicationContext(), jsonArr1.toString(), Toast.LENGTH_LONG).show();
             }
             else{
                 Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG).show();
             }
         }
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -180,7 +169,6 @@ public class Home extends ActionBarActivity {
         brands.add("Marca");
         ArrayList<String> years = new ArrayList<String>();
         years.add("Año");
-        //ArrayList<String> titulos= new String[];
         Intent intent = getIntent();
         usuario = intent.getStringExtra("usuario");
         TextView username = (TextView) findViewById(R.id.textViewUser);
@@ -209,7 +197,6 @@ public class Home extends ActionBarActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         if(productcheck !=null){
             listofprod = FillList(productcheck);
         }
@@ -245,14 +232,13 @@ public class Home extends ActionBarActivity {
 
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
-       chassis = (Button) findViewById(R.id.btnchassis);
+        chassis = (Button) findViewById(R.id.btnchassis);
         buscar = (Button) findViewById(R.id.btnbuscar);
         chassis.setOnClickListener(new View.OnClickListener() {
             @Override

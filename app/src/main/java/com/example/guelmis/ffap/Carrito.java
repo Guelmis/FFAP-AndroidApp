@@ -29,8 +29,6 @@ public class Carrito extends ActionBarActivity {
     ListView List;
     CartProductAdapter adaptador;
     ArrayList<String> datos;
-    //private String description;
-    //private Double price;
     private String usuario;
     ActionBar actionbar;
     Button eliminar;
@@ -84,7 +82,6 @@ public class Carrito extends ActionBarActivity {
                 JSONArray json = userFunction.showCart(username);
                 return json;
             }
-
             @Override
             protected JSONArray doInBackground(String... args){
                 if(args.length != 0 ){

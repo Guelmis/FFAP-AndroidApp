@@ -24,10 +24,6 @@ import org.json.JSONObject;
 import java.util.concurrent.ExecutionException;
 
 public class Piezas extends ActionBarActivity {
-    //private String title;
-    //private String description;
-    //private String imageurl;
-    //private Double price;
     private String usuario;
     private Button tienda;
     private Button carrito;

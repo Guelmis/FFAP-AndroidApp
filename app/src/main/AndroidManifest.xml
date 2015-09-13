@@ -48,6 +48,7 @@
         <activity android:name="Mapa"></activity>
         <activity android:name="Registrado"></activity>
         <activity android:name="Resenas"></activity>
+        <activity android:name="ProductoTiendas"></activity>
 
         <service
             android:name="com.paypal.android.sdk.payments.PayPalService"
