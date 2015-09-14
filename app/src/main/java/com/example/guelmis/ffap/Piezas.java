@@ -47,15 +47,17 @@ public class Piezas extends ActionBarActivity {
         usuario = myIntent.getStringExtra("usuario");
         final LineItem newprod = new LineItem(new Product(myIntent.getStringExtra("title"),
                 myIntent.getStringExtra("brand"), myIntent.getStringExtra("model"), myIntent.getStringExtra("image_url"),
-                Double.parseDouble(myIntent.getStringExtra("price")), Integer.parseInt(myIntent.getStringExtra("year")),
-                myIntent.getStringExtra("id")));
+                 Integer.parseInt(myIntent.getStringExtra("year")),
+                myIntent.getStringExtra("id")), new Stock(myIntent.getIntExtra("id", 0),
+                myIntent.getDoubleExtra("price", 0.00), myIntent.getIntExtra("quantity", 0),
+                myIntent.getStringExtra("seller_name"), myIntent.getIntExtra("seller_id", 0)));
    //     String id = myIntent.getStringExtra("id");
         TextView tv = (TextView)findViewById(R.id.textView1);
         TextView tv2 = (TextView)findViewById(R.id.textView2);
         TextView tv3 = (TextView)findViewById(R.id.textView3);
         tv.setText(""+ newprod.getTitle());
         tv2.setText("Descripcion: " + newprod.getTitle());
-        tv3.setText("Precio: " + newprod.getPrice());
+        tv3.setText("Precio: " + newprod.getSelectedStock().getPrice());
 
         ImageView iv1 = (ImageView) findViewById(R.id.imageV1);
         imageLoader.displayImage(newprod.getImageurl(), iv1, options);
@@ -64,6 +66,7 @@ public class Piezas extends ActionBarActivity {
             public void onClick(View view) {
                 Intent myIntent = new Intent(Piezas.this, Tienda.class);
                 myIntent.putExtra("usuario", usuario);
+                myIntent.putExtra("seller_id", newprod.getSelectedStock().getSellerId());
                 startActivity(myIntent);
             }
         });

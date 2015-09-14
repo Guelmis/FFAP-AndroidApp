@@ -287,17 +287,16 @@ public class Home extends ActionBarActivity {
         List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent myIntent = new Intent(Home.this, Piezas.class);
+                Intent myIntent = new Intent(Home.this, ProductoTiendas.class);
                 try {
                     if (listofprod != null) {
-                        myIntent.putExtra("title", listofprod.get(position).getTitle());
-                        myIntent.putExtra("price", listofprod.get(position).getPrice().toString());
+                       /* myIntent.putExtra("title", listofprod.get(position).getTitle());
                         myIntent.putExtra("image_url", listofprod.get(position).getImageurl());
                         myIntent.putExtra("brand", listofprod.get(position).getBrand());
                         myIntent.putExtra("model", listofprod.get(position).getModel());
-                        myIntent.putExtra("year", listofprod.get(position).getYear().toString());
+                        myIntent.putExtra("year", listofprod.get(position).getYear().toString());*/
+                        myIntent.putExtra("prod_id", listofprod.get(position).getId());
                         myIntent.putExtra("usuario",usuario);
-                        myIntent.putExtra("id", listofprod.get(position).getId());
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
@@ -315,7 +314,7 @@ public class Home extends ActionBarActivity {
                         input.getJSONObject(i).getJSONObject(UserFunction.brand_tag).getString("brand_name"),
                         input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("model_name"),
                         input.getJSONObject(i).getString("image_url"),
-                        Double.parseDouble(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("price")),
+                       // Double.parseDouble(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("price")),
                         Integer.parseInt(input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("year")),
                         (input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("id"))));
             } catch (JSONException e) {

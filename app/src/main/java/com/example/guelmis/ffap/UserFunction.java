@@ -13,14 +13,15 @@ public class UserFunction {
     private JSONParser jsonParser;
 
 
-    public static final String loginURL = "http://ffap-itt-2015.herokuapp.com/mobile_login";
-    public static final String searchURL = "http://ffap-itt-2015.herokuapp.com/product_query/search";
-    public static final String spinnersURL = "http://ffap-itt-2015.herokuapp.com/info_query";
-    public static final String proyectoURL = "http://ffap-itt-2015.herokuapp.com/product_query";
-    public static final String cartshowURL = "http://ffap-itt-2015.herokuapp.com/cart_query";
-    public static final String cartaddURL = "http://ffap-itt-2015.herokuapp.com/cart_add";
-    public static final String cartremoveURL = "http://ffap-itt-2015.herokuapp.com/cart_remove";
-    public static final String cartdestroyURL = "http://ffap-itt-2015.herokuapp.com/cart_destroy";
+    public static final String loginURL = "http://ffap-itt-2015.herokuapp.com/mobile_login/";
+    public static final String searchURL = "http://ffap-itt-2015.herokuapp.com/product_query/search/";
+    public static final String spinnersURL = "http://ffap-itt-2015.herokuapp.com/info_query/";
+    public static final String sellersURL = "http://ffap-itt-2015.herokuapp.com/seller_query/";
+    public static final String proyectoURL = "http://ffap-itt-2015.herokuapp.com/product_query/";
+    public static final String cartshowURL = "http://ffap-itt-2015.herokuapp.com/cart_query/";
+    public static final String cartaddURL = "http://ffap-itt-2015.herokuapp.com/cart_add/";
+    public static final String cartremoveURL = "http://ffap-itt-2015.herokuapp.com/cart_remove/";
+    public static final String cartdestroyURL = "http://ffap-itt-2015.herokuapp.com/cart_destroy/";
 
     public static final String product_tag = "product";
     public static final String image_tag = "image_url";
@@ -47,6 +48,19 @@ public class UserFunction {
         params.add(new BasicNameValuePair("model", model));
         params.add(new BasicNameValuePair("year", year));
         JSONArray json = jsonParser.postJSONArrFromUrl(searchURL, params);
+        return json;
+    }
+
+    public JSONObject showprod(String prod_id){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+       // params.add(new BasicNameValuePair("id", prod_id));
+        JSONObject json = jsonParser.getJSONFromUrl(proyectoURL + prod_id, params);
+        return json;
+    }
+
+    public JSONObject showseller(String seller_id){
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        JSONObject json = jsonParser.getJSONFromUrl(sellersURL + seller_id, params);
         return json;
     }
 

@@ -39,7 +39,7 @@ public class Carrito extends ActionBarActivity {
     private double calcTotal(ArrayList<LineItem> cart){
         double res = 0;
         for(int i=0; i<cart.size(); i++){
-            res += (cart.get(i).getPrice()*cart.get(i).getQuantity());
+            res += (cart.get(i).getSelectedStock().getPrice()*cart.get(i).getQuantity());
         }
         return res;
     }
@@ -206,19 +206,20 @@ public class Carrito extends ActionBarActivity {
     private ArrayList<LineItem> FillCart(JSONArray input){
         ArrayList<LineItem> ret = new ArrayList<LineItem>();
         for(int i=0; i<input.length(); i++){
-            try {
+            /*try {
                 LineItem current = new LineItem(new Product(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("title"),
                         input.getJSONObject(i).getJSONObject(UserFunction.brand_tag).getString("brand_name"),
                         input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("model_name"),
                         input.getJSONObject(i).getString("image_url"),
-                        Double.parseDouble(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("price")),
+                    //    Double.parseDouble(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("price")),
                         Integer.parseInt(input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("year")),
-                        (input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("id"))));
+                        (input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("id"))),
+                        new Stock());
                 current.setQuantity(input.getJSONObject(i).getJSONObject("item").getInt("quantity"));
                 ret.add(current);
             } catch (JSONException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
         return ret;
     }

@@ -1,6 +1,8 @@
 package com.example.guelmis.ffap;
 
 import android.app.Notification;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +13,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
 
 public class Tienda  extends ActionBarActivity {
 
@@ -20,10 +30,48 @@ public class Tienda  extends ActionBarActivity {
     ActionBar actionbar;
     private ImageView iv;
     private String usuario;
+    TextView direccion;
+    TextView tienda;
+
+    class ShowSeller extends AsyncTask<String,JSONObject,JSONObject>
+    {
+        private ProgressDialog nDialog;
+        private JSONObject json1;
+        private JSONArray jsonArr1;
+
+        @Override
+        protected void onPreExecute(){
+            super.onPreExecute();
+        }
+
+        public JSONObject getSellerInfo(String id) {
+
+            UserFunction userFunction = new UserFunction();
+            JSONObject json = userFunction.showseller(id);
+            return json;
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... args){
+            json1 = getSellerInfo(args[0]);
+            return json1;
+        }
+        @Override
+        protected void onPostExecute(JSONObject th){
+
+            if(th != null){
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tienda);
+        direccion = (TextView) findViewById(R.id.textView6);
+        tienda = (TextView) findViewById(R.id.textView5);
         iv = (ImageView) findViewById(R.id.imageV1);
         iv.setImageResource(R.drawable.logo);
         actionbar = getSupportActionBar();
@@ -50,6 +98,20 @@ public class Tienda  extends ActionBarActivity {
                 Intent myIntent = new Intent(Tienda.this,Resenas.class);
                 startActivity(myIntent);
             }});
+        JSONObject sellerJSON = null;
+
+        try {
+            sellerJSON = new ShowSeller().execute(Integer.toString(myIntent.getIntExtra("seller_id", 0))).get();
+            direccion.setText(sellerJSON.getString("address"));
+            tienda.setText(sellerJSON.getString("name"));
+            //....
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -3,17 +3,20 @@ package com.example.guelmis.ffap;
 public class LineItem extends Product {
     private int quantity;
 
-    LineItem(Product input){
+    private Stock selectedStock;
+
+    LineItem(Product input, Stock selStk){
         title = input.title;
         brand = input.brand;
         model = input.model;
         desc = input.title + " " + input.brand + " " + input.model +" "+ input.year;
         imageurl = input.imageurl;
         year = input.year;
-        price = input.price;
+    //    price = input.price;
         id = input.id;
 
         quantity = 1;
+        selectedStock = selStk;
     }
 
     public int getQuantity() {
@@ -26,5 +29,13 @@ public class LineItem extends Product {
 
     public void addOne(){
         this.quantity += 1;
+    }
+
+    public Stock getSelectedStock() {
+        return selectedStock;
+    }
+
+    public void setSelectedStock(Stock selectedStock) {
+        this.selectedStock = selectedStock;
     }
 }

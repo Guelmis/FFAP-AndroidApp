@@ -5,6 +5,9 @@ import android.content.BroadcastReceiver;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class Product {
     protected String title;
     protected String desc;
@@ -12,7 +15,7 @@ public class Product {
     protected String model;
     protected String imageurl;
     protected Integer year;
-    protected Double price;
+  //  protected Double price;
     protected String id;
 
     Product(){
@@ -22,18 +25,18 @@ public class Product {
         desc = null;
         imageurl = null;
         year = null;
-        price = null;
+     //   price = null;
         id = null;
     }
 
-    Product(String ptitle, String pbrand, String pmodel, String pimageurl, double pprice, int pyear, String pid){
+    Product(String ptitle, String pbrand, String pmodel, String pimageurl, int pyear, String pid){
         title = ptitle;
         brand = pbrand;
         model = pmodel;
         desc = ptitle + " " + pbrand + " " + pmodel +" "+ pyear;
         imageurl = pimageurl;
         year = pyear;
-        price = pprice;
+    //    price = pprice;
         id = pid;
     }
 
@@ -83,14 +86,6 @@ public class Product {
 
     public void setYear(Integer year) {
         this.year = year;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
     }
 
     public String getId() { return id; }
