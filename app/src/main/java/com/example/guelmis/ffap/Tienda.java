@@ -1,10 +1,8 @@
 package com.example.guelmis.ffap;
 
-import android.app.Notification;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -81,27 +79,25 @@ public class Tienda  extends ActionBarActivity {
         resena = (Button) findViewById(R.id.btnresena);
         ubicacion = (Button) findViewById(R.id.btnubicacion);
         comentario = (Button) findViewById(R.id.btncomment);
-        resena.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent myIntent = new Intent(Tienda.this,VerResenas.class);
-                startActivity(myIntent);
-            }});
         Intent myIntent = getIntent();
         usuario = myIntent.getStringExtra("usuario");
         ubicacion.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent myIntent = new Intent(Tienda.this,Mapa.class);
+                Intent myIntent = new Intent(Tienda.this, Mapa.class);
                 startActivity(myIntent);
-            }});
+            }
+        });
         comentario.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent myIntent = new Intent(Tienda.this,Resenas.class);
                 startActivity(myIntent);
             }});
+
         JSONObject sellerJSON = null;
+        final int sellerid = myIntent.getIntExtra("seller_id", 0);
 
         try {
-            sellerJSON = new ShowSeller().execute(Integer.toString(myIntent.getIntExtra("seller_id", 0))).get();
+            sellerJSON = new ShowSeller().execute(Integer.toString(sellerid)).get();
             direccion.setText(sellerJSON.getString("address"));
             tienda.setText(sellerJSON.getString("name"));
             //....
@@ -112,6 +108,14 @@ public class Tienda  extends ActionBarActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        resena.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent myIntent = new Intent(Tienda.this,ListaResenas.class);
+                myIntent.putExtra("seller_id", sellerid);
+                startActivity(myIntent);
+            }});
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -43,12 +43,13 @@
         <activity android:name="Tienda"></activity>
         <activity android:name="Chassis"></activity>
         <activity android:name="Piezas"></activity>
-        <activity android:name=".VerResenas"></activity>
+        <activity android:name=".ListaResenas"></activity>
         <activity android:name="Carrito"></activity>
         <activity android:name="Mapa"></activity>
         <activity android:name="Registrado"></activity>
         <activity android:name="Resenas"></activity>
         <activity android:name="ProductoTiendas"></activity>
+        <activity android:name=".VerResenas"></activity>
 
         <service
             android:name="com.paypal.android.sdk.payments.PayPalService"
