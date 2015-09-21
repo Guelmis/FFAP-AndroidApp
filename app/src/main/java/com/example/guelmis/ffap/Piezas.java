@@ -48,9 +48,11 @@ public class Piezas extends ActionBarActivity {
         final LineItem newprod = new LineItem(new Product(myIntent.getStringExtra("title"),
                 myIntent.getStringExtra("brand"), myIntent.getStringExtra("model"), myIntent.getStringExtra("image_url"),
                  Integer.parseInt(myIntent.getStringExtra("year")),
-                myIntent.getStringExtra("id")), new Stock(myIntent.getIntExtra("id", 0),
-                myIntent.getDoubleExtra("price", 0.00), myIntent.getIntExtra("quantity", 0),
-                myIntent.getStringExtra("seller_name"), myIntent.getIntExtra("seller_id", 0)));
+                myIntent.getStringExtra("id")),
+                new Stock(myIntent.getIntExtra("stock_id", 0),
+                    myIntent.getDoubleExtra("price", 0.00), myIntent.getIntExtra("quantity", 0),
+                    myIntent.getStringExtra("seller_name"), myIntent.getIntExtra("seller_id", 0))
+        );
    //     String id = myIntent.getStringExtra("id");
         TextView tv = (TextView)findViewById(R.id.textView1);
         TextView tv2 = (TextView)findViewById(R.id.textView2);
@@ -114,7 +116,7 @@ public class Piezas extends ActionBarActivity {
                 Intent myIntent = new Intent(Piezas.this, Carrito.class);
                 myIntent.putExtra("usuario", usuario);
                 try {
-                   JSONObject success = new AddToCart().execute(usuario, newprod.getId()).get();
+                   JSONObject success = new AddToCart().execute(usuario, new Integer(newprod.getSelectedStock().getId()).toString()).get();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {

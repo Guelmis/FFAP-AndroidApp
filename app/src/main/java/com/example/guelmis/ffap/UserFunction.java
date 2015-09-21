@@ -11,7 +11,17 @@ import android.content.Context;
 
 public class UserFunction {
     private JSONParser jsonParser;
-
+/*
+    public static final String loginURL = "http://10.0.0.21:3000/mobile_login/";
+    public static final String searchURL = "http://10.0.0.21:3000/product_query/search/";
+    public static final String spinnersURL = "http://10.0.0.21:3000/info_query/";
+    public static final String sellersURL = "http://10.0.0.21:3000/seller_query/";
+    public static final String proyectoURL = "http://10.0.0.21:3000/product_query/";
+    public static final String cartshowURL = "http://10.0.0.21:3000/cart_query/";
+    public static final String cartaddURL = "http://10.0.0.21:3000/cart_add/";
+    public static final String cartremoveURL = "http://10.0.0.21:3000/cart_remove/";
+    public static final String cartdestroyURL = "http://10.0.0.21:3000/cart_destroy/";
+*/
 
     public static final String loginURL = "http://ffap-itt-2015.herokuapp.com/mobile_login/";
     public static final String searchURL = "http://ffap-itt-2015.herokuapp.com/product_query/search/";
@@ -34,7 +44,6 @@ public class UserFunction {
     private static String searchpro_tag = "format";
     private static String searchproBar_tag = "searchproBar";
     private static String searchpro_offer = "searchproOff";
-
 
     // constructor
     public UserFunction(){
@@ -87,18 +96,18 @@ public class UserFunction {
         return json;
     }
 
-    public JSONObject addToCart(String username, String prod_id) {
+    public JSONObject addToCart(String username, String stock_id) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("username", username));
-        params.add(new BasicNameValuePair("product_id", prod_id));
+        params.add(new BasicNameValuePair("stock_id", stock_id));
         JSONObject json = jsonParser.postJSONFromUrl(cartaddURL, params);
         return json;
     }
 
-    public JSONObject delFromCart(String username, String prod_id) {
+    public JSONObject delFromCart(String username, String line_item_id) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("username", username));
-        params.add(new BasicNameValuePair("product_id", prod_id));
+        params.add(new BasicNameValuePair("line_item_id", line_item_id));
         JSONObject json = jsonParser.postJSONFromUrl(cartremoveURL, params);
         return json;
     }
