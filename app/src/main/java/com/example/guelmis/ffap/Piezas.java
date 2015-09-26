@@ -1,7 +1,5 @@
 package com.example.guelmis.ffap;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.content.Intent;
@@ -15,10 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.guelmis.ffap.models.LineItem;
+import com.example.guelmis.ffap.models.Product;
+import com.example.guelmis.ffap.models.Stock;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;

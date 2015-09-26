@@ -1,11 +1,11 @@
-package com.example.guelmis.ffap;
+package com.example.guelmis.ffap.models;
 
 public class LineItem extends Product {
     private int quantity;
 
     private Stock selectedStock;
 
-    LineItem(Product input, Stock selStk){
+    public LineItem(Product input, Stock selStk){
         title = input.title;
         brand = input.brand;
         model = input.model;

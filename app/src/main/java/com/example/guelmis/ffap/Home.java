@@ -4,14 +4,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,10 +22,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.guelmis.ffap.models.LineItem;
+import com.example.guelmis.ffap.models.Product;
+import com.example.guelmis.ffap.signaling.InfoQuery;
+import com.example.guelmis.ffap.signaling.ServerSignal;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class Home extends ActionBarActivity {
@@ -98,57 +101,6 @@ public class Home extends ActionBarActivity {
         }
     }
 
-    class Populate extends AsyncTask<String,JSONObject,JSONObject>
-    {
-        private ProgressDialog nDialog;
-        private JSONObject json1;
-        private JSONArray jsonArr1;
-
-        @Override
-        protected void onPreExecute(){
-            super.onPreExecute();
-            // nDialog = new ProgressDialog(Home.this);
-            // nDialog.setTitle("Checking Network");
-            // nDialog.setMessage("Loading..");
-            // nDialog.setIndeterminate(false);
-            // nDialog.setCancelable(true);
-            // nDialog.show();
-           // modelos.add("dummy");
-        }
-        /*public JSONObject searchProducts(String search) {
-
-            UserFunction userFunction = new UserFunction();
-            JSONObject json = userFunction.search(search);
-            return json;
-        }
-        public JSONArray listProducts(String list) {
-
-            UserFunction userFunction = new UserFunction();
-            JSONArray json = userFunction.listObj(list);
-            return json;
-        }*/
-        public JSONObject populateSpinners(String list) {
-
-            UserFunction userFunction = new UserFunction();
-            JSONObject json = userFunction.spinnerinfo();
-            return json;
-        }
-
-        @Override
-        protected JSONObject doInBackground(String... args){
-            json1 = populateSpinners("");
-            return json1;
-        }
-        @Override
-        protected void onPostExecute(JSONObject th){
-
-            if(th != null){
-            }
-            else{
-                Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,8 +115,7 @@ public class Home extends ActionBarActivity {
                 .build();
         ImageLoader.getInstance().init(config);
 
-        JSONArray productcheck = null;
-        JSONObject infoquery = null;
+
         ArrayList<String> brands = new ArrayList<String>();
         brands.add("Marca");
         ArrayList<String> years = new ArrayList<String>();
@@ -173,34 +124,16 @@ public class Home extends ActionBarActivity {
         usuario = intent.getStringExtra("usuario");
         TextView username = (TextView) findViewById(R.id.textViewUser);
         username.setText("Bienvenido " +usuario);
-        try {
-            infoquery = new Populate().execute().get();
-            //
-            /*productcheck = new NetCheck().execute().get();
-            for(int i=0; i<productcheck.length(); i++){
-                String cat= productcheck.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("title") + " "
-                        + productcheck.getJSONObject(i).getJSONObject(UserFunction.brand_tag).getString("brand_name")+ " " +
-                        productcheck.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("model_name")+ " "
-                        + productcheck.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("year");
-                datos.add(cat);
-            }*/
-            for(int i=0; i<infoquery.getJSONArray("brands").length(); i++){
-                brands.add(infoquery.getJSONArray("brands").getString(i));
-            }
-            for(int i=0; i<infoquery.getJSONArray("years").length(); i++){
-                years.add(new Integer(infoquery.getJSONArray("years").getInt(i)).toString());
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        if(productcheck !=null){
-            listofprod = FillList(productcheck);
-        }
-        final JSONObject infoq = infoquery;
+
+        InfoQuery spinnerinfo = ServerSignal.spinnersQuery();
+        brands.addAll(spinnerinfo.getBrands());
+        years.addAll(spinnerinfo.getYears());
+
+        //esto es para evitar nullpointerexception en el spinner 1
+        //el elemento en la posicion 1 del spinner1 es "Marca" pero el hash map no tiene ese key.
+        spinnerinfo.getModels().put("Marca", new ArrayList<String>());
+
+        final HashMap<String, ArrayList<String>> modelmap = spinnerinfo.getModels();
         modelos.add("Modelo");
         List = (ListView) findViewById(R.id.listProducts);
         spinner1 = (Spinner) findViewById(R.id.spinner1);
@@ -215,22 +148,16 @@ public class Home extends ActionBarActivity {
         spinner3.setAdapter(adaptsp3);
         List.setAdapter(adaptador);
 
+        //Este spinner se actualiza dependiendo de la marca seleccionada, a partir del hashmap dado.
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    modelos.clear();
-                    modelos.add("Modelo");
-                    for (int i = 0; i < infoq.getJSONObject("brand_model")
-                            .getJSONArray(parent.getItemAtPosition(position).toString()).length(); i++) {
-                        modelos.add(infoq.getJSONObject("brand_model")
-                                .getJSONArray(parent.getItemAtPosition(position).toString()).getString(i));
-                    }
-                    adaptsp2.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-
+                modelos.clear();
+                modelos.add("Modelo");
+                for (int i = 0; i < modelmap.get(parent.getItemAtPosition(position).toString()).size(); i++) {
+                    modelos.add(modelmap.get(parent.getItemAtPosition(position).toString()).get(i));
                 }
+                adaptsp2.notifyDataSetChanged();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -257,8 +184,9 @@ public class Home extends ActionBarActivity {
                 String year = spinner3.getSelectedItem().toString();
                 datos.clear();
                 adaptador.notifyDataSetChanged();
+               // listofprod = Serve
                 try {
-                    JSONArray products = new NetCheck().execute(//pbusqueda,brand,model,year).get();
+                    JSONArray products = new NetCheck().execute(
                             pbusqueda, brand.equals("Marca")? "":brand,
                             model.equals("Modelo")? "":model,
                             year.equals("Año")? "":year)
@@ -268,10 +196,6 @@ public class Home extends ActionBarActivity {
                     }
                     listofprod = FillList(products);
                     for(int i=0; i<listofprod.size(); i++){
-                      //  String cat= products.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("title") + " "
-                        //        + products.getJSONObject(i).getJSONObject(UserFunction.brand_tag).getString("brand_name")+ " " +
-                          //      products.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("model_name")+ " "
-                            //    + products.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("year");
                         datos.add(listofprod.get(i).getTitle());
                     }
                     adaptador.notifyDataSetChanged();
@@ -279,9 +203,7 @@ public class Home extends ActionBarActivity {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
-                }/* catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
+                }
             }
         });
         List.setOnItemClickListener(new AdapterView.OnItemClickListener() {

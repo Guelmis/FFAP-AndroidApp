@@ -1,4 +1,4 @@
-package com.example.guelmis.ffap;
+package com.example.guelmis.ffap.signaling;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class JSONParser {
 
     }
 
-    public JSONObject getJSONFromUrl(String url, List params) {
+    public static JSONObject getJSONFromUrl(String url, List params) {
 
         // Making HTTP request
         try {
@@ -80,7 +80,7 @@ public class JSONParser {
 
     }
 
-    public JSONObject postJSONFromUrl(String url, List params) {
+    public static JSONObject postJSONFromUrl(String url, List params) {
 
         // Making HTTP request
         try {
@@ -128,7 +128,7 @@ public class JSONParser {
 
     }
 
-    public JSONArray getJSONArrFromUrl(String url, List params) {
+    public static JSONArray getJSONArrFromUrl(String url, List params) {
 
         // Making HTTP request
         try {
@@ -178,7 +178,7 @@ public class JSONParser {
 
     }
 
-    public JSONArray postJSONArrFromUrl(String url, List params) {
+    public static JSONArray postJSONArrFromUrl(String url, List params) {
 
         // Making HTTP request
         try {

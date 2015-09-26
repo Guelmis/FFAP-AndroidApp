@@ -12,6 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.guelmis.ffap.models.Product;
+import com.example.guelmis.ffap.models.Stock;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

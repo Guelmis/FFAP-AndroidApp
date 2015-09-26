@@ -1,12 +1,7 @@
-package com.example.guelmis.ffap;
-
-import android.content.BroadcastReceiver;
+package com.example.guelmis.ffap.models;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class Product {
     protected String title;
@@ -18,7 +13,7 @@ public class Product {
   //  protected Double price;
     protected String id;
 
-    Product(){
+    public Product(){
         title = null;
         brand = null;
         model = null;
@@ -29,7 +24,7 @@ public class Product {
         id = null;
     }
 
-    Product(String ptitle, String pbrand, String pmodel, String pimageurl, int pyear, String pid){
+    public Product(String ptitle, String pbrand, String pmodel, String pimageurl, int pyear, String pid){
         title = ptitle;
         brand = pbrand;
         model = pmodel;
