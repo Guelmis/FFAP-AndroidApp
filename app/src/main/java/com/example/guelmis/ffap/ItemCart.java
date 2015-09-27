@@ -10,6 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.guelmis.ffap.models.LineItem;
+import com.example.guelmis.ffap.signaling.BasicResponse;
+import com.example.guelmis.ffap.signaling.ServerSignal;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,74 +29,6 @@ public class ItemCart extends Activity {
     String usuario;
     Button cart;
 
-    class Delete extends AsyncTask<String, JSONObject, JSONObject> {
-        private JSONObject json1;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        public JSONObject delprod(String uname, String pid) {
-
-            UserFunction userFunction = new UserFunction();
-            JSONObject json = userFunction.delFromCart(uname, pid);
-            return json;
-        }
-
-        @Override
-        protected JSONObject doInBackground(String... args) {
-            json1 = delprod(args[0], args[1]);
-            return json1;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject th) {
-
-            if (th != null) {
-                //Toast.makeText(getApplicationContext(), jsonArr1.toString(), Toast.LENGTH_LONG).show();
-            } else {
-                // Toast.makeText(context, "Error!", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    class AddToCart extends AsyncTask<String, JSONObject, JSONObject> {
-        private JSONObject json1;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        public JSONObject addtoCart(String username, String pid) {
-
-            UserFunction userFunction = new UserFunction();
-            JSONObject json = userFunction.addToCart(username, pid);
-            return json;
-        }
-
-        @Override
-        protected JSONObject doInBackground(String... args) {
-            if (args.length != 0) {
-                json1 = addtoCart(args[0], args[1]);
-            } else {
-                json1 = null;
-            }
-            return json1;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject th) {
-
-            if (th != null) {
-                //Toast.makeText(getApplicationContext(), jsonArr1.toString(), Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getApplicationContext(), "Error, no se especifica usuario.", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.item_cart);
@@ -110,29 +44,18 @@ public class ItemCart extends Activity {
         usuario = myIntent.getStringExtra("usuario");
 
         pieza.setText(current_item.getDesc());
-        cantidad.setText(new Integer(current_item.getQuantity()).toString());
+        cantidad.setText(Integer.toString(current_item.getQuantity()));
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    JSONObject addToCart = new AddToCart().execute(usuario,
-                            new Integer(current_item.getSelectedStock().getId()).toString()).get();
-                    if (addToCart.getString("success").equals("true")) {
-                        Home.cart.get(position).setQuantity(Home.cart.get(position).getQuantity() + 1);
-                        cantidad.setText(new Integer(current_item.getQuantity()).toString());
-                     /*   if(Home.cart.get(position).getQuantity() < 1){
-                            Home.cart.remove(position);
-                        }*/
-                    } else {
-                        Toast.makeText(getApplicationContext(), addToCart.getString("message"), Toast.LENGTH_LONG).show();
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                BasicResponse addToCart = ServerSignal.AddToCart(usuario,
+                        Integer.toString(current_item.getSelectedStock().getId()));
+                if (addToCart.success()) {
+                    Home.cart.get(position).setQuantity(Home.cart.get(position).getQuantity() + 1);
+                    cantidad.setText(Integer.toString(current_item.getQuantity()));
+                } else {
+                    Toast.makeText(getApplicationContext(), addToCart.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -140,27 +63,23 @@ public class ItemCart extends Activity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    JSONObject chCart = new Delete().execute(usuario,
-                            new Integer(current_item.getId()).toString()).get();
-                    if (chCart.getString("success").equals("true")) {
-                        Home.cart.get(position).setQuantity(Home.cart.get(position).getQuantity() - 1);
-                        cantidad.setText(new Integer(current_item.getQuantity()).toString());
-                        if(Home.cart.get(position).getQuantity() < 1){
-                            Home.cart.remove(position);
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), chCart.getString("message"), Toast.LENGTH_LONG).show();
+                BasicResponse chCart = ServerSignal.delFromCart(usuario,
+                        new Integer(current_item.getId()).toString());
+                if (chCart.success()) {
+                    Home.cart.get(position).setQuantity(Home.cart.get(position).getQuantity() - 1);
+                    cantidad.setText(new Integer(current_item.getQuantity()).toString());
+                    if(Home.cart.get(position).getQuantity() < 1){
+                        Home.cart.remove(position);
+                        finish();
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } else if(!chCart.getMessage().equals("Force")) {
+                    Toast.makeText(getApplicationContext(), chCart.getMessage(), Toast.LENGTH_LONG).show();
                 }
-            }
-        });
+                else{
+                    Home.cart.remove(position);
+                    finish();
+                }
+            }});
 
         cart.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,6 +1,5 @@
 package com.example.guelmis.ffap;
 
-import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,12 +15,11 @@ import android.widget.Toast;
 import com.example.guelmis.ffap.models.LineItem;
 import com.example.guelmis.ffap.models.Product;
 import com.example.guelmis.ffap.models.Stock;
+import com.example.guelmis.ffap.signaling.BasicResponse;
+import com.example.guelmis.ffap.signaling.ServerSignal;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.json.JSONObject;
-
-import java.util.concurrent.ExecutionException;
 
 public class Piezas extends ActionBarActivity {
     private String usuario;
@@ -53,7 +51,7 @@ public class Piezas extends ActionBarActivity {
                     myIntent.getDoubleExtra("price", 0.00), myIntent.getIntExtra("quantity", 0),
                     myIntent.getStringExtra("seller_name"), myIntent.getIntExtra("seller_id", 0))
         );
-   //     String id = myIntent.getStringExtra("id");
+
         TextView tv = (TextView)findViewById(R.id.textView1);
         TextView tv2 = (TextView)findViewById(R.id.textView2);
         TextView tv3 = (TextView)findViewById(R.id.textView3);
@@ -73,62 +71,18 @@ public class Piezas extends ActionBarActivity {
             }
         });
 
-        class AddToCart extends AsyncTask<String,JSONObject,JSONObject>
-        {
-            private JSONObject json1;
-
-            @Override
-            protected void onPreExecute(){
-                super.onPreExecute();
-            }
-
-            public JSONObject addtoCart(String username, String pid) {
-
-                UserFunction userFunction = new UserFunction();
-                JSONObject json = userFunction.addToCart(username, pid);
-                return json;
-            }
-
-            @Override
-            protected JSONObject doInBackground(String... args){
-                if(args.length != 0 ){
-                    json1 = addtoCart(args[0], args[1]);
-                }
-                else{
-                    json1 = null;
-                }
-                return json1;
-            }
-            @Override
-            protected void onPostExecute(JSONObject th){
-
-                if(th != null){
-                    //Toast.makeText(getApplicationContext(), jsonArr1.toString(), Toast.LENGTH_LONG).show();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Error, no se especifica usuario.", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
         carrito.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent myIntent = new Intent(Piezas.this, Carrito.class);
                 myIntent.putExtra("usuario", usuario);
-                try {
-                   JSONObject success = new AddToCart().execute(usuario, new Integer(newprod.getSelectedStock().getId()).toString()).get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                /*if(!Home.cart.contains(newprod)){
-                    Home.cart.add(newprod);
+                BasicResponse response = ServerSignal.AddToCart(usuario, Integer.toString(newprod.getSelectedStock().getId()));
+                if(response.success()){
+                    startActivity(myIntent);
                 }
                 else{
-                    Home.cart.get(Home.cart.indexOf(newprod)).addOne();
-                }*/
-                startActivity(myIntent);
+                    Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

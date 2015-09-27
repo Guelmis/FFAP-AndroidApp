@@ -4,8 +4,6 @@ import android.os.AsyncTask;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 

@@ -1,14 +1,8 @@
 package com.example.guelmis.ffap;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.guelmis.ffap.models.LineItem;
 import com.example.guelmis.ffap.models.Product;
@@ -31,15 +24,14 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
 
 public class Home extends ActionBarActivity {
     private String usuario;
-    ArrayList<String> modelos = new ArrayList<String>();
+    ArrayList<String> modelos = new ArrayList<>();
     public static ArrayList<Product> listofprod = null;
-    public static ArrayList<LineItem> cart = new ArrayList<LineItem>();
+    public static ArrayList<LineItem> cart = new ArrayList<>();
     Button chassis;
-    Button piezas;
+  //  Button piezas;
     Button buscar;
     Spinner spinner1, spinner2, spinner3;
     ListView List;
@@ -50,75 +42,27 @@ public class Home extends ActionBarActivity {
     ArrayList<String> datos;
     ActionBar actionbar;
     EditText busqueda;
-    class NetCheck extends AsyncTask<String,JSONArray,JSONArray>
-    {
-        private ProgressDialog nDialog;
-        private JSONObject json1;
-        private JSONArray jsonArr1;
-
-        @Override
-        protected void onPreExecute(){
-            super.onPreExecute();
-        }
-        public JSONArray searchProducts(String qstring, String brand, String model, String year) {
-
-            UserFunction userFunction = new UserFunction();
-            JSONArray json = userFunction.search(qstring, brand, model, year);
-            return json;
-        }
-
-        public JSONArray listProducts(String list) {
-
-            UserFunction userFunction = new UserFunction();
-            JSONArray json = userFunction.listObj(list);
-            return json;
-        }
-        //public JSONObject populateSpinners(String list) {
-
-        //    UserFunction userFunction = new UserFunction();
-        //    JSONObject json = userFunction.spinnerinfo();
-        //    return json;
-        // }
-        @Override
-        protected JSONArray doInBackground(String... args){
-            if(args.length != 0 ){
-                jsonArr1 = searchProducts(args[0], args[1], args[2], args[3]);
-            }
-            else{
-                jsonArr1 = listProducts("");
-            }
-            return jsonArr1;
-        }
-        @Override
-        protected void onPostExecute(JSONArray th){
-
-            if(th != null){
-                //Toast.makeText(getApplicationContext(), jsonArr1.toString(), Toast.LENGTH_LONG).show();
-            }
-            else{
-                Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
         actionbar = getSupportActionBar();
-        actionbar.setDisplayShowHomeEnabled(true);
+        if (actionbar != null) {
+            actionbar.setDisplayShowHomeEnabled(true);
+        }
         actionbar.setTitle("FFAP Home");
         actionbar.setIcon(R.mipmap.ffap);
         busqueda = (EditText) findViewById(R.id.editTextPieza);
-        datos = new ArrayList<String>();
+        datos = new ArrayList<>();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .build();
         ImageLoader.getInstance().init(config);
 
 
-        ArrayList<String> brands = new ArrayList<String>();
+        ArrayList<String> brands = new ArrayList<>();
         brands.add("Marca");
-        ArrayList<String> years = new ArrayList<String>();
+        ArrayList<String> years = new ArrayList<>();
         years.add("Año");
         Intent intent = getIntent();
         usuario = intent.getStringExtra("usuario");
@@ -139,10 +83,10 @@ public class Home extends ActionBarActivity {
         spinner1 = (Spinner) findViewById(R.id.spinner1);
         spinner2 = (Spinner) findViewById(R.id.spinner2);
         spinner3 = (Spinner) findViewById(R.id.spinner3);
-        adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, datos);
-        adaptsp1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, brands);
-        adaptsp2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, modelos);
-        adaptsp3 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, years);
+        adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, datos);
+        adaptsp1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, brands);
+        adaptsp2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, modelos);
+        adaptsp3 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
         spinner1.setAdapter(adaptsp1);
         spinner2.setAdapter(adaptsp2);
         spinner3.setAdapter(adaptsp3);
@@ -183,27 +127,15 @@ public class Home extends ActionBarActivity {
                 String model = spinner2.getSelectedItem().toString();
                 String year = spinner3.getSelectedItem().toString();
                 datos.clear();
-                adaptador.notifyDataSetChanged();
-               // listofprod = Serve
-                try {
-                    JSONArray products = new NetCheck().execute(
-                            pbusqueda, brand.equals("Marca")? "":brand,
-                            model.equals("Modelo")? "":model,
-                            year.equals("Año")? "":year)
-                            .get();
-                    if(listofprod !=null){
-                        listofprod.clear();
-                    }
-                    listofprod = FillList(products);
-                    for(int i=0; i<listofprod.size(); i++){
-                        datos.add(listofprod.get(i).getTitle());
-                    }
-                    adaptador.notifyDataSetChanged();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
+                listofprod = ServerSignal.searchProducts(
+                        pbusqueda, brand.equals("Marca")? "":brand,
+                        model.equals("Modelo")? "":model,
+                        year.equals("Año")? "":year);
+
+                for(int i=0; i<listofprod.size(); i++){
+                    datos.add(listofprod.get(i).getTitle());
                 }
+                adaptador.notifyDataSetChanged();
             }
         });
         List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -212,13 +144,8 @@ public class Home extends ActionBarActivity {
                 Intent myIntent = new Intent(Home.this, ProductoTiendas.class);
                 try {
                     if (listofprod != null) {
-                       /* myIntent.putExtra("title", listofprod.get(position).getTitle());
-                        myIntent.putExtra("image_url", listofprod.get(position).getImageurl());
-                        myIntent.putExtra("brand", listofprod.get(position).getBrand());
-                        myIntent.putExtra("model", listofprod.get(position).getModel());
-                        myIntent.putExtra("year", listofprod.get(position).getYear().toString());*/
                         myIntent.putExtra("prod_id", listofprod.get(position).getId());
-                        myIntent.putExtra("usuario",usuario);
+                        myIntent.putExtra("usuario", usuario);
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
@@ -228,23 +155,6 @@ public class Home extends ActionBarActivity {
         });
     }
 
-    private ArrayList<Product> FillList(JSONArray input){
-        ArrayList<Product> ret = new ArrayList<Product>();
-        for(int i=0; i<input.length(); i++){
-            try {
-                ret.add(new Product(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("title"),
-                        input.getJSONObject(i).getJSONObject(UserFunction.brand_tag).getString("brand_name"),
-                        input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("model_name"),
-                        input.getJSONObject(i).getString("image_url"),
-                       // Double.parseDouble(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("price")),
-                        Integer.parseInt(input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("year")),
-                        (input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("id"))));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return ret;
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

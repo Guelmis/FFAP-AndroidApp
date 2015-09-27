@@ -3,7 +3,6 @@ package com.example.guelmis.ffap.signaling;
 import android.os.AsyncTask;
 
 import org.apache.http.NameValuePair;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -27,13 +26,13 @@ public class JObjRequester {
         protected void onPreExecute(){
             super.onPreExecute();
         }
-        public JSONObject getArray(String url) {
+        public JSONObject getObj(String url) {
             return JSONParser.getJSONFromUrl(url, params);
         }
 
         @Override
         protected JSONObject doInBackground(String... args){
-            jsonobj = getArray(args[0]);
+            jsonobj = getObj(args[0]);
             return jsonobj;
         }
     }
@@ -52,13 +51,13 @@ public class JObjRequester {
         protected void onPreExecute(){
             super.onPreExecute();
         }
-        public JSONObject getArray(String url) {
-            return JSONParser.getJSONFromUrl(url, params);
+        public JSONObject postObj(String url) {
+            return JSONParser.postJSONFromUrl(url, params);
         }
 
         @Override
         protected JSONObject doInBackground(String... args){
-            jsonobj = getArray(args[0]);
+            jsonobj = postObj(args[0]);
             return jsonobj;
         }
     }

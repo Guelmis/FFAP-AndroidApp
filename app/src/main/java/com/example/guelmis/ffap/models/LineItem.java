@@ -9,10 +9,8 @@ public class LineItem extends Product {
         title = input.title;
         brand = input.brand;
         model = input.model;
-        desc = input.title + " " + input.brand + " " + input.model +" "+ input.year;
         imageurl = input.imageurl;
         year = input.year;
-    //    price = input.price;
         id = input.id;
 
         quantity = 1;
@@ -29,6 +27,10 @@ public class LineItem extends Product {
 
     public void addOne(){
         this.quantity += 1;
+    }
+
+    public void substractOne(){
+        this.quantity -= 1;
     }
 
     public Stock getSelectedStock() {

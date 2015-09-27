@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.guelmis.ffap.models.LineItem;
 import com.example.guelmis.ffap.models.Product;
 import com.example.guelmis.ffap.models.Stock;
+import com.example.guelmis.ffap.signaling.ServerSignal;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,49 +37,10 @@ public class Carrito extends ActionBarActivity {
     Button eliminar;
     Double itbis;
     Double total;
-    JSONArray cart;
     TextView subtotal;
     TextView ITBIS;
     TextView Total;
 
-    class QueryCart extends AsyncTask<String,JSONArray,JSONArray>
-    {
-        private ProgressDialog nDialog;
-        private JSONObject json1;
-        private JSONArray jsonArr1;
-
-        @Override
-        protected void onPreExecute(){
-            super.onPreExecute();
-        }
-
-        public JSONArray showCart(String username) {
-
-            UserFunction userFunction = new UserFunction();
-            JSONArray json = userFunction.showCart(username);
-            return json;
-        }
-        @Override
-        protected JSONArray doInBackground(String... args){
-            if(args.length != 0 ){
-                jsonArr1 = showCart(args[0]);
-            }
-            else{
-                jsonArr1 = null;
-            }
-            return jsonArr1;
-        }
-        @Override
-        protected void onPostExecute(JSONArray th){
-
-            if(th != null){
-                //Toast.makeText(getApplicationContext(), jsonArr1.toString(), Toast.LENGTH_LONG).show();
-            }
-            else{
-                Toast.makeText(getApplicationContext(), "Error, no se especifica usuario", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     private double calcTotal(ArrayList<LineItem> cart){
         double res = 0;
@@ -112,26 +74,16 @@ public class Carrito extends ActionBarActivity {
         usuario = myIntent.getStringExtra("usuario");
         actualizaPrecios();
         List = (ListView) findViewById(R.id.listofprod);
-        datos = new ArrayList<String>();
-        cart = new JSONArray();
+        datos = new ArrayList<>();
 
-        try {
-            cart = new QueryCart().execute(usuario).get();
-            Home.cart = FillCart(cart);
-            actualizaPrecios();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Home.cart = ServerSignal.ShowCart(usuario);
+        actualizaPrecios();
 
         for(int i =0; i<Home.cart.size(); i++){
             datos.add(Home.cart.get(i).getQuantity() + " x " + Home.cart.get(i).getTitle() );
         }
 
-        adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, datos);
+        adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, datos);
         List.setAdapter(adaptador);
         List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -187,26 +139,5 @@ public class Carrito extends ActionBarActivity {
         default:
         return super.onOptionsItemSelected(item);
         }
-    }
-
-    private ArrayList<LineItem> FillCart(JSONArray input) throws JSONException {
-        ArrayList<LineItem> ret = new ArrayList<LineItem>();
-        for(int i=0; i<input.length(); i++){
-            LineItem current = new LineItem(
-                    new Product(input.getJSONObject(i).getJSONObject(UserFunction.product_tag).getString("title"),
-                    input.getJSONObject(i).getJSONObject(UserFunction.brand_tag).getString("brand_name"),
-                    input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("model_name"),
-                    input.getJSONObject(i).getString("image_url"),
-                    Integer.parseInt(input.getJSONObject(i).getJSONObject(UserFunction.model_tag).getString("year")),
-                    (input.getJSONObject(i).getJSONObject("item").getString("id"))),
-                    new Stock(input.getJSONObject(i).getJSONObject("stock").getInt("id"),
-                         input.getJSONObject(i).getJSONObject("stock").getDouble("price"),
-                         input.getJSONObject(i).getJSONObject("stock").getInt("quantity"),
-                         input.getJSONObject(i).getJSONObject("seller").getString("name"),
-                         input.getJSONObject(i).getJSONObject("seller").getInt("id")));
-            current.setQuantity(input.getJSONObject(i).getJSONObject("item").getInt("quantity"));
-            ret.add(current);
-        }
-        return ret;
     }
 }

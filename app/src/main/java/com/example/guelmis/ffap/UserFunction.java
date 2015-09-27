@@ -17,7 +17,7 @@ public class UserFunction {
     public static final String searchURL = "http://10.0.0.21:3000/product_query/search/";
     public static final String spinnersURL = "http://10.0.0.21:3000/info_query/";
     public static final String sellersURL = "http://10.0.0.21:3000/seller_query/";
-    public static final String proyectoURL = "http://10.0.0.21:3000/product_query/";
+    public static final String productosURL = "http://10.0.0.21:3000/product_query/";
     public static final String cartshowURL = "http://10.0.0.21:3000/cart_query/";
     public static final String cartaddURL = "http://10.0.0.21:3000/cart_add/";
     public static final String cartremoveURL = "http://10.0.0.21:3000/cart_remove/";

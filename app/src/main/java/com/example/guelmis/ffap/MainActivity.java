@@ -24,6 +24,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBar;
 
+import com.example.guelmis.ffap.signaling.ServerSignal;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -31,15 +33,6 @@ public class MainActivity extends ActionBarActivity {
     EditText email;
     EditText password;
     ActionBar bar;
-
-    private static String KEY_SUCCESS = "success";
-    private static String KEY_MESSAGE = "message";
-    /* private static String KEY_UID = "uid";
-     private static String KEY_USERNAME = "uname";
-     private static String KEY_FIRSTNAME = "fname";
-     private static String KEY_LASTNAME = "lname";
-     private static String KEY_EMAIL = "email";
-     private static String KEY_CREATED_AT = "created_at"; */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,9 +204,9 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(JSONObject json) {
             try {
-                if (json.getString(KEY_SUCCESS) != null) {
+                if (json.getString(ServerSignal.KEY_SUCCESS) != null) {
 
-                    String res = json.getString(KEY_SUCCESS);
+                    String res = json.getString(ServerSignal.KEY_SUCCESS);
 
                     if (res.equals("true")) {
 
@@ -227,7 +220,7 @@ public class MainActivity extends ActionBarActivity {
                         pDialog.dismiss();
                         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                         alertDialog.setTitle("No se pudo iniciar sesión");
-                        alertDialog.setMessage(json.getString(KEY_MESSAGE));
+                        alertDialog.setMessage(json.getString(ServerSignal.KEY_MESSAGE));
                         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {

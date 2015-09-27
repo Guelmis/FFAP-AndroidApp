@@ -3,9 +3,11 @@ package com.example.guelmis.ffap.models;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.ArrayList;
+
 public class Product {
     protected String title;
-    protected String desc;
+    private ArrayList<Stock> stocklist;
     protected String brand;
     protected String model;
     protected String imageurl;
@@ -17,9 +19,9 @@ public class Product {
         title = null;
         brand = null;
         model = null;
-        desc = null;
         imageurl = null;
         year = null;
+        stocklist = null;
      //   price = null;
         id = null;
     }
@@ -28,10 +30,18 @@ public class Product {
         title = ptitle;
         brand = pbrand;
         model = pmodel;
-        desc = ptitle + " " + pbrand + " " + pmodel +" "+ pyear;
         imageurl = pimageurl;
         year = pyear;
-    //    price = pprice;
+        id = pid;
+    }
+
+    public Product(String ptitle, String pbrand, String pmodel, String pimageurl, int pyear, String pid, ArrayList<Stock> pstocklist){
+        title = ptitle;
+        brand = pbrand;
+        model = pmodel;
+        imageurl = pimageurl;
+        year = pyear;
+        stocklist = pstocklist;
         id = pid;
     }
 
@@ -44,11 +54,15 @@ public class Product {
     }
 
     public String getDesc() {
-        return desc;
+        return title + " " + brand + " " + model +" "+ year;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public ArrayList<Stock> getStocklist() {
+        return stocklist;
+    }
+
+    public void setStocklist(ArrayList<Stock> stocklist) {
+        this.stocklist = stocklist;
     }
 
     public String getBrand() {
