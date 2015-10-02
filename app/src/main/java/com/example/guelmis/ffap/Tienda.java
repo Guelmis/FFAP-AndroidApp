@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.guelmis.ffap.models.Seller;
+import com.example.guelmis.ffap.signaling.ServerSignal;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,40 +33,6 @@ public class Tienda  extends ActionBarActivity {
     private String usuario;
     TextView direccion;
     TextView tienda;
-
-    class ShowSeller extends AsyncTask<String,JSONObject,JSONObject>
-    {
-        private ProgressDialog nDialog;
-        private JSONObject json1;
-        private JSONArray jsonArr1;
-
-        @Override
-        protected void onPreExecute(){
-            super.onPreExecute();
-        }
-
-        public JSONObject getSellerInfo(String id) {
-
-            UserFunction userFunction = new UserFunction();
-            JSONObject json = userFunction.showseller(id);
-            return json;
-        }
-
-        @Override
-        protected JSONObject doInBackground(String... args){
-            json1 = getSellerInfo(args[0]);
-            return json1;
-        }
-        @Override
-        protected void onPostExecute(JSONObject th){
-
-            if(th != null){
-            }
-            else{
-                Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,28 +56,20 @@ public class Tienda  extends ActionBarActivity {
                 startActivity(myIntent);
             }
         });
+
+        final int sellerid = myIntent.getIntExtra("seller_id", 0);
+
+        Seller seller = ServerSignal.ShowSeller(Integer.toString(sellerid));
+        direccion.setText(seller.getAddress());
+        tienda.setText(seller.getName());
+
         comentario.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent myIntent = new Intent(Tienda.this,Resenas.class);
+                myIntent.putExtra("usuario", usuario);
+                myIntent.putExtra("seller_id", Integer.toString(sellerid));
                 startActivity(myIntent);
             }});
-
-        JSONObject sellerJSON = null;
-        final int sellerid = myIntent.getIntExtra("seller_id", 0);
-
-        try {
-            sellerJSON = new ShowSeller().execute(Integer.toString(sellerid)).get();
-            direccion.setText(sellerJSON.getString("address"));
-            tienda.setText(sellerJSON.getString("name"));
-            //....
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
         resena.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent myIntent = new Intent(Tienda.this,ListaResenas.class);

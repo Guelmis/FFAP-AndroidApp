@@ -12,8 +12,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.guelmis.ffap.models.Comment;
+import com.example.guelmis.ffap.models.Seller;
+import com.example.guelmis.ffap.signaling.ServerSignal;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,40 +30,6 @@ public class ListaResenas extends Activity {
     ArrayAdapter<String> adaptador;
     ArrayList<String> datos;
 
-    class ShowSeller extends AsyncTask<String,JSONObject,JSONObject>
-    {
-        private ProgressDialog nDialog;
-        private JSONObject json1;
-        private JSONArray jsonArr1;
-
-        @Override
-        protected void onPreExecute(){
-            super.onPreExecute();
-        }
-
-        public JSONObject getSellerInfo(String id) {
-
-            UserFunction userFunction = new UserFunction();
-            JSONObject json = userFunction.showseller(id);
-            return json;
-        }
-
-        @Override
-        protected JSONObject doInBackground(String... args){
-            json1 = getSellerInfo(args[0]);
-            return json1;
-        }
-        @Override
-        protected void onPostExecute(JSONObject th){
-
-            if(th != null){
-            }
-            else{
-                Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resena_tienda);
@@ -70,27 +39,16 @@ public class ListaResenas extends Activity {
         List.setAdapter(adaptador);
 
         Intent myIntent = getIntent();
-        JSONObject sellerJSON = null;
         int sellerid = myIntent.getIntExtra("seller_id", 0);
-        ArrayList<Comment> resenas = null;
 
-        try {
-            sellerJSON = new ShowSeller().execute(Integer.toString(sellerid)).get();
-            resenas = FillList(sellerJSON);
-            for(int i=0; i<resenas.size(); i++){
-                datos.add(resenas.get(i).getTitle() + " -- " + resenas.get(i).getUsername());
-            }
-            adaptador.notifyDataSetChanged();
-            //....
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        Seller seller = ServerSignal.ShowSeller(Integer.toString(sellerid));
+
+        for(int i=0; i<seller.getReviews().size(); i++){
+            datos.add(seller.getReviews().get(i).getTitle() + " -- " + seller.getReviews().get(i).getUsername());
         }
+        adaptador.notifyDataSetChanged();
 
-        final ArrayList<Comment> verresenas = resenas;
+        final ArrayList<Comment> verresenas = seller.getReviews();
 
         List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -102,16 +60,5 @@ public class ListaResenas extends Activity {
                 startActivity(myIntent);
             }
         });
-    }
-
-    private ArrayList<Comment> FillList(JSONObject input) throws JSONException {
-        ArrayList<Comment> arr = new ArrayList<Comment>();
-        JSONArray comments = input.getJSONArray("comments");
-        for(int i=0; i<comments.length(); i++){
-            arr.add(new Comment(comments.getJSONObject(i).getJSONObject("comment").getString("title"),
-                    comments.getJSONObject(i).getJSONObject("comment").getString("body"),
-                    comments.getJSONObject(i).getJSONObject("username").getString("username")));
-        }
-        return arr;
     }
 }

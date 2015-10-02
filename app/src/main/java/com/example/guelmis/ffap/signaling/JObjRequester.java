@@ -39,7 +39,7 @@ public class JObjRequester {
 
     private class postJSONObject extends AsyncTask<String,JSONObject,JSONObject>
     {
-        private JSONObject jsonobj;
+       // private JSONObject jsonobj;
         private List<NameValuePair> params;
 
         public postJSONObject(List<NameValuePair> paramlist){
@@ -57,8 +57,8 @@ public class JObjRequester {
 
         @Override
         protected JSONObject doInBackground(String... args){
-            jsonobj = postObj(args[0]);
-            return jsonobj;
+            //jsonobj =
+            return postObj(args[0]);// jsonobj;
         }
     }
 

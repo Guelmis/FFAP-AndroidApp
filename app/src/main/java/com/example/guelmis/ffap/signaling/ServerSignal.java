@@ -1,8 +1,9 @@
 package com.example.guelmis.ffap.signaling;
 
-import com.example.guelmis.ffap.ListaResenas;
+import com.example.guelmis.ffap.models.Comment;
 import com.example.guelmis.ffap.models.LineItem;
 import com.example.guelmis.ffap.models.Product;
+import com.example.guelmis.ffap.models.Seller;
 import com.example.guelmis.ffap.models.Stock;
 
 import org.apache.http.NameValuePair;
@@ -21,10 +22,23 @@ import java.util.concurrent.ExecutionException;
  */
 public class ServerSignal {
 
+    /*
+    public static final String loginURL = "http://10.0.0.21:3000/mobile_login/";
+    public static final String searchURL = "http://10.0.0.21:3000/product_query/search/";
+    public static final String spinnersURL = "http://10.0.0.21:3000/info_query/";
+    public static final String sellersURL = "http://10.0.0.21:3000/seller_query/";
+    public static final String productosURL = "http://10.0.0.21:3000/product_query/";
+    public static final String cartshowURL = "http://10.0.0.21:3000/cart_query/";
+    public static final String cartaddURL = "http://10.0.0.21:3000/cart_add/";
+    public static final String cartremoveURL = "http://10.0.0.21:3000/cart_remove/";
+    public static final String cartdestroyURL = "http://10.0.0.21:3000/cart_destroy/";
+*/
+
     public static final String loginURL = "http://ffap-itt-2015.herokuapp.com/mobile_login/";
     public static final String searchURL = "http://ffap-itt-2015.herokuapp.com/product_query/search/";
     public static final String spinnersURL = "http://ffap-itt-2015.herokuapp.com/info_query/";
     public static final String sellersURL = "http://ffap-itt-2015.herokuapp.com/seller_query/";
+    public static final String commentURL = "http://ffap-itt-2015.herokuapp.com/seller_query/comment/";
     public static final String productosURL = "http://ffap-itt-2015.herokuapp.com/product_query/";
     public static final String cartshowURL = "http://ffap-itt-2015.herokuapp.com/cart_query/";
     public static final String cartaddURL = "http://ffap-itt-2015.herokuapp.com/cart_add/";
@@ -41,9 +55,11 @@ public class ServerSignal {
     public static final String register_tag = "register";
     public static final String brand_model_map_tag = "brand_model";
     public static final String username_tag = "username";
+    public static final String password_tag = "password";
 
     public static final String KEY_SUCCESS = "success";
     public static final String KEY_MESSAGE = "message";
+    public static final String KEY_STATUS = "status";
 
     public static InfoQuery spinnersQuery(){
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -66,7 +82,7 @@ public class ServerSignal {
                 brands.add(query.getJSONArray("brands").getString(i));
             }
             for(int i=0; i<query.getJSONArray("years").length(); i++){
-                years.add(new Integer(query.getJSONArray("years").getInt(i)).toString());
+                years.add(Integer.toString(query.getJSONArray("years").getInt(i)));
             }
             for(int i=0; i<brands.size(); i++){
                 ArrayList<String> temp = new ArrayList<String>();
@@ -253,5 +269,95 @@ public class ServerSignal {
         }
 
         return cart;
+    }
+
+    public static BasicResponse Comment(String username, String seller_id, String title, String body){
+        BasicResponse res = new BasicResponse(false, "Error no identificado al comentar.", "");
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject resJSON;
+
+        params.add(new BasicNameValuePair(username_tag, username));
+        params.add(new BasicNameValuePair("seller_id", seller_id));
+        params.add(new BasicNameValuePair("title", title));
+        params.add(new BasicNameValuePair("body", body));
+
+        try {
+            resJSON = new JObjRequester().post(commentURL, params);
+            if(resJSON.getString(KEY_SUCCESS).equals("true")) {
+                res = new BasicResponse(true, resJSON.getString(KEY_MESSAGE), "");
+            }
+            else {
+                res = new BasicResponse(false, resJSON.getString(KEY_MESSAGE), "");
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return res;
+    }
+
+    public static Seller ShowSeller(String seller_id){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        ArrayList<Comment> reviews = new ArrayList<>();
+        Seller ret = null;
+        JSONObject sellerJSON;
+
+        //params.add(new BasicNameValuePair("seller_id", seller_id));
+        try {
+            sellerJSON = new JObjRequester().get(sellersURL + seller_id, params);
+            JSONArray comments = sellerJSON.getJSONArray("comments");
+            for(int i=0; i<comments.length(); i++){
+                reviews.add(new Comment(comments.getJSONObject(i).getJSONObject("comment").getString("title"),
+                        comments.getJSONObject(i).getJSONObject("comment").getString("body"),
+                        comments.getJSONObject(i).getJSONObject(username_tag).getString(username_tag)));
+            }
+
+            ret = new Seller(
+                    sellerJSON.getString("name"),
+                    sellerJSON.getString("address"),
+                    sellerJSON.getString("phone"),
+                    sellerJSON.getString(image_tag),
+                    reviews);
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static BasicResponse Login(String username, String password){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject answer = null;
+        BasicResponse ret = new BasicResponse(false, "Error no identificado al autenticarse.", "");
+
+        params.add(new BasicNameValuePair(username_tag, username));
+        params.add(new BasicNameValuePair(password_tag, password));
+
+        try {
+            answer = new JObjRequester().post(loginURL, params);
+            if(answer.getString(KEY_SUCCESS).equals("true")) {
+                ret = new BasicResponse(true, answer.getString(KEY_MESSAGE), "");
+            }
+            else {
+                ret = new BasicResponse(false, answer.getString(KEY_MESSAGE), "");
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
     }
 }

@@ -5,8 +5,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import org.json.JSONException;
-import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -20,10 +18,13 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBar;
 
+import com.example.guelmis.ffap.signaling.BasicResponse;
 import com.example.guelmis.ffap.signaling.ServerSignal;
 
 
@@ -51,7 +52,8 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View view) {
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 if ((!email.getText().toString().equals("")) && (!password.getText().toString().equals(""))) {
-                    NetAsync(view);
+                    ProgressDialog pDialog = new ProgressDialog(MainActivity.this);
+                    NetAsync(pDialog, email.getText().toString(), password.getText().toString());
                 } else if ((!email.getText().toString().equals(""))) {
                     alertDialog.setTitle("No se pudo iniciar sesión");
                     alertDialog.setMessage("El campo de la contraseña está vacío, Por favor introduzca su contraseña");
@@ -138,10 +140,8 @@ public class MainActivity extends ActionBarActivity {
                         return true;
                     }
                 } catch (MalformedURLException e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -154,7 +154,6 @@ public class MainActivity extends ActionBarActivity {
 
             if (th == true) {
                 nDialog.dismiss();
-                new ProcessLogin().execute();
             } else {
                 nDialog.dismiss();
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
@@ -170,72 +169,61 @@ public class MainActivity extends ActionBarActivity {
             }
         }
     }
-    private class ProcessLogin extends AsyncTask<String, String, JSONObject> {
 
-
-        private ProgressDialog pDialog;
-
-        String username, contrasena;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            email = (EditText) findViewById(R.id.editTextEmail);
-            password = (EditText) findViewById(R.id.editTextPass);
-            username = email.getText().toString();
-            contrasena = password.getText().toString();
-            pDialog = new ProgressDialog(MainActivity.this);
-            pDialog.setTitle("Comunicandose con el servidor");
-            pDialog.setMessage("Autenticando usuario");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
+    public void NetAsync(ProgressDialog pDialog, String username, String password) {
+        BasicResponse response = null;
+        try {
+            if(new NetCheck().execute().get()){
+                response = ServerSignal.Login(username, password);
+                pDialog.setTitle("Comunicandose con el servidor");
+                pDialog.setMessage("Autenticando usuario");
+                pDialog.setIndeterminate(false);
+                pDialog.setCancelable(true);
+                pDialog.show();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
 
-        @Override
-        protected JSONObject doInBackground(String... args) {
+        if(response != null){
+            if (response.success()) {
 
-            UserFunction userFunction = new UserFunction();
-            JSONObject json = userFunction.loginUser(username, contrasena);
-            return json;
-        }
+                pDialog.dismiss();
+                Intent intent = new Intent(MainActivity.this, Home.class);
+                intent.putExtra("usuario", username);
+                startActivity(intent);
 
-        @Override
-        protected void onPostExecute(JSONObject json) {
-            try {
-                if (json.getString(ServerSignal.KEY_SUCCESS) != null) {
+            } else {
 
-                    String res = json.getString(ServerSignal.KEY_SUCCESS);
-
-                    if (res.equals("true")) {
-
-                        pDialog.dismiss();
-                        Intent intent = new Intent(MainActivity.this, Home.class);
-                        intent.putExtra("usuario", username);
-                        startActivity(intent);
-
-                    } else {
-
-                        pDialog.dismiss();
-                        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                        alertDialog.setTitle("No se pudo iniciar sesión");
-                        alertDialog.setMessage(json.getString(ServerSignal.KEY_MESSAGE));
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.show();
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+                pDialog.dismiss();
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.setTitle("No se pudo iniciar sesión");
+                alertDialog.setMessage(response.getMessage());
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
             }
         }
-    }
-    public void NetAsync(View view) {
-        new NetCheck().execute();
+        else {
+
+            pDialog.dismiss();
+            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+            alertDialog.setTitle("No se pudo iniciar sesión");
+            alertDialog.setMessage("Error no identificado.");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        }
+
     }
 }

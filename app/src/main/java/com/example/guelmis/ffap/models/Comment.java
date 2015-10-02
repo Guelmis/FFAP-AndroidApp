@@ -1,4 +1,4 @@
-package com.example.guelmis.ffap;
+package com.example.guelmis.ffap.models;
 
 /**
  * Created by mario on 09/19/15.
