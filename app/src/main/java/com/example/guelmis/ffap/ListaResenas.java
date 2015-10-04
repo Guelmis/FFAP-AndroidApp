@@ -57,6 +57,7 @@ public class ListaResenas extends Activity {
                 myIntent.putExtra("title", verresenas.get(position).getTitle());
                 myIntent.putExtra("username", verresenas.get(position).getUsername());
                 myIntent.putExtra("body", verresenas.get(position).getBody());
+                myIntent.putExtra("rating", verresenas.get(position).getRating());
                 startActivity(myIntent);
             }
         });

@@ -20,7 +20,7 @@
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ratingBar"
+        android:id="@+id/ratingBComment"
         android:layout_below="@+id/editTextResena"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="48dp" />
@@ -33,10 +33,10 @@
         android:textSize="20sp"
         android:background="#D32F2F"
         android:textColor="#FFFFFF"
-        android:layout_below="@+id/ratingBar"
-        android:layout_alignStart="@+id/ratingBar"
+        android:layout_below="@+id/ratingBComment"
+        android:layout_alignStart="@+id/ratingBComment"
         android:layout_marginTop="38dp"
-        android:layout_alignEnd="@+id/ratingBar" />
+        android:layout_alignEnd="@+id/ratingBComment" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -52,4 +52,13 @@
         android:padding="15dp"
         android:phoneNumber="false"
         android:hint="Titulo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/textVTest"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

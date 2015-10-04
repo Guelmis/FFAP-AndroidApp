@@ -271,7 +271,7 @@ public class ServerSignal {
         return cart;
     }
 
-    public static BasicResponse Comment(String username, String seller_id, String title, String body){
+    public static BasicResponse Comment(String username, String seller_id, String title, String body, String rating){
         BasicResponse res = new BasicResponse(false, "Error no identificado al comentar.", "");
         ArrayList<NameValuePair> params = new ArrayList<>();
         JSONObject resJSON;
@@ -280,6 +280,7 @@ public class ServerSignal {
         params.add(new BasicNameValuePair("seller_id", seller_id));
         params.add(new BasicNameValuePair("title", title));
         params.add(new BasicNameValuePair("body", body));
+        params.add(new BasicNameValuePair("rating", rating));
 
         try {
             resJSON = new JObjRequester().post(commentURL, params);
@@ -313,7 +314,8 @@ public class ServerSignal {
             for(int i=0; i<comments.length(); i++){
                 reviews.add(new Comment(comments.getJSONObject(i).getJSONObject("comment").getString("title"),
                         comments.getJSONObject(i).getJSONObject("comment").getString("body"),
-                        comments.getJSONObject(i).getJSONObject(username_tag).getString(username_tag)));
+                        comments.getJSONObject(i).getJSONObject(username_tag).getString(username_tag),
+                        comments.getJSONObject(i).getJSONObject("comment").getString("rating")));
             }
 
             ret = new Seller(
