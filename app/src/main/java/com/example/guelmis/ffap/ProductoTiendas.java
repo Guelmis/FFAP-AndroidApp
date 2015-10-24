@@ -36,7 +36,8 @@ public class ProductoTiendas extends Activity {
         Product productInfo = ServerSignal.ShowProduct(thisIntent.getStringExtra("prod_id"));
 
         for(int i=0; i<productInfo.getStocklist().size(); i++){
-            datos.add(productInfo.getStocklist().get(i).getSellerName() + ", $" + productInfo.getStocklist().get(i).getPrice());
+            datos.add(productInfo.getStocklist().get(i).getSellerName() + "                                                   " +
+                    "Precio: " + productInfo.getStocklist().get(i).getPrice()+ "$");
         }
 
         final Product product = productInfo;

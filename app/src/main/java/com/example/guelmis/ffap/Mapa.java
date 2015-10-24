@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.guelmis.ffap.models.Seller;
+import com.example.guelmis.ffap.signaling.ServerSignal;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -12,6 +14,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -23,16 +27,22 @@ public class Mapa extends FragmentActivity implements LocationProvider.LocationC
 
     public static final String TAG = Mapa.class.getSimpleName();
     private LocationProvider mLocationProvider;
-    private static final LatLng tienda = new LatLng(18.4925333,-69.9032473);
+    private LatLng tienda;
     private GoogleMap map;
-    LatLng marcadortienda = tienda;
+    private Seller infoTienda;
+    LatLng marcadortienda;
     private static LatLng ubicacion = new LatLng(0,0);
     private double currentLatitude,currentLongitude;
     private Polyline newPolyline;
     private LatLngBounds latlngBounds;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent myIntent = getIntent();
+        infoTienda = ServerSignal.ShowSeller(Integer.toString(myIntent.getIntExtra("seller_id", 0)));
+        tienda = infoTienda.getLocation();
+        marcadortienda = tienda;
         setContentView(R.layout.mapa);
         mLocationProvider = new LocationProvider(this, this);
         try

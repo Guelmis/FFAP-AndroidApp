@@ -5,6 +5,7 @@ import com.example.guelmis.ffap.models.LineItem;
 import com.example.guelmis.ffap.models.Product;
 import com.example.guelmis.ffap.models.Seller;
 import com.example.guelmis.ffap.models.Stock;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -23,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 public class ServerSignal {
 
     /*
+    //local urls
     public static final String loginURL = "http://10.0.0.21:3000/mobile_login/";
     public static final String searchURL = "http://10.0.0.21:3000/product_query/search/";
     public static final String spinnersURL = "http://10.0.0.21:3000/info_query/";
@@ -32,6 +34,8 @@ public class ServerSignal {
     public static final String cartaddURL = "http://10.0.0.21:3000/cart_add/";
     public static final String cartremoveURL = "http://10.0.0.21:3000/cart_remove/";
     public static final String cartdestroyURL = "http://10.0.0.21:3000/cart_destroy/";
+    public static final String ordercreateURL = "http://10.0.0.17:5000/order_api/create/";
+    public static final String ordershowURL = "http://10.0.0.17:5000/order_api/";
 */
 
     public static final String loginURL = "http://ffap-itt-2015.herokuapp.com/mobile_login/";
@@ -44,6 +48,8 @@ public class ServerSignal {
     public static final String cartaddURL = "http://ffap-itt-2015.herokuapp.com/cart_add/";
     public static final String cartremoveURL = "http://ffap-itt-2015.herokuapp.com/cart_remove/";
     public static final String cartdestroyURL = "http://ffap-itt-2015.herokuapp.com/cart_destroy/";
+    public static final String ordercreateURL = "http://ffap-itt-2015.herokuapp.com/order_api/create/";
+    public static final String ordershowURL = "http://ffap-itt-2015.herokuapp.com/order_api/";
 
     public static final String product_tag = "product";
     public static final String image_tag = "image_url";
@@ -66,12 +72,14 @@ public class ServerSignal {
         JSONObject query = null;
         try {
             query = new JObjRequester().get(spinnersURL, params);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         InfoQuery ret;
+
+        if(query == null){
+            return null;
+        }
 
         ArrayList<String> brands = new ArrayList<String>();
         ArrayList<String> years = new ArrayList<String>();
@@ -117,10 +125,12 @@ public class ServerSignal {
         JSONArray pJSONarr = null;
         try {
             pJSONarr = new JArrRequester().post(searchURL, params);
-        } catch (ExecutionException e) {
+        } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        }
+
+        if(pJSONarr == null){
+            return null;
         }
 
         ArrayList<Product> ret = new ArrayList<>();
@@ -307,7 +317,6 @@ public class ServerSignal {
         Seller ret = null;
         JSONObject sellerJSON;
 
-        //params.add(new BasicNameValuePair("seller_id", seller_id));
         try {
             sellerJSON = new JObjRequester().get(sellersURL + seller_id, params);
             JSONArray comments = sellerJSON.getJSONArray("comments");
@@ -318,12 +327,18 @@ public class ServerSignal {
                         comments.getJSONObject(i).getJSONObject("comment").getString("rating")));
             }
 
+            LatLng location = new LatLng(
+                    Double.valueOf(sellerJSON.getJSONObject("location").getString("latitude")),
+                    Double.valueOf(sellerJSON.getJSONObject("location").getString("longitude")));
+
             ret = new Seller(
+                    sellerJSON.getString("id"),
                     sellerJSON.getString("name"),
                     sellerJSON.getString("address"),
                     sellerJSON.getString("phone"),
                     sellerJSON.getString(image_tag),
-                    reviews);
+                    reviews,
+                    location);
 
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -352,6 +367,30 @@ public class ServerSignal {
             else {
                 ret = new BasicResponse(false, answer.getString(KEY_MESSAGE), "");
             }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static BasicResponse checkout(String username){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject answer = null;
+        BasicResponse ret = new BasicResponse(false, "Error no identificado al crear orden.", "");
+
+        params.add(new BasicNameValuePair(username_tag, username));
+
+        try {
+            answer = new JObjRequester().post(ordercreateURL, params);
+            if(answer.getString(KEY_SUCCESS).equals("true")){
+                ret = new BasicResponse(true, answer.getString(KEY_MESSAGE),"");
+            }
+            else {
+                ret = new BasicResponse(false, answer.getString(KEY_MESSAGE), "");
+            }
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -362,4 +401,6 @@ public class ServerSignal {
 
         return ret;
     }
+
+
 }

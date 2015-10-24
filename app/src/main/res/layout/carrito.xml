@@ -59,7 +59,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Eliminar"
+        android:text="Eliminar Todo"
         android:id="@+id/btnclear"
         android:layout_above="@+id/listofprod"
         android:layout_alignParentEnd="true"

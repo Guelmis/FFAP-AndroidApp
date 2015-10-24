@@ -43,7 +43,7 @@ public class ItemCart extends Activity {
         final LineItem current_item = Home.cart.get(position);
         usuario = myIntent.getStringExtra("usuario");
 
-        pieza.setText(current_item.getDesc());
+        pieza.setText(current_item.getTitle());
         cantidad.setText(Integer.toString(current_item.getQuantity()));
 
         add.setOnClickListener(new View.OnClickListener() {

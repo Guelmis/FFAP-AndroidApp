@@ -11,43 +11,49 @@
         android:id="@+id/textViewDescripcion"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp" />
+        android:layout_marginTop="35dp"
+        android:textColor="#FFFFFF" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Cantidad"
+        android:text="Valor"
         android:id="@+id/textViewQuantity"
+        android:layout_marginTop="47dp"
+        android:textColor="#FFFFFF"
         android:layout_below="@+id/textViewDescripcion"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp" />
+        android:layout_alignStart="@+id/textViewDescripcion" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="+"
         android:id="@+id/buttonAdd"
-        android:layout_marginTop="42dp"
-        android:layout_below="@+id/textViewQuantity"
-        android:layout_alignStart="@+id/textViewQuantity" />
+        android:layout_alignTop="@+id/textViewQuantity"
+        android:layout_alignParentEnd="true"
+        android:textColor="#FFFFFF"
+        android:background="#D32F2F" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="X"
+        android:text="x"
         android:id="@+id/buttonDelete"
-        android:layout_marginTop="44dp"
-        android:layout_below="@+id/buttonAdd"
-        android:layout_alignStart="@+id/buttonAdd" />
+        android:layout_alignTop="@+id/textViewQuantity"
+        android:layout_alignParentStart="true"
+        android:textColor="#FFFFFF"
+        android:background="#D32F2F" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cart"
+        android:text="Volver Al Carrito"
         android:id="@+id/btncart"
-        android:layout_below="@+id/buttonDelete"
+        android:layout_below="@+id/buttonAdd"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="57dp" />
+        android:textColor="#FFFFFF"
+        android:background="#D32F2F" />
+
 </RelativeLayout>
