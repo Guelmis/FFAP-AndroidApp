@@ -7,17 +7,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Reseñas de la tienda"
+        android:text="Seleccione los comentarios por estrellas"
         android:id="@+id/textView8"
+        android:textColor="#FFFFFF"
+        android:padding="4sp"
+        android:textSize="19sp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="#FFFFFF" />
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Cantidad de Comentarios"
+        android:id="@+id/textViewReview"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="43dp"
+        android:layout_below="@+id/ratingBarReview"
+        android:layout_alignParentStart="true"
+        android:textSize="19sp" />
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/listViewComments"
-        android:layout_below="@+id/textView8"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="52dp" />
+        android:layout_below="@+id/textViewReview" />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ratingBarReview"
+        android:stepSize = "1"
+        android:layout_marginTop="27dp"
+        android:layout_below="@+id/textView8"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

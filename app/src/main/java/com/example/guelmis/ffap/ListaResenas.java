@@ -1,10 +1,6 @@
 package com.example.guelmis.ffap;
 
-import android.app.Activity;
-import android.app.Notification;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -13,19 +9,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.example.guelmis.ffap.models.Comment;
 import com.example.guelmis.ffap.models.Seller;
 import com.example.guelmis.ffap.signaling.ServerSignal;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class ListaResenas extends ActionBarActivity {
     ListView List;
@@ -33,7 +26,8 @@ public class ListaResenas extends ActionBarActivity {
     ArrayList<String> datos;
     ActionBar actionbar;
     private String usuario;
-
+    RatingBar reviewsearch;
+    TextView reviewdisplay;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resena_tienda);
@@ -41,6 +35,8 @@ public class ListaResenas extends ActionBarActivity {
         actionbar.setDisplayShowHomeEnabled(true);
         actionbar.setTitle("FFAP Lista De Reseñas");
         actionbar.setIcon(R.mipmap.ffap);
+        reviewsearch = (RatingBar) findViewById(R.id.ratingBarReview);
+        reviewdisplay = (TextView) findViewById(R.id.textViewReview);
         Intent intent = getIntent();
         usuario = intent.getStringExtra("usuario");
         datos = new ArrayList<String>();
@@ -54,13 +50,25 @@ public class ListaResenas extends ActionBarActivity {
         Seller seller = ServerSignal.ShowSeller(Integer.toString(sellerid));
 
         for(int i=0; i<seller.getReviews().size(); i++){
-            datos.add("Cliente: " + seller.getReviews().get(i).getUsername() + " \n" + "Título: " + seller.getReviews().get(i).getTitle() + "\n"+ "Puntuacion: " + seller.getReviews().get(i).getRating()+ "/5");
+            datos.add("Cliente: " + seller.getReviews().get(i).getUsername() + "\n" + "Puntuacion: " + seller.getReviews().get(i).getRating() + "/5" + " \n" + "Título: " + seller.getReviews().get(i).getTitle() + "\n" + "Comentario: " + seller.getReviews().get(i).getBody());
         }
         adaptador.notifyDataSetChanged();
 
+        reviewsearch.setOnRatingBarChangeListener(
+
+                new RatingBar.OnRatingBarChangeListener() {
+
+                    @Override
+                    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+
+
+                    }
+                }
+        );
+
         final ArrayList<Comment> verresenas = seller.getReviews();
 
-        List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+       /* List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent myIntent = new Intent(ListaResenas.this, VerResenas.class);
@@ -71,7 +79,7 @@ public class ListaResenas extends ActionBarActivity {
                 myIntent.putExtra("rating", verresenas.get(position).getRating());
                 startActivity(myIntent);
             }
-        });
+        }); */
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

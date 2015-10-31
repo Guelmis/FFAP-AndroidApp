@@ -11,7 +11,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 public class VerResenas extends ActionBarActivity {
-    TextView user;
+   /* TextView user;
     TextView title;
     TextView review;
     RatingBar rbar;
@@ -85,5 +85,5 @@ public class VerResenas extends ActionBarActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    } */
 }
