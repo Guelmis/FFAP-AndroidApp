@@ -4,9 +4,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-/**
- * Created by mario on 09/27/15.
- */
 public class Seller {
     private String id;
     private String name;

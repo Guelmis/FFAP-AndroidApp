@@ -3,9 +3,6 @@ package com.example.guelmis.ffap.signaling;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by mario on 09/25/15.
- */
 public class InfoQuery {
     protected ArrayList<String> brands;
     protected HashMap<String, ArrayList<String>> brand_model_map;

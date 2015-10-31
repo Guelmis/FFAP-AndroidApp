@@ -1,8 +1,5 @@
 package com.example.guelmis.ffap.models;
 
-/**
- * Created by mario on 09/19/15.
- */
 public class Comment {
     private String title;
     private String body;

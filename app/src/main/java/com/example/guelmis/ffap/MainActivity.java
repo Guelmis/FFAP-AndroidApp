@@ -34,6 +34,7 @@ public class MainActivity extends ActionBarActivity {
     EditText email;
     EditText password;
     ActionBar bar;
+    ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +53,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View view) {
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 if ((!email.getText().toString().equals("")) && (!password.getText().toString().equals(""))) {
-                    ProgressDialog pDialog = new ProgressDialog(MainActivity.this);
-                    NetAsync(pDialog, email.getText().toString(), password.getText().toString());
+                    NetAsync(email.getText().toString(), password.getText().toString());
                 } else if ((!email.getText().toString().equals(""))) {
                     alertDialog.setTitle("No se pudo iniciar sesión");
                     alertDialog.setMessage("El campo de la contraseña está vacío, Por favor introduzca su contraseña");
@@ -103,10 +103,6 @@ public class MainActivity extends ActionBarActivity {
             // automatically handle clicks on the Home/Up button, so long
             // as you specify a parent activity in AndroidManifest.xml.
             switch (item.getItemId()) {
-                // Caso
-                case R.id.id_login:
-                    startActivity(new Intent(this, MainActivity.class));
-                    return true;
                 default:
                     return super.onOptionsItemSelected(item);
             }
@@ -146,7 +142,6 @@ public class MainActivity extends ActionBarActivity {
                 }
             }
             return false;
-
         }
 
         @Override
@@ -170,11 +165,12 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    public void NetAsync(ProgressDialog pDialog, String username, String password) {
+    public void NetAsync (String username, String password) {
         BasicResponse response = null;
         try {
             if(new NetCheck().execute().get()){
                 response = ServerSignal.Login(username, password);
+                pDialog = new ProgressDialog(MainActivity.this);
                 pDialog.setTitle("Comunicandose con el servidor");
                 pDialog.setMessage("Autenticando usuario");
                 pDialog.setIndeterminate(false);
@@ -186,18 +182,12 @@ public class MainActivity extends ActionBarActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
         if(response != null){
             if (response.success()) {
-
-                pDialog.dismiss();
                 Intent intent = new Intent(MainActivity.this, Home.class);
                 intent.putExtra("usuario", username);
                 startActivity(intent);
-
             } else {
-
-                pDialog.dismiss();
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 alertDialog.setTitle("No se pudo iniciar sesión");
                 alertDialog.setMessage(response.getMessage());
@@ -211,8 +201,6 @@ public class MainActivity extends ActionBarActivity {
             }
         }
         else {
-
-            pDialog.dismiss();
             AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
             alertDialog.setTitle("No se pudo iniciar sesión");
             alertDialog.setMessage("Error no identificado.");
@@ -224,6 +212,5 @@ public class MainActivity extends ActionBarActivity {
                     });
             alertDialog.show();
         }
-
     }
 }

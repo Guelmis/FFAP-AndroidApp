@@ -172,8 +172,22 @@ public class Carrito extends ActionBarActivity {
             if (resultCode == Activity.RESULT_OK) {
 
                 Toast.makeText(getApplicationContext(), "Payment done succesfully ", Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(), "Payment failed , Try again ", Toast.LENGTH_LONG).show();
-
+                AlertDialog alertDialog = new AlertDialog.Builder(Carrito.this).create();
+                alertDialog.setTitle("Gracias por su compra");
+                alertDialog.setMessage("Desea brindar su ubicacion actual como punto de entrega?");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "SI",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
             }
 
             else if (resultCode == Activity.RESULT_CANCELED) {
@@ -223,12 +237,33 @@ public class Carrito extends ActionBarActivity {
         switch (item.getItemId()) {
             // Caso
             case R.id.id_home:
-                Intent intent  = new Intent(Carrito.this, Home.class);
+                Intent intent  = new Intent(this, Home.class);
                 intent.putExtra("usuario", usuario);
                 startActivity(intent);
                 return true;
             case R.id.id_carrito:
-                startActivity(new Intent(Carrito.this, Carrito.class));
+                Intent myIntent  = new Intent(this, Carrito.class);
+                myIntent.putExtra("usuario", usuario);
+                startActivity(myIntent);
+                return true;
+            case R.id.id_ordenes:
+                Intent intent1  = new Intent(this, Ordenes.class);
+                intent1.putExtra("usuario", usuario);
+                startActivity(intent1);
+                return true;
+            case R.id.id_vehiculos:
+                Intent intent2  = new Intent(this, Vehiculos.class);
+                intent2.putExtra("usuario", usuario);
+                startActivity(intent2);
+                return true;
+            case R.id.id_chassis:
+                Intent intent3  = new Intent(this, Chassis.class);
+                intent3.putExtra("usuario", usuario);
+                startActivity(intent3);
+                return true;
+            case R.id.id_logout:
+                finishAffinity();
+                startActivity(new Intent(this, MainActivity.class));
                 return true;
         default:
         return super.onOptionsItemSelected(item);

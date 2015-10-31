@@ -18,9 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-/**
- * Created by mario on 09/22/15.
- */
 public class ServerSignal {
 
     /*

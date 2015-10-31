@@ -18,12 +18,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Valor"
+        android:text="1"
         android:id="@+id/textViewQuantity"
-        android:layout_marginTop="47dp"
         android:textColor="#FFFFFF"
-        android:layout_below="@+id/textViewDescripcion"
-        android:layout_alignStart="@+id/textViewDescripcion" />
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -51,9 +50,20 @@
         android:layout_height="wrap_content"
         android:text="Volver Al Carrito"
         android:id="@+id/btncart"
-        android:layout_below="@+id/buttonAdd"
-        android:layout_centerHorizontal="true"
         android:textColor="#FFFFFF"
-        android:background="#D32F2F" />
+        android:background="#D32F2F"
+        android:layout_below="@+id/buttonDelete"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Cantidad"
+        android:id="@+id/textView"
+        android:layout_below="@+id/textViewDescripcion"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp"
+        android:textColor="#FFFFFF" />
 
 </RelativeLayout>

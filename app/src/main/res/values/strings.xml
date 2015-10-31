@@ -3,5 +3,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_home">Home</string>
     <string name="action_carrito">Carrito</string>
-    <string name="action_login">LogIn</string>
+    <string name="action_logout">LogOut</string>
+    <string name="action_ordenes">Mis Ordenes</string>
+    <string name="action_vehiculos">Mis Vehículos</string>
+    <string name="action_chassis">Registrar Vehículos</string>
 </resources>

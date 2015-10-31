@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/ratingBComment"
         android:layout_below="@+id/editTextResena"
+        android:stepSize="1"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="48dp" />
 
@@ -51,14 +52,6 @@
         android:background="#FFFFFF"
         android:padding="15dp"
         android:phoneNumber="false"
-        android:hint="Titulo" />
+        android:hint="Título" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/textVTest"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
 </RelativeLayout>

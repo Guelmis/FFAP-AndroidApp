@@ -8,9 +8,6 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-/**
- * Created by mario on 09/25/15.
- */
 public class JObjRequester {
     private class getJSONObject extends AsyncTask<String,JSONObject,JSONObject>
     {

@@ -1,8 +1,5 @@
 package com.example.guelmis.ffap.signaling;
 
-/**
- * Created by mario on 09/27/15.
- */
 public class BasicResponse {
     private boolean success;
     private String message;

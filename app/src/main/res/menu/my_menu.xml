@@ -5,4 +5,12 @@
         app:showAsAction="never"/>
     <item android:id="@+id/id_carrito" android:title="@string/action_carrito"
          app:showAsAction="never"/>
+    <item android:id="@+id/id_ordenes" android:title="@string/action_ordenes"
+    app:showAsAction="never"/>
+    <item android:id="@+id/id_vehiculos" android:title="@string/action_vehiculos"
+        app:showAsAction="never"/>
+    <item android:id="@+id/id_chassis" android:title="@string/action_chassis"
+        app:showAsAction="never"/>
+    <item android:id="@+id/id_logout" android:title="@string/action_logout"
+        app:showAsAction="never" />
 </menu>

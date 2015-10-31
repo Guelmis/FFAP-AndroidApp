@@ -30,7 +30,6 @@ public class Home extends ActionBarActivity {
     ArrayList<String> modelos = new ArrayList<>();
     public static ArrayList<Product> listofprod = null;
     public static ArrayList<LineItem> cart = new ArrayList<>();
-    Button chassis;
   //  Button piezas;
     Button buscar;
     Spinner spinner1, spinner2, spinner3;
@@ -42,6 +41,8 @@ public class Home extends ActionBarActivity {
     ArrayList<String> datos;
     ActionBar actionbar;
     EditText busqueda;
+    EditText chassissearch;
+    Button chassissearcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,13 +110,14 @@ public class Home extends ActionBarActivity {
             }
         });
 
-        chassis = (Button) findViewById(R.id.btnchassis);
         buscar = (Button) findViewById(R.id.btnbuscar);
-        chassis.setOnClickListener(new View.OnClickListener() {
+        chassissearch = (EditText) findViewById(R.id.editTextChassis);
+        chassissearcher = (Button) findViewById(R.id.btnchassisbusc);
+
+        chassissearcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(Home.this, Chassis.class);
-                startActivity(myIntent);
+
             }
         });
 
@@ -177,6 +179,25 @@ public class Home extends ActionBarActivity {
                 Intent myIntent = new Intent(this, Carrito.class);
                 myIntent.putExtra("usuario", usuario);
                 startActivity(myIntent);
+                return true;
+            case R.id.id_ordenes:
+                Intent intent1  = new Intent(this, Ordenes.class);
+                intent1.putExtra("usuario", usuario);
+                startActivity(intent1);
+                return true;
+            case R.id.id_vehiculos:
+                Intent intent2  = new Intent(this, Vehiculos.class);
+                intent2.putExtra("usuario", usuario);
+                startActivity(intent2);
+                return true;
+            case R.id.id_chassis:
+                Intent intent3  = new Intent(this, Chassis.class);
+                intent3.putExtra("usuario", usuario);
+                startActivity(intent3);
+                return true;
+            case R.id.id_logout:
+                finishAffinity();
+                startActivity(new Intent(this, MainActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

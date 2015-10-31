@@ -7,9 +7,6 @@ import org.json.JSONArray;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-/**
- * Created by mario on 09/25/15.
- */
 public class JArrRequester {
 
     private class getJSONArray extends AsyncTask<String,JSONArray,JSONArray>

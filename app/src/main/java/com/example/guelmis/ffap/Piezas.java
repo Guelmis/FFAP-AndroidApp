@@ -106,7 +106,28 @@ public class Piezas extends ActionBarActivity {
                 startActivity(intent);
                 return true;
             case R.id.id_carrito:
-                startActivity(new Intent(this, Carrito.class));
+                Intent myIntent  = new Intent(this, Carrito.class);
+                myIntent.putExtra("usuario", usuario);
+                startActivity(myIntent);
+                return true;
+            case R.id.id_ordenes:
+                Intent intent1  = new Intent(this, Ordenes.class);
+                intent1.putExtra("usuario", usuario);
+                startActivity(intent1);
+                return true;
+            case R.id.id_vehiculos:
+                Intent intent2  = new Intent(this, Vehiculos.class);
+                intent2.putExtra("usuario", usuario);
+                startActivity(intent2);
+                return true;
+            case R.id.id_chassis:
+                Intent intent3  = new Intent(this, Chassis.class);
+                intent3.putExtra("usuario", usuario);
+                startActivity(intent3);
+                return true;
+            case R.id.id_logout:
+                finishAffinity();
+                startActivity(new Intent(this, MainActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -1,8 +1,5 @@
 package com.example.guelmis.ffap.models;
 
-/**
- * Created by mario on 09/13/15.
- */
 public class Stock {
     int id;
     double price;
