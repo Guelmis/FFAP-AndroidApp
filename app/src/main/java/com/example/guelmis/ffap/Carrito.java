@@ -3,6 +3,8 @@ package com.example.guelmis.ffap;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
@@ -25,6 +27,7 @@ import com.example.guelmis.ffap.models.Product;
 import com.example.guelmis.ffap.models.Stock;
 import com.example.guelmis.ffap.signaling.BasicResponse;
 import com.example.guelmis.ffap.signaling.ServerSignal;
+import com.google.android.gms.maps.model.LatLng;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
@@ -50,8 +53,12 @@ public class Carrito extends ActionBarActivity {
     TextView subtotal;
     TextView ITBIS;
     TextView Total;
+    public static LatLng ubicacion;
     Button pagar;
+    LocationManager locationManager;
+    Location location;
     private static final int REQUEST_CODE_PAYMENT = 1;
+    private static final int OBTAIN_LOCATION = 2;
 
     private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX;
     // note that these credentials will differ between live & sandbox environments.
@@ -90,6 +97,8 @@ public class Carrito extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.carrito);
+        locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         eliminar = (Button) findViewById(R.id.btnclear);
         actionbar = getSupportActionBar();
         actionbar.setDisplayShowHomeEnabled(true);
@@ -105,7 +114,7 @@ public class Carrito extends ActionBarActivity {
         actualizaPrecios();
         List = (ListView) findViewById(R.id.listofprod);
         datos = new ArrayList<>();
-        Intent intent = new Intent(this, PayPalService.class);
+        final Intent intent = new Intent(this, PayPalService.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, paypalConfig);
         startService(intent);
 
@@ -142,13 +151,31 @@ public class Carrito extends ActionBarActivity {
     {
         @Override
         public void onClick (View v){
-            BasicResponse response = ServerSignal.checkout(usuario);
-            if(response.success()) {
-                launchPayPalPayment();
-            }
-            else{
-                Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
-            }
+            AlertDialog alertDialog = new AlertDialog.Builder(Carrito.this).create();
+            alertDialog.setTitle("Gracias por su compra");
+            alertDialog.setMessage("Desea brindar su ubicacion actual como punto de entrega?");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "SI",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            Intent myIntent = new Intent(Carrito.this, MapaCliente.class);
+                            startActivityForResult(myIntent, OBTAIN_LOCATION);
+                        }
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            BasicResponse response = ServerSignal.checkout(usuario);
+                            if(response.success()) {
+                                launchPayPalPayment();
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+            alertDialog.show();
         }
     });
 }
@@ -172,22 +199,7 @@ public class Carrito extends ActionBarActivity {
             if (resultCode == Activity.RESULT_OK) {
 
                 Toast.makeText(getApplicationContext(), "Payment done succesfully ", Toast.LENGTH_LONG).show();
-                AlertDialog alertDialog = new AlertDialog.Builder(Carrito.this).create();
-                alertDialog.setTitle("Gracias por su compra");
-                alertDialog.setMessage("Desea brindar su ubicacion actual como punto de entrega?");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "SI",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
+
             }
 
             else if (resultCode == Activity.RESULT_CANCELED) {
@@ -208,6 +220,16 @@ public class Carrito extends ActionBarActivity {
                             }
                         });
                 alertDialog.show();
+            }
+        }
+        if(requestCode == OBTAIN_LOCATION){
+            Toast.makeText(getApplicationContext(), ubicacion.toString(), Toast.LENGTH_LONG).show();
+            BasicResponse response = ServerSignal.checkout(usuario, ubicacion);
+            if(response.success()) {
+                launchPayPalPayment();
+            }
+            else{
+                Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -21,40 +21,29 @@ import java.util.concurrent.ExecutionException;
 
 public class ServerSignal {
 
-    /*
-    //local urls
-    public static final String loginURL = "http://10.0.0.21:3000/mobile_login/";
-    public static final String searchURL = "http://10.0.0.21:3000/product_query/search/";
-    public static final String spinnersURL = "http://10.0.0.21:3000/info_query/";
-    public static final String sellersURL = "http://10.0.0.21:3000/seller_query/";
-    public static final String productosURL = "http://10.0.0.21:3000/product_query/";
-    public static final String cartshowURL = "http://10.0.0.21:3000/cart_query/";
-    public static final String cartaddURL = "http://10.0.0.21:3000/cart_add/";
-    public static final String cartremoveURL = "http://10.0.0.21:3000/cart_remove/";
-    public static final String cartdestroyURL = "http://10.0.0.21:3000/cart_destroy/";
-    public static final String ordercreateURL = "http://10.0.0.17:5000/order_api/create/";
-    public static final String ordershowURL = "http://10.0.0.17:5000/order_api/";
-*/
 
-    public static final String loginURL = "http://ffap-itt-2015.herokuapp.com/mobile_login/";
-    public static final String searchURL = "http://ffap-itt-2015.herokuapp.com/product_query/search/";
-    //public static final String searchURL = "http://10.0.0.20:5000/product_query/search/";
-    public static final String spinnersURL = "http://ffap-itt-2015.herokuapp.com/info_query/";
-    public static final String sellersURL = "http://ffap-itt-2015.herokuapp.com/seller_query/";
-    public static final String commentURL = "http://ffap-itt-2015.herokuapp.com/seller_query/comment/";
-    public static final String productosURL = "http://ffap-itt-2015.herokuapp.com/product_query/";
-    public static final String cartshowURL = "http://ffap-itt-2015.herokuapp.com/cart_query/";
-    public static final String cartaddURL = "http://ffap-itt-2015.herokuapp.com/cart_add/";
-    public static final String cartremoveURL = "http://ffap-itt-2015.herokuapp.com/cart_remove/";
-    public static final String cartdestroyURL = "http://ffap-itt-2015.herokuapp.com/cart_destroy/";
-    public static final String ordercreateURL = "http://ffap-itt-2015.herokuapp.com/order_api/create/";
-    public static final String ordershowURL = "http://ffap-itt-2015.herokuapp.com/order_api/";
+    //public static final String domain = "http://10.0.0.20:5000/"; //local
+    public static final String domain = "http://ffap-itt-2015.herokuapp.com/"; //web
+
+    public static final String loginURL = domain + "mobile_login/";
+    public static final String spinnersURL = domain + "info_query/";
+    public static final String searchURL = domain + "product_query/search/";
+    public static final String sellersURL = domain + "seller_query/";
+    public static final String commentURL = domain + "seller_query/comment/";
+    public static final String productosURL = domain + "product_query/";
+    public static final String cartshowURL = domain + "cart_query/";
+    public static final String cartaddURL = domain + "cart_add/";
+    public static final String cartremoveURL = domain + "cart_remove/";
+    public static final String cartdestroyURL = domain + "cart_destroy/";
+    public static final String ordercreateURL = domain + "order_api/create/";
+    public static final String ordershowURL = domain + "order_api/";
+    public static final String regvehicleURL = domain + "register_vehicle/";
+    public static final String showvehicleURL = domain + "show_vehicle/";
+    public static final String listvehiclesURL = domain + "list_vehicles/";
+    public static final String destroyvehicleURL = domain + "destroy_vehicle/";
+
     public static final String edmunds_pt1 = "https://api.edmunds.com/api/vehicle/v2/vins/";
     public static final String edmunds_pt2 = "?&fmt=json&api_key=cpes64w9wyy4yd8anrvqz74t";
-    public static final String regvehicleURL = "http://ffap-itt-2015.herokuapp.com/register_vehicle/";
-    public static final String showvehicleURL = "http://ffap-itt-2015.herokuapp.com/show_vehicle/";
-    public static final String listvehiclesURL = "http://ffap-itt-2015.herokuapp.com/list_vehicles/";
-    public static final String destroyvehicleURL = "http://ffap-itt-2015.herokuapp.com/destroy_vehicle/";
 
     public static final String product_tag = "product";
     public static final String image_tag = "image_url";
@@ -386,6 +375,34 @@ public class ServerSignal {
         JSONObject answer = null;
         BasicResponse ret = new BasicResponse(false, "Error no identificado al crear orden.", "");
 
+        params.add(new BasicNameValuePair(username_tag, username));
+
+        try {
+            answer = new JObjRequester().post(ordercreateURL, params);
+            if(answer.getString(KEY_SUCCESS).equals("true")){
+                ret = new BasicResponse(true, answer.getString(KEY_MESSAGE),"");
+            }
+            else {
+                ret = new BasicResponse(false, answer.getString(KEY_MESSAGE), "");
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static BasicResponse checkout(String username, LatLng location){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject answer = null;
+        BasicResponse ret = new BasicResponse(false, "Error no identificado al crear orden.", "");
+
+        params.add(new BasicNameValuePair("latitude", Double.toString(location.latitude)));
+        params.add(new BasicNameValuePair("longitude", Double.toString(location.longitude)));
         params.add(new BasicNameValuePair(username_tag, username));
 
         try {
