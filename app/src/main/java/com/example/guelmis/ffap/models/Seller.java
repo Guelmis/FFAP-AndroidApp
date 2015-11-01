@@ -48,7 +48,7 @@ public class Seller {
     public float getAverageRating(){
         float sum =0;
         for(int i=0; i<reviews.size(); i++){
-            sum += Float.valueOf(reviews.get(i).getRating());
+            sum += Double.valueOf(reviews.get(i).getRating());
         }
         return sum/reviews.size();
     }

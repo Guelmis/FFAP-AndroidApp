@@ -5,6 +5,7 @@ import com.example.guelmis.ffap.models.LineItem;
 import com.example.guelmis.ffap.models.Product;
 import com.example.guelmis.ffap.models.Seller;
 import com.example.guelmis.ffap.models.Stock;
+import com.example.guelmis.ffap.models.Vehicle;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.NameValuePair;
@@ -37,6 +38,7 @@ public class ServerSignal {
 
     public static final String loginURL = "http://ffap-itt-2015.herokuapp.com/mobile_login/";
     public static final String searchURL = "http://ffap-itt-2015.herokuapp.com/product_query/search/";
+    //public static final String searchURL = "http://10.0.0.20:5000/product_query/search/";
     public static final String spinnersURL = "http://ffap-itt-2015.herokuapp.com/info_query/";
     public static final String sellersURL = "http://ffap-itt-2015.herokuapp.com/seller_query/";
     public static final String commentURL = "http://ffap-itt-2015.herokuapp.com/seller_query/comment/";
@@ -47,6 +49,12 @@ public class ServerSignal {
     public static final String cartdestroyURL = "http://ffap-itt-2015.herokuapp.com/cart_destroy/";
     public static final String ordercreateURL = "http://ffap-itt-2015.herokuapp.com/order_api/create/";
     public static final String ordershowURL = "http://ffap-itt-2015.herokuapp.com/order_api/";
+    public static final String edmunds_pt1 = "https://api.edmunds.com/api/vehicle/v2/vins/";
+    public static final String edmunds_pt2 = "?&fmt=json&api_key=cpes64w9wyy4yd8anrvqz74t";
+    public static final String regvehicleURL = "http://ffap-itt-2015.herokuapp.com/register_vehicle/";
+    public static final String showvehicleURL = "http://ffap-itt-2015.herokuapp.com/show_vehicle/";
+    public static final String listvehiclesURL = "http://ffap-itt-2015.herokuapp.com/list_vehicles/";
+    public static final String destroyvehicleURL = "http://ffap-itt-2015.herokuapp.com/destroy_vehicle/";
 
     public static final String product_tag = "product";
     public static final String image_tag = "image_url";
@@ -127,7 +135,7 @@ public class ServerSignal {
         }
 
         if(pJSONarr == null){
-            return null;
+            return new ArrayList<>();
         }
 
         ArrayList<Product> ret = new ArrayList<>();
@@ -321,7 +329,7 @@ public class ServerSignal {
                 reviews.add(new Comment(comments.getJSONObject(i).getJSONObject("comment").getString("title"),
                         comments.getJSONObject(i).getJSONObject("comment").getString("body"),
                         comments.getJSONObject(i).getJSONObject(username_tag).getString(username_tag),
-                        comments.getJSONObject(i).getJSONObject("comment").getString("rating")));
+                        comments.getJSONObject(i).getJSONObject("comment").getDouble("rating")));
             }
 
             LatLng location = new LatLng(
@@ -399,5 +407,119 @@ public class ServerSignal {
         return ret;
     }
 
+    public static Vehicle edmundQuery(String vin){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject answer = null;
+        Vehicle ret = null;
 
+        try {
+            answer = new JObjRequester().get(edmunds_pt1 + vin + edmunds_pt2, params);
+            ret = new Vehicle(answer.getJSONObject("make").getString("name"),
+                    answer.getJSONObject("model").getString("name"),
+                    answer.getJSONArray("years").getJSONObject(0).getString("year"),
+                    vin);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static BasicResponse regVehicle(String username, Vehicle input){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject answer = null;
+        BasicResponse ret = new BasicResponse(false, "Error no identificado al registrar vehiculo.", "");
+
+        params.add(new BasicNameValuePair("chassis", input.getVin()));
+        params.add(new BasicNameValuePair("brand", input.getBrand()));
+        params.add(new BasicNameValuePair("model", input.getModel()));
+        params.add(new BasicNameValuePair("year", input.getYear()));
+        params.add(new BasicNameValuePair(username_tag, username));
+
+        try {
+            answer = new JObjRequester().post(regvehicleURL, params);
+            if(answer.getString(KEY_SUCCESS).equals("true")){
+                ret = new BasicResponse(true, answer.getString(KEY_MESSAGE), "");
+            }
+            else{
+                ret = new BasicResponse(false, answer.getString(KEY_MESSAGE), "");
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    /*
+    public static showVehicle(){
+
+    } */
+
+    public static ArrayList<Vehicle> listVehicles(String username){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONArray answer = null;
+        ArrayList<Vehicle> ret = null;
+
+        params.add(new BasicNameValuePair(username_tag, username));
+
+        try {
+            answer = new JArrRequester().post(listvehiclesURL, params);
+            JSONObject current;
+            ret = new ArrayList<>();
+            for (int i=0; i<answer.length(); i++){
+                current = answer.getJSONObject(i).getJSONObject("vehicle");
+                ret.add(new Vehicle(
+                        current.getInt("id"),
+                        current.getString("brand"),
+                        current.getString("model"),
+                        current.getString("year"),
+                        current.getString("chassis_number")
+                ));
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static BasicResponse delVehicle(String username, int vehicleid){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject answer = null;
+        BasicResponse ret = new BasicResponse(false, "Error no identificado al registrar vehiculo.", "");
+
+        params.add(new BasicNameValuePair("id", Integer.toString(vehicleid)));
+        params.add(new BasicNameValuePair(username_tag, username));
+
+        try {
+            answer = new JObjRequester().post(destroyvehicleURL, params);
+            if(answer.getString(KEY_SUCCESS).equals("true")){
+                ret = new BasicResponse(true, answer.getString(KEY_MESSAGE), "");
+            }
+            else{
+                ret = new BasicResponse(false, answer.getString(KEY_MESSAGE), "");
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
 }

@@ -11,8 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.guelmis.ffap.models.Vehicle;
 import com.example.guelmis.ffap.signaling.BasicResponse;
 import com.example.guelmis.ffap.signaling.ServerSignal;
 
@@ -20,10 +22,12 @@ public class Chassis extends ActionBarActivity {
     Button vinregister;
     ActionBar actionbar;
     private String usuario;
+    EditText vin;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.registrar_vehiculos);
         vinregister = (Button) findViewById(R.id.btnvinregister);
+        vin = (EditText) findViewById(R.id.editTextVin);
         actionbar = getSupportActionBar();
         actionbar.setDisplayShowHomeEnabled(true);
         actionbar.setTitle("FFAP Registrar Vehículo");
@@ -34,22 +38,55 @@ public class Chassis extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog alertDialog = new AlertDialog.Builder(Chassis.this).create();
-                alertDialog.setTitle("Registro de vehículo");
-                alertDialog.setMessage("El vehículo que desea registrar es .... ?");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "SI",
+
+                AlertDialog alertDialog1 = new AlertDialog.Builder(Chassis.this).create();
+                alertDialog1.setTitle("Vehiculo no encontrado");
+                alertDialog1.setMessage("El chasis introducido no ha arrojado resultados.");
+                alertDialog1.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         });
-                alertDialog.show();
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+
+                final AlertDialog alertDialog2 = new AlertDialog.Builder(Chassis.this).create();
+                alertDialog1.setTitle("Error al registrar vehiculo.");
+                alertDialog2.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         });
-                alertDialog.show();
+
+                final Vehicle ref = ServerSignal.edmundQuery(vin.getText().toString());
+                if(ref == null){
+                    alertDialog1.show();
+                }
+                else{
+                    alertDialog.setTitle("Registro de vehículo");
+                    alertDialog.setMessage("El vehículo que desea registrar es " + ref.getDescription() + "?");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "SI",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    //api register vehicle
+                                    BasicResponse response = ServerSignal.regVehicle(usuario, ref);
+                                    if (!response.success()) {
+                                        alertDialog2.setMessage(response.getMessage());
+                                        alertDialog2.show();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Vehiculo registrado.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                }
             }
         });
     }

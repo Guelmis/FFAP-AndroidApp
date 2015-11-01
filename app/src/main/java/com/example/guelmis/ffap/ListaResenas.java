@@ -6,13 +6,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.guelmis.ffap.models.Comment;
 import com.example.guelmis.ffap.models.Seller;
@@ -28,6 +26,7 @@ public class ListaResenas extends ActionBarActivity {
     private String usuario;
     RatingBar reviewsearch;
     TextView reviewdisplay;
+    Seller seller;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resena_tienda);
@@ -47,11 +46,12 @@ public class ListaResenas extends ActionBarActivity {
         Intent myIntent = getIntent();
         int sellerid = myIntent.getIntExtra("seller_id", 0);
 
-        Seller seller = ServerSignal.ShowSeller(Integer.toString(sellerid));
+        seller = ServerSignal.ShowSeller(Integer.toString(sellerid));
 
         for(int i=0; i<seller.getReviews().size(); i++){
             datos.add("Cliente: " + seller.getReviews().get(i).getUsername() + "\n" + "Puntuacion: " + seller.getReviews().get(i).getRating() + "/5" + " \n" + "Título: " + seller.getReviews().get(i).getTitle() + "\n" + "Comentario: " + seller.getReviews().get(i).getBody());
         }
+        reviewdisplay.setText(Integer.toString(datos.size()) + " comentarios");
         adaptador.notifyDataSetChanged();
 
         reviewsearch.setOnRatingBarChangeListener(
@@ -60,8 +60,18 @@ public class ListaResenas extends ActionBarActivity {
 
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-
-
+                        Toast.makeText(getApplicationContext(),  Float.toString(rating), Toast.LENGTH_LONG).show();
+                      //  float epsilon = 0.1f;
+                        for(int i=0; i<seller.getReviews().size(); i++){
+                            datos.clear();
+                            if(Float.compare((float)seller.getReviews().get(i).getRating().doubleValue(), rating) == 0){
+                                datos.add("Cliente: " + seller.getReviews().get(i).getUsername() + "\n" + "Puntuacion: " +
+                                        seller.getReviews().get(i).getRating() + "/5" + " \n" + "Título: " + seller.getReviews().get(i).getTitle() + "\n" +
+                                        "Comentario: " + seller.getReviews().get(i).getBody());
+                            }
+                            reviewdisplay.setText(Integer.toString(datos.size()) + " comentarios");
+                            adaptador.notifyDataSetChanged();
+                        }
                     }
                 }
         );

@@ -1,19 +1,34 @@
 package com.example.guelmis.ffap;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.guelmis.ffap.models.Vehicle;
+import com.example.guelmis.ffap.signaling.BasicResponse;
+import com.example.guelmis.ffap.signaling.ServerSignal;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Vehiculos extends ActionBarActivity {
     ListView ListaVehiculos;
     private String usuario;
     ActionBar actionbar;
+    ArrayList<String> datos;
+    ArrayAdapter<String> adaptador;
+    ArrayList<Vehicle> vehiculos;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +39,71 @@ public class Vehiculos extends ActionBarActivity {
         actionbar.setIcon(R.mipmap.ffap);
         Intent myIntent = getIntent();
         usuario = myIntent.getStringExtra("usuario");
+        datos = new ArrayList<>();
+
+        ListaVehiculos = (ListView) findViewById(R.id.listViewVehiculos);
+
+        vehiculos = ServerSignal.listVehicles(usuario);
+        if(vehiculos != null){
+            Vehicle current;
+            for (int i=0; i<vehiculos.size(); i++){
+                current= vehiculos.get(i);
+                datos.add(current.getDescription() + "\nVIN: " + current.getVin());
+            }
+            adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, datos);
+            ListaVehiculos.setAdapter(adaptador);
+        }
+        else{
+            AlertDialog alertDialog1 = new AlertDialog.Builder(Vehiculos.this).create();
+            alertDialog1.setTitle("Error");
+            alertDialog1.setMessage("Error no identificado al buscar lista de vehiculos.");
+            alertDialog1.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog1.show();
+        }
+
+        ListaVehiculos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog alertDialog1 = new AlertDialog.Builder(Vehiculos.this).create();
+                alertDialog1.setTitle("Eliminar Vehiculo");
+                alertDialog1.setMessage("Desea eliminar el vehiculo seleccionado?");
+                alertDialog1.setButton(AlertDialog.BUTTON_NEUTRAL, "SI",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                // eliminar
+                                BasicResponse response = ServerSignal.delVehicle(usuario, vehiculos.get(position).getId());
+                                if (response.success()) {
+                                    datos.remove(position);
+                                    vehiculos.remove(position);
+                                    adaptador.notifyDataSetChanged();
+                                } else {
+                                    AlertDialog alertDialog2 = new AlertDialog.Builder(Vehiculos.this).create();
+                                    alertDialog2.setTitle("Error al Eliminar Vehiculo");
+                                    alertDialog2.setMessage(response.getMessage());
+                                    alertDialog2.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                }
+                            }
+                        });
+                alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog1.show();
+            }
+        });
     }
     @Override
      public boolean onCreateOptionsMenu(Menu menu) {

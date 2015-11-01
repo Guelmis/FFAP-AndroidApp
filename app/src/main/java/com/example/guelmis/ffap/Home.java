@@ -1,9 +1,11 @@
 package com.example.guelmis.ffap;
 
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 
 import com.example.guelmis.ffap.models.LineItem;
 import com.example.guelmis.ffap.models.Product;
+import com.example.guelmis.ffap.models.Vehicle;
 import com.example.guelmis.ffap.signaling.InfoQuery;
 import com.example.guelmis.ffap.signaling.ServerSignal;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -30,19 +33,27 @@ public class Home extends ActionBarActivity {
     ArrayList<String> modelos = new ArrayList<>();
     public static ArrayList<Product> listofprod = null;
     public static ArrayList<LineItem> cart = new ArrayList<>();
+    private ArrayList<Vehicle> vehiculos;
   //  Button piezas;
     Button buscar;
-    Spinner spinner1, spinner2, spinner3;
+    Spinner spinner1, spinner2, spinner3, spinner4;
     ListView List;
     ArrayAdapter<String> adaptador;
     ArrayAdapter<String> adaptsp1;
     ArrayAdapter<String> adaptsp2;
     ArrayAdapter<String> adaptsp3;
+    ArrayAdapter<String> adaptsp4;
+    ArrayList<String> brands;
     ArrayList<String> datos;
+    HashMap<String, ArrayList<String>> modelmap;
     ActionBar actionbar;
     EditText busqueda;
     EditText chassissearch;
     Button chassissearcher;
+    Button chassisregistered;
+    ArrayList<String> dvehiculos;
+    Vehicle currentVehicle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,24 +62,25 @@ public class Home extends ActionBarActivity {
         actionbar = getSupportActionBar();
         if (actionbar != null) {
             actionbar.setDisplayShowHomeEnabled(true);
+            actionbar.setTitle("FFAP Home");
+            actionbar.setIcon(R.mipmap.ffap);
         }
-        actionbar.setTitle("FFAP Home");
-        actionbar.setIcon(R.mipmap.ffap);
         busqueda = (EditText) findViewById(R.id.editTextPieza);
         datos = new ArrayList<>();
+        dvehiculos = new ArrayList<>();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
                 .build();
         ImageLoader.getInstance().init(config);
 
-
-        ArrayList<String> brands = new ArrayList<>();
+        brands = new ArrayList<>();
         brands.add("Marca");
         ArrayList<String> years = new ArrayList<>();
         years.add("Año");
+
         Intent intent = getIntent();
         usuario = intent.getStringExtra("usuario");
         TextView username = (TextView) findViewById(R.id.textViewUser);
-        username.setText("Bienvenido " +usuario);
+        username.setText("Bienvenido " + usuario);
 
         InfoQuery spinnerinfo = ServerSignal.spinnersQuery();
         brands.addAll(spinnerinfo.getBrands());
@@ -78,19 +90,25 @@ public class Home extends ActionBarActivity {
         //el elemento en la posicion 1 del spinner1 es "Marca" pero el hash map no tiene ese key.
         spinnerinfo.getModels().put("Marca", new ArrayList<String>());
 
-        final HashMap<String, ArrayList<String>> modelmap = spinnerinfo.getModels();
+        modelmap = spinnerinfo.getModels();
         modelos.add("Modelo");
+        chassisregistered = (Button) findViewById(R.id.btnvinregistered);
         List = (ListView) findViewById(R.id.listProducts);
         spinner1 = (Spinner) findViewById(R.id.spinner1);
         spinner2 = (Spinner) findViewById(R.id.spinner2);
         spinner3 = (Spinner) findViewById(R.id.spinner3);
+        spinner4 = (Spinner) findViewById(R.id.spinner4);
         adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, datos);
         adaptsp1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, brands);
         adaptsp2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, modelos);
         adaptsp3 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
+        adaptsp4 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, dvehiculos);
         spinner1.setAdapter(adaptsp1);
         spinner2.setAdapter(adaptsp2);
         spinner3.setAdapter(adaptsp3);
+        spinner4.setAdapter(adaptsp4);
+        spinner4.setPrompt("Vehiculo");
+        refreshVehicles();
         List.setAdapter(adaptador);
 
         //Este spinner se actualiza dependiendo de la marca seleccionada, a partir del hashmap dado.
@@ -110,14 +128,79 @@ public class Home extends ActionBarActivity {
             }
         });
 
+        spinner4.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 0){
+                    currentVehicle = null;
+                }
+                else{
+                    currentVehicle = vehiculos.get(position-1);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                currentVehicle = null;
+            }
+        });
+
         buscar = (Button) findViewById(R.id.btnbuscar);
         chassissearch = (EditText) findViewById(R.id.editTextChassis);
         chassissearcher = (Button) findViewById(R.id.btnchassisbusc);
 
+        chassisregistered.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(currentVehicle == null){
+                    AlertDialog alertDialog = new AlertDialog.Builder(Home.this).create();
+                    alertDialog.setTitle("Vehiculo no encontrado");
+                    alertDialog.setMessage("Por favor seleccione un vehiculo.");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                }
+                else{
+                    listofprod = ServerSignal.searchProducts(busqueda.getText().toString(), currentVehicle.getBrand(),
+                            currentVehicle.getModel(), currentVehicle.getYear());
+                    refreshList();
+                }
+            }
+        });
+
         chassissearcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AlertDialog alertDialog = new AlertDialog.Builder(Home.this).create();
+                alertDialog.setTitle("Vehiculo no encontrado");
+                alertDialog.setMessage("El chasis introducido no ha arrojado resultados.");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog alertDialog1 = new AlertDialog.Builder(Home.this).create();
 
+                Vehicle ref = ServerSignal.edmundQuery(chassissearch.getText().toString());
+                if(ref == null){
+                    alertDialog.show();
+                }
+                else{
+                    alertDialog1.setTitle("Vehiculo encontrado");
+                    alertDialog1.setMessage("Su vehiculo es: " + ref.getBrand() + " " + ref.getModel() + " " + ref.getYear());
+                    alertDialog1.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog1.show();
+                    listofprod = ServerSignal.searchProducts("", ref.getBrand(), ref.getModel(), ref.getYear());
+                    refreshList();
+                }
             }
         });
 
@@ -128,16 +211,11 @@ public class Home extends ActionBarActivity {
                 String brand = spinner1.getSelectedItem().toString();
                 String model = spinner2.getSelectedItem().toString();
                 String year = spinner3.getSelectedItem().toString();
-                datos.clear();
                 listofprod = ServerSignal.searchProducts(
                         pbusqueda, brand.equals("Marca")? "":brand,
                         model.equals("Modelo")? "":model,
                         year.equals("Año")? "":year);
-
-                for(int i=0; i<listofprod.size(); i++){
-                    datos.add(listofprod.get(i).getTitle());
-                }
-                adaptador.notifyDataSetChanged();
+                refreshList();
             }
         });
         List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -155,6 +233,23 @@ public class Home extends ActionBarActivity {
                 startActivity(myIntent);
             }
         });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        InfoQuery spinnerinfo = ServerSignal.spinnersQuery();
+        brands.clear();
+        brands.add("Marca");
+        brands.addAll(spinnerinfo.getBrands());
+        adaptsp1.notifyDataSetChanged();
+        spinnerinfo.getModels().put("Marca", new ArrayList<String>());
+        modelmap = spinnerinfo.getModels();
+        if(listofprod != null){
+            listofprod.clear();
+            refreshList();
+        }
+        refreshVehicles();
     }
 
     @Override
@@ -202,5 +297,25 @@ public class Home extends ActionBarActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void refreshList(){
+        datos.clear();
+        for(int i=0; i<listofprod.size(); i++){
+            datos.add(listofprod.get(i).getTitle());
+        }
+        adaptador.notifyDataSetChanged();
+    }
+    private void refreshVehicles() {
+        vehiculos = ServerSignal.listVehicles(usuario);
+        if(vehiculos == null){
+            vehiculos = new ArrayList<>();
+        }
+        dvehiculos.clear();
+        dvehiculos.add("vehiculos");
+        for(int i=0; i<vehiculos.size(); i++){
+            dvehiculos.add(vehiculos.get(i).getDescription());
+        }
+        adaptsp4.notifyDataSetChanged();
     }
 }

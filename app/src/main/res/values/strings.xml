@@ -7,4 +7,6 @@
     <string name="action_ordenes">Mis Ordenes</string>
     <string name="action_vehiculos">Mis Vehículos</string>
     <string name="action_chassis">Registrar Vehículos</string>
+
+    <string name="vehicle_prompt">Vehiculo</string>
 </resources>

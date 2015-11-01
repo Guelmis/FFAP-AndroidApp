@@ -4,9 +4,9 @@ public class Comment {
     private String title;
     private String body;
     private String username;
-    private String rating;
+    private Double rating;
 
-    public Comment(String _title, String _body, String _username, String _rating){
+    public Comment(String _title, String _body, String _username, Double _rating){
         title = _title;
         body = _body;
         username = _username;
@@ -25,7 +25,7 @@ public class Comment {
         return username;
     }
 
-    public String getRating() {
+    public Double getRating() {
         return rating;
     }
 }
