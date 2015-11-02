@@ -6,15 +6,24 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.guelmis.ffap.R;
+import com.example.guelmis.ffap.models.Order;
+import com.example.guelmis.ffap.models.Vehicle;
+import com.example.guelmis.ffap.signaling.ServerSignal;
+
+import java.util.ArrayList;
 
 public class Ordenes extends ActionBarActivity {
     ListView ListaOrdenes;
     private String usuario;
     ActionBar actionbar;
+    ArrayList<String> datos;
+    ArrayAdapter<String> adaptador;
+    ArrayList<Order> ordenes;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,9 +32,22 @@ public class Ordenes extends ActionBarActivity {
         actionbar.setDisplayShowHomeEnabled(true);
         actionbar.setTitle("FFAP Ordenes");
         actionbar.setIcon(R.mipmap.ffap);
+        ListaOrdenes = (ListView) findViewById(R.id.listViewOrdenes);
         Intent myIntent = getIntent();
         usuario = myIntent.getStringExtra("usuario");
-        Toast.makeText(getApplicationContext(), "Usuario: " + usuario, Toast.LENGTH_LONG).show();
+       // Toast.makeText(getApplicationContext(), "Usuario: " + usuario, Toast.LENGTH_LONG).show();
+        datos = new ArrayList<>();
+        ordenes = ServerSignal.listOrders(usuario);
+
+        if(ordenes != null){
+            for(int i=0; i<ordenes.size(); i++){
+                Order current = ordenes.get(i);
+                datos.add("Orden no. "+ current.getInvoice() + " Fecha: " + current.getCreatedAt());
+            }
+
+            adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, datos);
+            ListaOrdenes.setAdapter(adaptador);
+        }
     }
 
     @Override

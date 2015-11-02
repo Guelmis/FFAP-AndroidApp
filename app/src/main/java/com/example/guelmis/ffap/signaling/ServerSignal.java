@@ -2,6 +2,7 @@ package com.example.guelmis.ffap.signaling;
 
 import com.example.guelmis.ffap.models.Comment;
 import com.example.guelmis.ffap.models.LineItem;
+import com.example.guelmis.ffap.models.Order;
 import com.example.guelmis.ffap.models.Product;
 import com.example.guelmis.ffap.models.Seller;
 import com.example.guelmis.ffap.models.Stock;
@@ -37,6 +38,7 @@ public class ServerSignal {
     public static final String cartdestroyURL = domain + "cart_destroy/";
     public static final String ordercreateURL = domain + "order_api/create/";
     public static final String ordershowURL = domain + "order_api/";
+    public static final String orderlistURL = domain + "order_api/list/";
     public static final String regvehicleURL = domain + "register_vehicle/";
     public static final String showvehicleURL = domain + "show_vehicle/";
     public static final String listvehiclesURL = domain + "list_vehicles/";
@@ -528,6 +530,36 @@ public class ServerSignal {
             }
             else{
                 ret = new BasicResponse(false, answer.getString(KEY_MESSAGE), "");
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static ArrayList<Order> listOrders(String username){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONArray answer = null;
+        ArrayList<Order> ret = null;
+
+        params.add(new BasicNameValuePair(username_tag, username));
+
+        try {
+            answer = new JArrRequester().post(orderlistURL, params);
+            ret = new ArrayList<>();
+            for (int i=0; i<answer.length(); i++){
+                JSONObject current = answer.getJSONObject(i);
+                ret.add(new Order(
+                        current.getInt("id"),
+                        current.getString("address"),
+                        current.getString("invoice"),
+                        current.getString("created_at")
+                ));
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
