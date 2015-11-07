@@ -12,8 +12,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.guelmis.ffap.models.Product;
+import com.example.guelmis.ffap.models.Seller;
 import com.example.guelmis.ffap.models.Stock;
 import com.example.guelmis.ffap.signaling.ServerSignal;
 
@@ -25,6 +27,9 @@ public class ProductoTiendas extends ActionBarActivity {
     ArrayList<String> datos;
     String usuario;
     ActionBar actionbar;
+    Seller sellerdata;
+    String producto;
+    TextView product;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,21 +39,22 @@ public class ProductoTiendas extends ActionBarActivity {
         actionbar.setDisplayShowHomeEnabled(true);
         actionbar.setTitle("FFAP ProductStores");
         actionbar.setIcon(R.mipmap.ffap);
+        product = (TextView) findViewById(R.id.textView16);
         datos = new ArrayList<>();
-        adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, datos);
+        adaptador = new ArrayAdapter<>(this, R.layout.listviewsmall, R.id.textView15, datos);
         List = (ListView) findViewById(R.id.listStoreProduct);
         List.setAdapter(adaptador);
 
         Intent thisIntent = getIntent();
         usuario = thisIntent.getStringExtra("usuario");
-
+        producto = thisIntent.getStringExtra("producto");
         Product productInfo = ServerSignal.ShowProduct(thisIntent.getStringExtra("prod_id"));
 
         for(int i=0; i<productInfo.getStocklist().size(); i++){
             datos.add(productInfo.getStocklist().get(i).getSellerName() + "\n" +
                     "Precio: " + productInfo.getStocklist().get(i).getPrice()+ "$");
         }
-
+            product.setText(producto);
         final Product product = productInfo;
         final ArrayList<Stock> stocks = productInfo.getStocklist();
 

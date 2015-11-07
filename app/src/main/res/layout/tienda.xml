@@ -39,7 +39,7 @@
         android:text="Dirección: "
         android:id="@+id/textView6"
         android:textColor="#FFFFFF"
-        android:layout_below="@+id/imageV2"
+        android:layout_centerVertical="true"
         android:layout_alignParentStart="true" />
 
     <Button
@@ -79,6 +79,7 @@
         android:text="Telefono:"
         android:id="@+id/textView11"
         android:textColor="#FFFFFF"
-        android:layout_centerVertical="true"
+        android:layout_marginBottom="33dp"
+        android:layout_above="@+id/btncomment"
         android:layout_alignParentStart="true" />
 </RelativeLayout>

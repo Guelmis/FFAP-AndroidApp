@@ -98,7 +98,7 @@ public class Home extends ActionBarActivity {
         spinner2 = (Spinner) findViewById(R.id.spinner2);
         spinner3 = (Spinner) findViewById(R.id.spinner3);
         spinner4 = (Spinner) findViewById(R.id.spinner4);
-        adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, datos);
+        adaptador = new ArrayAdapter<>(this, R.layout.listviewsmall, R.id.textView15, datos);
         adaptsp1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, brands);
         adaptsp2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, modelos);
         adaptsp3 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
@@ -153,14 +153,15 @@ public class Home extends ActionBarActivity {
             public void onClick(View v) {
                 if(currentVehicle == null){
                     AlertDialog alertDialog = new AlertDialog.Builder(Home.this).create();
-                    alertDialog.setTitle("Vehiculo no encontrado");
-                    alertDialog.setMessage("Por favor seleccione un vehiculo.");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    alertDialog.setTitle("No se selecciono ningun vehiculo");
+                    alertDialog.setMessage("Por favor seleccione un vehiculo para la busqueda");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
                             });
+                    alertDialog.show();
                 }
                 else{
                     listofprod = ServerSignal.searchProducts(busqueda.getText().toString(), currentVehicle.getBrand(),
@@ -169,14 +170,13 @@ public class Home extends ActionBarActivity {
                 }
             }
         });
-
         chassissearcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog alertDialog = new AlertDialog.Builder(Home.this).create();
                 alertDialog.setTitle("Vehiculo no encontrado");
                 alertDialog.setMessage("El chasis introducido no ha arrojado resultados.");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -191,7 +191,7 @@ public class Home extends ActionBarActivity {
                 else{
                     alertDialog1.setTitle("Vehiculo encontrado");
                     alertDialog1.setMessage("Su vehiculo es: " + ref.getBrand() + " " + ref.getModel() + " " + ref.getYear());
-                    alertDialog1.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -215,7 +215,22 @@ public class Home extends ActionBarActivity {
                         pbusqueda, brand.equals("Marca")? "":brand,
                         model.equals("Modelo")? "":model,
                         year.equals("Año")? "":year);
-                refreshList();
+                if (listofprod.size() == 0) {
+                    AlertDialog alertDialog1 = new AlertDialog.Builder(Home.this).create();
+                    alertDialog1.setTitle("Producto no encontrado");
+                    alertDialog1.setMessage("No se han encontrado productos con sus especificaciones");
+                    alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog1.show();
+                    refreshList();
+                }
+                else {
+                    refreshList();
+                }
             }
         });
         List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -226,6 +241,7 @@ public class Home extends ActionBarActivity {
                     if (listofprod != null) {
                         myIntent.putExtra("prod_id", listofprod.get(position).getId());
                         myIntent.putExtra("usuario", usuario);
+                        myIntent.putExtra("producto", listofprod.get(position).getTitle());
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
@@ -312,7 +328,7 @@ public class Home extends ActionBarActivity {
             vehiculos = new ArrayList<>();
         }
         dvehiculos.clear();
-        dvehiculos.add("vehiculos");
+        dvehiculos.add("Vehiculos Registrados");
         for(int i=0; i<vehiculos.size(); i++){
             dvehiculos.add(vehiculos.get(i).getDescription());
         }

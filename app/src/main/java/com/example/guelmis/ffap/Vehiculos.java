@@ -48,9 +48,9 @@ public class Vehiculos extends ActionBarActivity {
             Vehicle current;
             for (int i=0; i<vehiculos.size(); i++){
                 current= vehiculos.get(i);
-                datos.add(current.getDescription() + "\nVIN: " + current.getVin());
+                datos.add("Vehiculo: " + current.getDescription() + "\nVIN: " + current.getVin());
             }
-            adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, datos);
+            adaptador = new ArrayAdapter<>(this, R.layout.listviewsmall, R.id.textView15, datos);
             ListaVehiculos.setAdapter(adaptador);
         }
         else{

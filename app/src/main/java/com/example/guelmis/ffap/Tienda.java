@@ -57,10 +57,10 @@ public class Tienda  extends ActionBarActivity {
 
         sellerdata = ServerSignal.ShowSeller(Integer.toString(sellerid));
         imageLoader.displayImage(sellerdata.getLogo_url(), iv, options);
-        direccion.setText(sellerdata.getAddress());
+        direccion.setText("Direccion: "+ sellerdata.getAddress());
         tienda.setText(sellerdata.getName());
         ratingavg.setRating(sellerdata.getAverageRating());
-        telefono.setText(sellerdata.getPhone());
+        telefono.setText("Telefono: "+ sellerdata.getPhone());
 
         comentario.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -81,6 +81,8 @@ public class Tienda  extends ActionBarActivity {
             public void onClick(View view) {
                 Intent myIntent = new Intent(Tienda.this, Mapa.class);
                 myIntent.putExtra("seller_id", sellerid);
+                myIntent.putExtra("seller_name", sellerdata.getName());
+                myIntent.putExtra("seller_address", sellerdata.getAddress());
                 startActivity(myIntent);
             }
         });

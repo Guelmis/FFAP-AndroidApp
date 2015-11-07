@@ -7,11 +7,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnbuscar"
-        android:textSize="14sp"
         android:background="@drawable/abc_ic_search_api_mtrl_alpha"
-        android:layout_alignTop="@+id/spinner3"
+        android:layout_above="@+id/spinner4"
         android:layout_alignParentEnd="true"
-        android:layout_above="@+id/editTextPieza" />
+        android:layout_below="@+id/textViewUser" />
 
     <Spinner
         android:layout_width="50dp"
@@ -33,9 +32,9 @@
         android:layout_width="80dp"
         android:layout_height="40dp"
         android:id="@+id/spinner3"
-        android:layout_alignTop="@+id/spinner2"
-        android:layout_above="@+id/editTextPieza"
-        android:layout_toStartOf="@+id/btnbuscar" />
+        android:layout_alignBottom="@+id/btnbuscar"
+        android:layout_toStartOf="@+id/btnbuscar"
+        android:layout_alignTop="@+id/btnbuscar" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -47,7 +46,8 @@
         android:padding="10dp"
         android:background="#FFFFFF"
         android:layout_below="@+id/spinner1"
-        android:layout_toStartOf="@+id/spinner3" />
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/spinner2" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -66,10 +66,10 @@
         android:id="@+id/btnchassisbusc"
         android:textColor="#FFFFFF"
         android:background="@android:drawable/ic_menu_search"
-        android:layout_marginTop="31dp"
-        android:layout_below="@+id/editTextPieza"
-        android:layout_alignParentEnd="true"
-        android:text="Chassis" />
+        android:layout_marginTop="32dp"
+        android:text="Chassis"
+        android:layout_below="@+id/spinner4"
+        android:layout_alignParentEnd="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -81,8 +81,9 @@
         android:hint="Número de Chassis"
         android:layout_alignParentStart="true"
         android:layout_alignBottom="@+id/btnchassisbusc"
-        android:layout_toStartOf="@+id/btnbuscar"
-        android:layout_alignTop="@+id/btnchassisbusc" />
+        android:layout_toStartOf="@+id/spinner3"
+        android:layout_alignTop="@+id/btnchassisbusc"
+        android:layout_alignEnd="@+id/spinner4" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -92,24 +93,22 @@
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/btnchassisbusc" />
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner4"
-        android:layout_alignTop="@+id/editTextPieza"
-        android:layout_alignStart="@+id/spinner3"
-        android:layout_toStartOf="@+id/btnvinregistered"
-        android:layout_above="@+id/editTextChassis"
-        android:prompt="@string/vehicle_prompt" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnvinregistered"
-        android:layout_above="@+id/editTextChassis"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/editTextChassis"
         android:background="@android:drawable/ic_menu_zoom"
-        android:layout_alignTop="@+id/spinner4" />
+        android:layout_alignBottom="@+id/spinner4"
+        android:layout_alignStart="@+id/btnchassisbusc"
+        android:layout_below="@+id/btnbuscar" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner4"
+        android:layout_below="@+id/spinner1"
+        android:layout_alignBottom="@+id/editTextPieza"
+        android:layout_toEndOf="@+id/editTextPieza"
+        android:layout_toStartOf="@+id/btnvinregistered"/>
 
 </RelativeLayout>

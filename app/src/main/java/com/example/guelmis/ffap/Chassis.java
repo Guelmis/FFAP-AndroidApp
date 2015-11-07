@@ -41,8 +41,8 @@ public class Chassis extends ActionBarActivity {
 
                 AlertDialog alertDialog1 = new AlertDialog.Builder(Chassis.this).create();
                 alertDialog1.setTitle("Vehiculo no encontrado");
-                alertDialog1.setMessage("El chasis introducido no ha arrojado resultados.");
-                alertDialog1.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                alertDialog1.setMessage("El chasis introducido no ha arrojado resultados");
+                alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -50,8 +50,8 @@ public class Chassis extends ActionBarActivity {
                         });
 
                 final AlertDialog alertDialog2 = new AlertDialog.Builder(Chassis.this).create();
-                alertDialog1.setTitle("Error al registrar vehiculo.");
-                alertDialog2.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                alertDialog1.setTitle("No se pudo registrar su vehiculo");
+                alertDialog2.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -65,7 +65,7 @@ public class Chassis extends ActionBarActivity {
                 else{
                     alertDialog.setTitle("Registro de vehículo");
                     alertDialog.setMessage("El vehículo que desea registrar es " + ref.getDescription() + "?");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "SI",
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "SI",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -79,7 +79,7 @@ public class Chassis extends ActionBarActivity {
                                     }
                                 }
                             });
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "NO",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();

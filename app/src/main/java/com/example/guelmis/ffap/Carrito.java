@@ -125,7 +125,7 @@ public class Carrito extends ActionBarActivity {
             datos.add(Home.cart.get(i).getQuantity() + " x " + Home.cart.get(i).getTitle());
         }
 
-        adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, datos);
+        adaptador = new ArrayAdapter<>(this, R.layout.listviewsmall, R.id.textView15, datos);
         List.setAdapter(adaptador);
         List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -154,7 +154,7 @@ public class Carrito extends ActionBarActivity {
             AlertDialog alertDialog = new AlertDialog.Builder(Carrito.this).create();
             alertDialog.setTitle("Gracias por su compra");
             alertDialog.setMessage("Desea brindar su ubicacion actual como punto de entrega?");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "SI",
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "SI",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -162,7 +162,7 @@ public class Carrito extends ActionBarActivity {
                             startActivityForResult(myIntent, OBTAIN_LOCATION);
                         }
                     });
-            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "NO",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();

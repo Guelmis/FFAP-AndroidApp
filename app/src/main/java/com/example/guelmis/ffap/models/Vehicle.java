@@ -1,8 +1,5 @@
 package com.example.guelmis.ffap.models;
 
-/**
- * Created by mario on 10/31/15.
- */
 public class Vehicle {
     private int id;
     private String brand;

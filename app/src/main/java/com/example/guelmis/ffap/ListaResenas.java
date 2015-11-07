@@ -24,6 +24,7 @@ public class ListaResenas extends ActionBarActivity {
     ArrayList<String> datos;
     ActionBar actionbar;
     private String usuario;
+    private static String reviewtotal;
     RatingBar reviewsearch;
     TextView reviewdisplay;
     Seller seller;
@@ -39,7 +40,7 @@ public class ListaResenas extends ActionBarActivity {
         Intent intent = getIntent();
         usuario = intent.getStringExtra("usuario");
         datos = new ArrayList<String>();
-        adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, datos);
+        adaptador = new ArrayAdapter<String>(this, R.layout.listviewcolor, R.id.textView14, datos);
         List = (ListView) findViewById(R.id.listViewComments);
         List.setAdapter(adaptador);
 
@@ -51,7 +52,8 @@ public class ListaResenas extends ActionBarActivity {
         for(int i=0; i<seller.getReviews().size(); i++){
             datos.add("Cliente: " + seller.getReviews().get(i).getUsername() + "\n" + "Puntuacion: " + seller.getReviews().get(i).getRating() + "/5" + " \n" + "Título: " + seller.getReviews().get(i).getTitle() + "\n" + "Comentario: " + seller.getReviews().get(i).getBody());
         }
-        reviewdisplay.setText(Integer.toString(datos.size()) + " comentarios");
+        reviewdisplay.setText(Integer.toString(datos.size()) +"/" + Integer.toString(datos.size())+ " comentarios" );
+        reviewtotal = Integer.toString(datos.size());
         adaptador.notifyDataSetChanged();
 
         reviewsearch.setOnRatingBarChangeListener(
@@ -61,15 +63,15 @@ public class ListaResenas extends ActionBarActivity {
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                         Toast.makeText(getApplicationContext(),  Float.toString(rating), Toast.LENGTH_LONG).show();
-                      //  float epsilon = 0.1f;
+                      // float epsilon = 0.00000001f;
                         for(int i=0; i<seller.getReviews().size(); i++){
                             datos.clear();
-                            if(Float.compare((float)seller.getReviews().get(i).getRating().doubleValue(), rating) == 0){
+                            if(Float.compare((float)seller.getReviews().get(i).getRating().doubleValue(), rating)  == 0.0f){
                                 datos.add("Cliente: " + seller.getReviews().get(i).getUsername() + "\n" + "Puntuacion: " +
                                         seller.getReviews().get(i).getRating() + "/5" + " \n" + "Título: " + seller.getReviews().get(i).getTitle() + "\n" +
                                         "Comentario: " + seller.getReviews().get(i).getBody());
                             }
-                            reviewdisplay.setText(Integer.toString(datos.size()) + " comentarios");
+                            reviewdisplay.setText(Integer.toString(datos.size()) + "/" + reviewtotal + " comentarios");
                             adaptador.notifyDataSetChanged();
                         }
                     }

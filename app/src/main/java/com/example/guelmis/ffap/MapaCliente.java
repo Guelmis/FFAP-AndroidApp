@@ -84,7 +84,7 @@ import android.widget.Toast;
         }
         public void area() {
 
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(ubicacion.latitude, ubicacion.longitude), 13f));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(ubicacion.latitude, ubicacion.longitude), 16f));
         }
 
         public void handleNewLocation(Location location) {

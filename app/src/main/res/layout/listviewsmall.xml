@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#607D8B"
+    android:weightSum="1">
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:gravity="center_vertical"
+        android:checkMark="?android:attr/listChoiceIndicatorSingle"
+        android:paddingLeft="6dip"
+        android:paddingRight="6dip"
+        android:textColor="#FFFFFF"
+        android:text="Items"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        android:layout_weight="0.19" />
+
+</LinearLayout>

@@ -21,6 +21,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Mapa extends FragmentActivity implements LocationProvider.LocationCallback {
@@ -35,15 +36,21 @@ public class Mapa extends FragmentActivity implements LocationProvider.LocationC
     private double currentLatitude,currentLongitude;
     private Polyline newPolyline;
     private LatLngBounds latlngBounds;
+    private String sellername;
+    private String selleradd;
+    TextView selleraddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent myIntent = getIntent();
         infoTienda = ServerSignal.ShowSeller(Integer.toString(myIntent.getIntExtra("seller_id", 0)));
+        sellername = myIntent.getStringExtra("seller_name");
+        selleradd = myIntent.getStringExtra("seller_address");
         tienda = infoTienda.getLocation();
         marcadortienda = tienda;
         setContentView(R.layout.mapa);
+        selleraddress = (TextView) findViewById(R.id.textViewSellerAdd);
         mLocationProvider = new LocationProvider(this, this);
         try
         {
@@ -73,7 +80,7 @@ public class Mapa extends FragmentActivity implements LocationProvider.LocationC
     public void handleGetDirectionsResult(ArrayList directionPoints) {
         Polyline newPolyline;
         GoogleMap mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-        PolylineOptions rectLine = new PolylineOptions().width(8).color(Color.BLUE);
+        PolylineOptions rectLine = new PolylineOptions().width(4).color(Color.BLUE);
         for (int i = 0; i < directionPoints.size(); i++) {
             rectLine.add((LatLng) directionPoints.get(i));
         }
@@ -118,7 +125,8 @@ public class Mapa extends FragmentActivity implements LocationProvider.LocationC
     }
     public void area() {
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(ubicacion.latitude, ubicacion.longitude), 13f));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(ubicacion.latitude, ubicacion.longitude), 14f));
+        selleraddress.setText("Direccion Destino: " + selleradd);
     }
 
     public void handleNewLocation(Location location) {
@@ -128,7 +136,7 @@ public class Mapa extends FragmentActivity implements LocationProvider.LocationC
         currentLongitude = location.getLongitude();
         ubicacion = new LatLng(currentLatitude, currentLongitude);
         map.addMarker(new MarkerOptions().position(ubicacion).title("Ubicación Actual"));
-        map.addMarker(new MarkerOptions().position(marcadortienda));
+        map.addMarker(new MarkerOptions().position(marcadortienda).title(sellername));
         CrearRuta();
         area();
     }

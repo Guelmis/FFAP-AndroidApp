@@ -42,10 +42,10 @@ public class Ordenes extends ActionBarActivity {
         if(ordenes != null){
             for(int i=0; i<ordenes.size(); i++){
                 Order current = ordenes.get(i);
-                datos.add("Orden no. "+ current.getInvoice() + " Fecha: " + current.getCreatedAt());
+                datos.add("Orden no. "+ current.getInvoice() + "\n" +"Fecha: " + current.getCreatedAt());
             }
 
-            adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, datos);
+            adaptador = new ArrayAdapter<>(this, R.layout.listviewcolor, R.id.textView14, datos);
             ListaOrdenes.setAdapter(adaptador);
         }
     }
