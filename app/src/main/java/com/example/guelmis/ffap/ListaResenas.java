@@ -62,18 +62,21 @@ public class ListaResenas extends ActionBarActivity {
 
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                        Toast.makeText(getApplicationContext(),  Float.toString(rating), Toast.LENGTH_LONG).show();
+                       // Toast.makeText(getApplicationContext(),  Float.toString(rating), Toast.LENGTH_LONG).show();
                       // float epsilon = 0.00000001f;
+                        datos.clear();
                         for(int i=0; i<seller.getReviews().size(); i++){
-                            datos.clear();
-                            if(Float.compare((float)seller.getReviews().get(i).getRating().doubleValue(), rating)  == 0.0f){
-                                datos.add("Cliente: " + seller.getReviews().get(i).getUsername() + "\n" + "Puntuacion: " +
-                                        seller.getReviews().get(i).getRating() + "/5" + " \n" + "Título: " + seller.getReviews().get(i).getTitle() + "\n" +
-                                        "Comentario: " + seller.getReviews().get(i).getBody());
+                            long rt = Math.round(rating);
+                            Comment current = seller.getReviews().get(i);
+                            long cmp = Math.round(current.getRating());
+                            if(cmp == rt){
+                                datos.add("Cliente: " + current.getUsername() + "\n" + "Puntuacion: " +
+                                        current.getRating() + "/5" + " \n" + "Título: " + current.getTitle() + "\n" +
+                                        "Comentario: " + current.getBody());
                             }
-                            reviewdisplay.setText(Integer.toString(datos.size()) + "/" + reviewtotal + " comentarios");
-                            adaptador.notifyDataSetChanged();
                         }
+                        reviewdisplay.setText(Integer.toString(datos.size()) + "/" + reviewtotal + " comentarios");
+                        adaptador.notifyDataSetChanged();
                     }
                 }
         );

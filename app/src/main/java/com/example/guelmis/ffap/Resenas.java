@@ -56,20 +56,6 @@ public class Resenas extends ActionBarActivity {
 
         publicar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (ratingSample == 0) {
-                    AlertDialog alertDialog = new AlertDialog.Builder(Resenas.this).create();
-
-                    AlertDialog alertDialog1 = new AlertDialog.Builder(Resenas.this).create();
-                    alertDialog1.setTitle("Rating debe ser minimo 1");
-                    alertDialog1.setMessage("La puntuacion del comentario debe ser de 1 a 5");
-                    alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog1.show();
-                } else if (ratingSample != 0) {
                     BasicResponse response = ServerSignal.Comment(thisIntent.getStringExtra("usuario"),
                             thisIntent.getStringExtra("seller_id"),
                             titulo.getText().toString(),
@@ -81,9 +67,8 @@ public class Resenas extends ActionBarActivity {
                         Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
-            }
-                });
-            }
+        });
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
