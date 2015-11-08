@@ -1,21 +1,28 @@
 package com.example.guelmis.ffap;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.guelmis.ffap.R;
+import com.example.guelmis.ffap.models.LineItem;
 import com.example.guelmis.ffap.models.Order;
 import com.example.guelmis.ffap.models.Vehicle;
+import com.example.guelmis.ffap.signaling.BasicResponse;
 import com.example.guelmis.ffap.signaling.ServerSignal;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Ordenes extends ActionBarActivity {
     ListView ListaOrdenes;
@@ -42,12 +49,35 @@ public class Ordenes extends ActionBarActivity {
         if(ordenes != null){
             for(int i=0; i<ordenes.size(); i++){
                 Order current = ordenes.get(i);
-                datos.add("Orden no. "+ current.getInvoice() + "\n" +"Fecha: " + current.getCreatedAt());
+                String dato = "Orden no. "+ current.getInvoice() + "\n" +"Fecha: " + current.getCreatedAt()
+                        + "\n"+ "Hora: " + current.getTime() + "\n" + "Productos: ";
+                for(Iterator<LineItem> iterator = current.getLineItems().iterator(); iterator.hasNext();){
+                    LineItem item = iterator.next();
+                    dato += item.getQuantity()+ "x " + item.getTitle()+ "\n";
+                }
+                datos.add(dato);
             }
 
             adaptador = new ArrayAdapter<>(this, R.layout.listviewcolor, R.id.textView14, datos);
             ListaOrdenes.setAdapter(adaptador);
         }
+
+        ListaOrdenes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                BasicResponse eta = ServerSignal.deliveryeta(ordenes.get(position).getDelivery_id());
+                AlertDialog alertDialog = new AlertDialog.Builder(Ordenes.this).create();
+                alertDialog.setTitle("Estatus de la orden");
+                alertDialog.setMessage(eta.getMessage());
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
     }
 
     @Override
