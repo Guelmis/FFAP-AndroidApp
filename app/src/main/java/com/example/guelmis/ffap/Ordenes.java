@@ -68,7 +68,12 @@ public class Ordenes extends ActionBarActivity {
                 BasicResponse eta = ServerSignal.deliveryeta(ordenes.get(position).getDelivery_id());
                 AlertDialog alertDialog = new AlertDialog.Builder(Ordenes.this).create();
                 alertDialog.setTitle("Estatus de la orden");
-                alertDialog.setMessage(eta.getMessage());
+                if(eta.getStatus().equals("OK")){
+                    alertDialog.setMessage("Su orden llega en " + eta.getMessage() + " minutos.");
+                }
+                else{
+                    alertDialog.setMessage(eta.getMessage());
+                }
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {

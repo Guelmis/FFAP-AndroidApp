@@ -348,29 +348,14 @@ public class ServerSignal {
         return ret;
     }
 
-    public static BasicResponse Login(String username, String password){
+    public static JSONObject Login(String username, String password){
         ArrayList<NameValuePair> params = new ArrayList<>();
-        JSONObject answer = null;
-        BasicResponse ret = new BasicResponse(false, "Error no identificado al autenticarse.", "");
 
         params.add(new BasicNameValuePair(username_tag, username));
         params.add(new BasicNameValuePair(password_tag, password));
 
-        try {
-            answer = new JObjRequester().post(loginURL, params);
-            if(answer.getString(KEY_SUCCESS).equals("true")) {
-                ret = new BasicResponse(true, answer.getString(KEY_MESSAGE), "");
-            }
-            else {
-                ret = new BasicResponse(false, answer.getString(KEY_MESSAGE), "");
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return ret;
+        JSONObject json = JSONParser.postJSONFromUrl(loginURL, params);
+        return json;
     }
 
     public static BasicResponse checkout(String username){
@@ -483,6 +468,27 @@ public class ServerSignal {
     public static showVehicle(){
 
     } */
+
+    public static BasicResponse destroyCart(String username){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject answer = null;
+        BasicResponse ret = new BasicResponse(false, "Error de comunicacion.", "");
+
+        params.add(new BasicNameValuePair(username_tag, username));
+
+        try {
+            answer = new JObjRequester().post(cartdestroyURL, params);
+            ret = new BasicResponse(true, answer.getString(KEY_MESSAGE), "");
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
 
     public static ArrayList<Vehicle> listVehicles(String username){
         ArrayList<NameValuePair> params = new ArrayList<>();

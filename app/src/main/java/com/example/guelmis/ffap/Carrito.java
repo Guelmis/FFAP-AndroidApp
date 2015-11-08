@@ -141,6 +141,7 @@ public class Carrito extends ActionBarActivity {
             public void onClick(View view) {
                 Home.cart.clear();
                 actualizaPrecios();
+                ServerSignal.destroyCart(usuario);
                 datos.clear();
                 adaptador.notifyDataSetChanged();
             }
@@ -223,13 +224,18 @@ public class Carrito extends ActionBarActivity {
             }
         }
         if(requestCode == OBTAIN_LOCATION){
-            Toast.makeText(getApplicationContext(), ubicacion.toString(), Toast.LENGTH_LONG).show();
-            BasicResponse response = ServerSignal.checkout(usuario, ubicacion);
-            if(response.success()) {
-                launchPayPalPayment();
+            if(ubicacion == null){
+                Toast.makeText(getApplicationContext(), "Accion cancelada", Toast.LENGTH_LONG).show();
             }
             else{
-                Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), ubicacion.toString(), Toast.LENGTH_LONG).show();
+                BasicResponse response = ServerSignal.checkout(usuario, ubicacion);
+                if(response.success()) {
+                    launchPayPalPayment();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
