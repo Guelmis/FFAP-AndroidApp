@@ -69,12 +69,13 @@ public class Ordenes extends ActionBarActivity {
                 AlertDialog alertDialog = new AlertDialog.Builder(Ordenes.this).create();
                 alertDialog.setTitle("Estatus de la orden");
                 if(eta.getStatus().equals("OK")){
-                    alertDialog.setMessage("Su orden llega en " + eta.getMessage() + " minutos.");
+                    String esttime = eta.getMessage().split("\\.")[0];
+                    alertDialog.setMessage("Su orden se entregará en aproximadamente " + esttime + " minutos");
                 }
                 else{
                     alertDialog.setMessage(eta.getMessage());
                 }
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();

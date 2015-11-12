@@ -48,7 +48,7 @@ public class Vehiculos extends ActionBarActivity {
             Vehicle current;
             for (int i=0; i<vehiculos.size(); i++){
                 current= vehiculos.get(i);
-                datos.add("Vehiculo: " + current.getDescription() + "\nVIN: " + current.getVin());
+                datos.add("Vehículo: " + current.getDescription() + "\nChassis: " + current.getVin());
             }
             adaptador = new ArrayAdapter<>(this, R.layout.listviewsmall, R.id.textView15, datos);
             ListaVehiculos.setAdapter(adaptador);
@@ -57,7 +57,7 @@ public class Vehiculos extends ActionBarActivity {
             AlertDialog alertDialog1 = new AlertDialog.Builder(Vehiculos.this).create();
             alertDialog1.setTitle("Error");
             alertDialog1.setMessage("Error no identificado al buscar lista de vehiculos.");
-            alertDialog1.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+            alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -70,9 +70,9 @@ public class Vehiculos extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 AlertDialog alertDialog1 = new AlertDialog.Builder(Vehiculos.this).create();
-                alertDialog1.setTitle("Eliminar Vehiculo");
-                alertDialog1.setMessage("Desea eliminar el vehiculo seleccionado?");
-                alertDialog1.setButton(AlertDialog.BUTTON_NEUTRAL, "SI",
+                alertDialog1.setTitle("Eliminar Vehículo");
+                alertDialog1.setMessage("Desea eliminar el vehículo seleccionado?");
+                alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "Si",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -84,9 +84,9 @@ public class Vehiculos extends ActionBarActivity {
                                     adaptador.notifyDataSetChanged();
                                 } else {
                                     AlertDialog alertDialog2 = new AlertDialog.Builder(Vehiculos.this).create();
-                                    alertDialog2.setTitle("Error al Eliminar Vehiculo");
+                                    alertDialog2.setTitle("Error al Eliminar Vehículo");
                                     alertDialog2.setMessage(response.getMessage());
-                                    alertDialog2.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    alertDialog2.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
                                             new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     dialog.dismiss();
@@ -95,7 +95,7 @@ public class Vehiculos extends ActionBarActivity {
                                 }
                             }
                         });
-                alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "NO",
+                alertDialog1.setButton(AlertDialog.BUTTON_NEUTRAL, "No",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();

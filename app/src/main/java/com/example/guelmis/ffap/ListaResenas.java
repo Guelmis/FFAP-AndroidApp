@@ -50,7 +50,10 @@ public class ListaResenas extends ActionBarActivity {
         seller = ServerSignal.ShowSeller(Integer.toString(sellerid));
 
         for(int i=0; i<seller.getReviews().size(); i++){
-            datos.add("Cliente: " + seller.getReviews().get(i).getUsername() + "\n" + "Puntuacion: " + seller.getReviews().get(i).getRating() + "/5" + " \n" + "Título: " + seller.getReviews().get(i).getTitle() + "\n" + "Comentario: " + seller.getReviews().get(i).getBody());
+            long rtg = Math.round(seller.getReviews().get(i).getRating());
+            datos.add("Cliente: " + seller.getReviews().get(i).getUsername() + "\n" + "Puntuación: " + rtg + "/5" + " \n"
+                    + "Título: " + seller.getReviews().get(i).getTitle() + "\n"
+                    + "Comentario: " + seller.getReviews().get(i).getBody());
         }
         reviewdisplay.setText(Integer.toString(datos.size()) +"/" + Integer.toString(datos.size())+ " comentarios" );
         reviewtotal = Integer.toString(datos.size());
@@ -70,8 +73,8 @@ public class ListaResenas extends ActionBarActivity {
                             Comment current = seller.getReviews().get(i);
                             long cmp = Math.round(current.getRating());
                             if(cmp == rt){
-                                datos.add("Cliente: " + current.getUsername() + "\n" + "Puntuacion: " +
-                                        current.getRating() + "/5" + " \n" + "Título: " + current.getTitle() + "\n" +
+                                datos.add("Cliente: " + current.getUsername() + "\n" + "Puntuación: " +
+                                        rt + "/5" + " \n" + "Título: " + current.getTitle() + "\n" +
                                         "Comentario: " + current.getBody());
                             }
                         }

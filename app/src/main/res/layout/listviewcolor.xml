@@ -8,7 +8,7 @@
     <TextView
         android:id="@+id/textView14"
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:gravity="center_vertical"
         android:checkMark="?android:attr/listChoiceIndicatorSingle"
@@ -17,6 +17,5 @@
         android:textColor="#FFFFFF"
         android:text="Items"
         android:textSize="18sp"
-        android:textStyle="italic"
-        android:layout_weight="0.00" />
+        android:textStyle="italic" />
 </LinearLayout>

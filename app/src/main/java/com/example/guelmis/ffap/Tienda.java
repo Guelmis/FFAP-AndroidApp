@@ -57,10 +57,10 @@ public class Tienda  extends ActionBarActivity {
 
         sellerdata = ServerSignal.ShowSeller(Integer.toString(sellerid));
         imageLoader.displayImage(sellerdata.getLogo_url(), iv, options);
-        direccion.setText("Direccion: "+ sellerdata.getAddress());
+        direccion.setText("Dirección: "+ sellerdata.getAddress());
         tienda.setText(sellerdata.getName());
         ratingavg.setRating(sellerdata.getAverageRating());
-        telefono.setText("Telefono: "+ sellerdata.getPhone());
+        telefono.setText("Teléfono: "+ sellerdata.getPhone());
 
         comentario.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {

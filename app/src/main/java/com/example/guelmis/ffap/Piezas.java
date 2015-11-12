@@ -20,7 +20,6 @@ import com.example.guelmis.ffap.signaling.ServerSignal;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-
 public class Piezas extends ActionBarActivity {
     private String usuario;
     private Button tienda;
@@ -56,7 +55,7 @@ public class Piezas extends ActionBarActivity {
         TextView tv2 = (TextView)findViewById(R.id.textView2);
         TextView tv3 = (TextView)findViewById(R.id.textView3);
         tv.setText(""+ newprod.getTitle());
-        tv2.setText("Descripcion: " + newprod.getTitle());
+        tv2.setText("Descripción: " + newprod.getTitle());
         tv3.setText("Precio: " + newprod.getSelectedStock().getPrice());
 
         ImageView iv1 = (ImageView) findViewById(R.id.imageV1);

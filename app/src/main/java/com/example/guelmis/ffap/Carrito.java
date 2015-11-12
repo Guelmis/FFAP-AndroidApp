@@ -154,8 +154,8 @@ public class Carrito extends ActionBarActivity {
         public void onClick (View v){
             AlertDialog alertDialog = new AlertDialog.Builder(Carrito.this).create();
             alertDialog.setTitle("Gracias por su compra");
-            alertDialog.setMessage("Desea brindar su ubicacion actual como punto de entrega?");
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "SI",
+            alertDialog.setMessage("Desea brindar su ubicación actual como punto de entrega?");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Si",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -163,7 +163,7 @@ public class Carrito extends ActionBarActivity {
                             startActivityForResult(myIntent, OBTAIN_LOCATION);
                         }
                     });
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "NO",
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "No",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -199,13 +199,13 @@ public class Carrito extends ActionBarActivity {
         if (requestCode == REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
 
-                Toast.makeText(getApplicationContext(), "Payment done succesfully ", Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(), "Payment done succesfully ", Toast.LENGTH_LONG).show();
 
             }
 
             else if (resultCode == Activity.RESULT_CANCELED) {
 
-                Toast.makeText(getApplicationContext(), "Payment Canceled , Try again ", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Payment Canceled , Try again ", Toast.LENGTH_LONG).show();
 
 
             } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
@@ -213,7 +213,7 @@ public class Carrito extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(), "Payment failed , Try again ", Toast.LENGTH_LONG).show();
                 AlertDialog alertDialog = new AlertDialog.Builder(Carrito.this).create();
                 alertDialog.setTitle("No se pudo realizar la compra");
-                alertDialog.setMessage("El carrito esta vacio");
+                alertDialog.setMessage("El carrito esta vacío");
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -228,7 +228,7 @@ public class Carrito extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(), "Accion cancelada", Toast.LENGTH_LONG).show();
             }
             else{
-                Toast.makeText(getApplicationContext(), ubicacion.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), ubicacion.toString(), Toast.LENGTH_LONG).show();
                 BasicResponse response = ServerSignal.checkout(usuario, ubicacion);
                 if(response.success()) {
                     launchPayPalPayment();

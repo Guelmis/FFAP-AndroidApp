@@ -1,6 +1,5 @@
 package com.example.guelmis.ffap;
 
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,9 +39,9 @@ public class Chassis extends ActionBarActivity {
                 AlertDialog alertDialog = new AlertDialog.Builder(Chassis.this).create();
 
                 AlertDialog alertDialog1 = new AlertDialog.Builder(Chassis.this).create();
-                alertDialog1.setTitle("Vehiculo no encontrado");
-                alertDialog1.setMessage("El chasis introducido no ha arrojado resultados");
-                alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                alertDialog1.setTitle("Vehículo no encontrado");
+                alertDialog1.setMessage("El chassis introducido no ha arrojado resultados");
+                alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -50,8 +49,8 @@ public class Chassis extends ActionBarActivity {
                         });
 
                 final AlertDialog alertDialog2 = new AlertDialog.Builder(Chassis.this).create();
-                alertDialog1.setTitle("No se pudo registrar su vehiculo");
-                alertDialog2.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                alertDialog1.setTitle("No se pudo registrar su vehículo");
+                alertDialog2.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -65,7 +64,7 @@ public class Chassis extends ActionBarActivity {
                 else{
                     alertDialog.setTitle("Registro de vehículo");
                     alertDialog.setMessage("El vehículo que desea registrar es " + ref.getDescription() + "?");
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "SI",
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Si",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -75,11 +74,11 @@ public class Chassis extends ActionBarActivity {
                                         alertDialog2.setMessage(response.getMessage());
                                         alertDialog2.show();
                                     } else {
-                                        Toast.makeText(getApplicationContext(), "Vehiculo registrado.", Toast.LENGTH_LONG).show();
+                                      //  Toast.makeText(getApplicationContext(), "Vehiculo registrado.", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "NO",
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "No",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
