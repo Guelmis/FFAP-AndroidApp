@@ -35,7 +35,6 @@ public class ItemCart extends ActionBarActivity {
     ActionBar actionbar;
     private Toolbar toolbar;
     private ImageView img4;
-    private String imageurl;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +58,7 @@ public class ItemCart extends ActionBarActivity {
         usuario = myIntent.getStringExtra("usuario");
         pieza.setText(current_item.getTitle());
         cantidad.setText(Integer.toString(current_item.getQuantity()));
-        imageLoader.displayImage(imageurl, img4, options);
+        imageLoader.displayImage(current_item.getImageurl(), img4, options);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,7 +80,7 @@ public class ItemCart extends ActionBarActivity {
                         new Integer(current_item.getId()).toString());
                 if (chCart.success()) {
                     Home.cart.get(position).setQuantity(Home.cart.get(position).getQuantity() - 1);
-                    cantidad.setText(new Integer(current_item.getQuantity()).toString());
+                    cantidad.setText(Integer.toString(current_item.getQuantity()));
                     if (Home.cart.get(position).getQuantity() < 1) {
                         Home.cart.remove(position);
                         finish();
