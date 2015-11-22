@@ -353,6 +353,7 @@ public class ServerSignal {
 
         params.add(new BasicNameValuePair(username_tag, username));
         params.add(new BasicNameValuePair(password_tag, password));
+        params.add(new BasicNameValuePair("role", "client"));
 
         JSONObject json = JSONParser.postJSONFromUrl(loginURL, params);
         return json;
