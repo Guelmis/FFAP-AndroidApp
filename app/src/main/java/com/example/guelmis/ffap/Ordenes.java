@@ -49,7 +49,6 @@ public class Ordenes extends ActionBarActivity {
         textViewDate.setText(getCurrentDate());
         Intent myIntent = getIntent();
         usuario = myIntent.getStringExtra("usuario");
-       // Toast.makeText(getApplicationContext(), "Usuario: " + usuario, Toast.LENGTH_LONG).show();
         datos = new ArrayList<>();
         ordenes = ServerSignal.listOrders(usuario);
 

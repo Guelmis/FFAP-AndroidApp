@@ -178,7 +178,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Chasis"
+            android:text="Chassis"
             android:textColor="#ffff"
             android:background="@drawable/selector_button"
             android:id="@+id/btnchassisbusc" />
