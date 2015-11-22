@@ -13,7 +13,6 @@
 
         android:id="@+id/frameLayout2"
         android:layout_width="match_parent"
-<<<<<<< HEAD
         android:layout_height="485dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/app_bar">
@@ -34,18 +33,6 @@
         android:padding="10dp"
         android:layout_alignParentStart="true"
         android:id="@+id/frameLayout10"
-=======
-        android:layout_height="550dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Confirmar Ubicación"
-        android:id="@+id/btnlocation"
-        android:layout_below="@+id/map"
->>>>>>> origin/master
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/frameLayout2">
 

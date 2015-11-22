@@ -159,11 +159,7 @@ public class Home extends ActionBarActivity {
                             });
                     alertDialog.show();
                 }
-<<<<<<< HEAD
                 else {
-=======
-                else if(currentVehicle != null){
->>>>>>> origin/master
                     listofprod = ServerSignal.searchProducts(busqueda.getText().toString(), currentVehicle.getBrand(),
                             currentVehicle.getModel(), currentVehicle.getYear());
                     refreshList();
@@ -352,11 +348,7 @@ public class Home extends ActionBarActivity {
             vehiculos = new ArrayList<>();
         }
         dvehiculos.clear();
-<<<<<<< HEAD
         dvehiculos.add("Mis Vehiculos");
-=======
-        dvehiculos.add("Garage");
->>>>>>> origin/master
         for(int i=0; i<vehiculos.size(); i++){
             dvehiculos.add(vehiculos.get(i).getDescription());
         }

@@ -68,7 +68,6 @@ public class Resenas extends ActionBarActivity {
                 }
         });
     }
-<<<<<<< HEAD
 
     public void setActionBar() {
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
@@ -77,8 +76,6 @@ public class Resenas extends ActionBarActivity {
         getSupportActionBar().setIcon(R.mipmap.ffap);
     }
 
-=======
->>>>>>> origin/master
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
