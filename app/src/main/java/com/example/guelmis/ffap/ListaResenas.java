@@ -64,6 +64,11 @@ public class ListaResenas extends ActionBarActivity {
 
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+<<<<<<< HEAD
+=======
+                       // Toast.makeText(getApplicationContext(),  Float.toString(rating), Toast.LENGTH_LONG).show();
+                      // float epsilon = 0.00000001f;
+>>>>>>> origin/master
                         datos.clear();
                         for(int i=0; i<seller.getReviews().size(); i++){
                             long rt = Math.round(rating);

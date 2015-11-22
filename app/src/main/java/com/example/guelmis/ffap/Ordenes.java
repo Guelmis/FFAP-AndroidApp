@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+<<<<<<< HEAD
 import android.support.v7.widget.Toolbar;
+=======
+>>>>>>> origin/master
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +30,10 @@ import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.Calendar;
+=======
+>>>>>>> origin/master
 import java.util.Iterator;
 
 public class Ordenes extends ActionBarActivity {
@@ -55,11 +61,19 @@ public class Ordenes extends ActionBarActivity {
         if(ordenes != null){
             for(int i=0; i<ordenes.size(); i++){
                 Order current = ordenes.get(i);
+<<<<<<< HEAD
                 String dato = "Orden no: "+ current.getInvoice() + "\n" +"Fecha: " + current.getCreatedAt()
                         + "\n"+ "Hora: " + current.getTime() + "\n";
                 for(Iterator<LineItem> iterator = current.getLineItems().iterator(); iterator.hasNext();){
                     LineItem item = iterator.next();
                     dato += item.getQuantity()+ " x " + item.getTitle()+ "\n";
+=======
+                String dato = "Orden no. "+ current.getInvoice() + "\n" +"Fecha: " + current.getCreatedAt()
+                        + "\n"+ "Hora: " + current.getTime() + "\n" + "Productos: ";
+                for(Iterator<LineItem> iterator = current.getLineItems().iterator(); iterator.hasNext();){
+                    LineItem item = iterator.next();
+                    dato += item.getQuantity()+ "x " + item.getTitle()+ "\n";
+>>>>>>> origin/master
                 }
                 datos.add(dato);
             }
@@ -76,7 +90,11 @@ public class Ordenes extends ActionBarActivity {
                 alertDialog.setTitle("Estatus de la orden");
                 if(eta.getStatus().equals("OK")){
                     String esttime = eta.getMessage().split("\\.")[0];
+<<<<<<< HEAD
                     alertDialog.setMessage("Su orden se entregarÃ¡ en aproximadamente " + esttime + " minutos");
+=======
+                    alertDialog.setMessage("Su orden se entregará en aproximadamente " + esttime + " minutos");
+>>>>>>> origin/master
                 }
                 else{
                     alertDialog.setMessage(eta.getMessage());
@@ -90,6 +108,7 @@ public class Ordenes extends ActionBarActivity {
                 alertDialog.show();
             }
         });
+<<<<<<< HEAD
     }
 
     private String getCurrentDate()
@@ -108,6 +127,8 @@ public class Ordenes extends ActionBarActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Ordenes");
         getSupportActionBar().setIcon(R.mipmap.ffap);
+=======
+>>>>>>> origin/master
     }
 
     @Override

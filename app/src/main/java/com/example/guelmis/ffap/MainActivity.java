@@ -224,7 +224,11 @@ public class MainActivity extends ActionBarActivity {
                         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                         alertDialog.setTitle("No se pudo iniciar sesión");
                         alertDialog.setMessage("Nombre de usuario y/o contraseña incorrectos, Por favor intentelo de nuevo");
+<<<<<<< HEAD
                         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
+=======
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+>>>>>>> origin/master
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
@@ -243,6 +247,7 @@ public class MainActivity extends ActionBarActivity {
         new NetCheck().execute();
     }
 
+<<<<<<< HEAD
     public void setActionBar() {
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
@@ -250,4 +255,6 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setIcon(R.mipmap.ffap);
     }
 
+=======
+>>>>>>> origin/master
 }

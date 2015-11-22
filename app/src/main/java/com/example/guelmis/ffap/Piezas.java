@@ -54,8 +54,13 @@ public class Piezas extends ActionBarActivity {
         TextView tv2 = (TextView)findViewById(R.id.textView2);
         TextView tv3 = (TextView)findViewById(R.id.textView3);
         tv.setText(""+ newprod.getTitle());
+<<<<<<< HEAD
         tv2.setText(newprod.getTitle());
         tv3.setText("$" + Math.round(newprod.getSelectedStock().getPrice()));
+=======
+        tv2.setText("Descripción: " + newprod.getTitle());
+        tv3.setText("Precio: " + newprod.getSelectedStock().getPrice());
+>>>>>>> origin/master
 
         ImageView iv1 = (ImageView) findViewById(R.id.imageV1);
         imageLoader.displayImage(newprod.getImageurl(), iv1, options);

@@ -153,7 +153,11 @@ public class Carrito extends ActionBarActivity {
         public void onClick (View v){
             AlertDialog alertDialog = new AlertDialog.Builder(Carrito.this).create();
             alertDialog.setTitle("Gracias por su compra");
+<<<<<<< HEAD
             alertDialog.setMessage("Desea brindar su ubicaciÃ³n actual como punto de entrega?");
+=======
+            alertDialog.setMessage("Desea brindar su ubicación actual como punto de entrega?");
+>>>>>>> origin/master
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Si",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -218,7 +222,11 @@ public class Carrito extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(), "Payment failed , Try again ", Toast.LENGTH_LONG).show();
                 AlertDialog alertDialog = new AlertDialog.Builder(Carrito.this).create();
                 alertDialog.setTitle("No se pudo realizar la compra");
+<<<<<<< HEAD
                 alertDialog.setMessage("El carrito esta vacÃ­o");
+=======
+                alertDialog.setMessage("El carrito esta vacío");
+>>>>>>> origin/master
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {

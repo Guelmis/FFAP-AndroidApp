@@ -17,6 +17,5 @@
         android:textColor="#FFFFFF"
         android:text="Items"
         android:textSize="18sp"
-        android:textStyle="italic"
-        android:layout_weight="0.00" />
+        android:textStyle="italic" />
 </LinearLayout>
