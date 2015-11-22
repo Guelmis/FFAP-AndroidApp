@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,23 +21,20 @@ import com.example.guelmis.ffap.signaling.ServerSignal;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-
 public class Piezas extends ActionBarActivity {
     private String usuario;
     private Button tienda;
     private Button carrito;
     ActionBar actionbar;
+    private Toolbar toolbar;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.piezas);
-        actionbar = getSupportActionBar();
-        actionbar.setDisplayShowHomeEnabled(true);
-        actionbar.setTitle("FFAP Productos");
-        actionbar.setIcon(R.mipmap.ffap);
+        setActionBar();
         tienda = (Button) findViewById(R.id.btnTienda);
         carrito = (Button) findViewById(R.id.btncarrito);
-        ImageLoader imageLoader = ImageLoader.getInstance();
+        final ImageLoader imageLoader = ImageLoader.getInstance();
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory()
                 .cacheOnDisc().resetViewBeforeLoading()
                 .build();
@@ -56,8 +54,8 @@ public class Piezas extends ActionBarActivity {
         TextView tv2 = (TextView)findViewById(R.id.textView2);
         TextView tv3 = (TextView)findViewById(R.id.textView3);
         tv.setText(""+ newprod.getTitle());
-        tv2.setText("Descripcion: " + newprod.getTitle());
-        tv3.setText("Precio: " + newprod.getSelectedStock().getPrice());
+        tv2.setText(newprod.getTitle());
+        tv3.setText("$" + Math.round(newprod.getSelectedStock().getPrice()));
 
         ImageView iv1 = (ImageView) findViewById(R.id.imageV1);
         imageLoader.displayImage(newprod.getImageurl(), iv1, options);
@@ -76,6 +74,7 @@ public class Piezas extends ActionBarActivity {
             public void onClick(View view) {
                 Intent myIntent = new Intent(Piezas.this, Carrito.class);
                 myIntent.putExtra("usuario", usuario);
+                myIntent.putExtra("image_url", newprod.getImageurl());
                 BasicResponse response = ServerSignal.AddToCart(usuario, Integer.toString(newprod.getSelectedStock().getId()));
                 if(response.success()){
                     startActivity(myIntent);
@@ -86,6 +85,14 @@ public class Piezas extends ActionBarActivity {
             }
         });
     }
+
+    public void setActionBar() {
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Productos");
+        getSupportActionBar().setIcon(R.mipmap.ffap);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

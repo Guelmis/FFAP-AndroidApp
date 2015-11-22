@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,14 +26,12 @@ public class Resenas extends ActionBarActivity {
     RatingBar resenarating;
     double ratingSample;
     ActionBar actionbar;
+    private Toolbar toolbar;
     private String usuario;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resena);
-        actionbar = getSupportActionBar();
-        actionbar.setDisplayShowHomeEnabled(true);
-        actionbar.setTitle("FFAP Reseñas");
-        actionbar.setIcon(R.mipmap.ffap);
+        setActionBar();
         Intent intent = getIntent();
         usuario = intent.getStringExtra("usuario");
         publicar = (Button) findViewById(R.id.btnpublicar);
@@ -56,20 +55,6 @@ public class Resenas extends ActionBarActivity {
 
         publicar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (ratingSample == 0) {
-                    AlertDialog alertDialog = new AlertDialog.Builder(Resenas.this).create();
-
-                    AlertDialog alertDialog1 = new AlertDialog.Builder(Resenas.this).create();
-                    alertDialog1.setTitle("Rating debe ser minimo 1");
-                    alertDialog1.setMessage("La puntuacion del comentario debe ser de 1 a 5");
-                    alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog1.show();
-                } else if (ratingSample != 0) {
                     BasicResponse response = ServerSignal.Comment(thisIntent.getStringExtra("usuario"),
                             thisIntent.getStringExtra("seller_id"),
                             titulo.getText().toString(),
@@ -81,9 +66,16 @@ public class Resenas extends ActionBarActivity {
                         Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
-            }
-                });
-            }
+        });
+    }
+
+    public void setActionBar() {
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Crear Reseñas");
+        getSupportActionBar().setIcon(R.mipmap.ffap);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -5,16 +5,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.guelmis.ffap.models.LineItem;
 import com.example.guelmis.ffap.signaling.BasicResponse;
 import com.example.guelmis.ffap.signaling.ServerSignal;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,28 +33,33 @@ public class ItemCart extends ActionBarActivity {
     String usuario;
     Button cart;
     ActionBar actionbar;
+    private Toolbar toolbar;
+    private ImageView img4;
+    private String imageurl;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.item_cart);
-        actionbar = getSupportActionBar();
-        actionbar.setDisplayShowHomeEnabled(true);
-        actionbar.setTitle("FFAP ItemCart");
-        actionbar.setIcon(R.mipmap.ffap);
+        setActionBar();
+        img4 = (ImageView) findViewById (R.id.imageV4);
         pieza = (TextView) findViewById(R.id.textViewDescripcion);
         cantidad = (TextView) findViewById(R.id.textViewQuantity);
         add = (Button) findViewById(R.id.buttonAdd);
         delete = (Button) findViewById(R.id.buttonDelete);
         cart = (Button) findViewById(R.id.btncart);
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory()
+                .cacheOnDisc().resetViewBeforeLoading()
+                .build();
 
         Intent myIntent = getIntent();
         final int position = myIntent.getIntExtra("position", 0);
         final LineItem current_item = Home.cart.get(position);
-        usuario = myIntent.getStringExtra("usuario");
 
+        usuario = myIntent.getStringExtra("usuario");
         pieza.setText(current_item.getTitle());
         cantidad.setText(Integer.toString(current_item.getQuantity()));
-
+        imageLoader.displayImage(imageurl, img4, options);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,6 +101,12 @@ public class ItemCart extends ActionBarActivity {
                 finish();
             }
         });
+    }
+    public void setActionBar() {
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("ItemCart");
+        getSupportActionBar().setIcon(R.mipmap.ffap);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

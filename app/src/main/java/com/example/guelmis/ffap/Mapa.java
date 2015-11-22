@@ -9,6 +9,7 @@ import com.example.guelmis.ffap.signaling.ServerSignal;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -20,11 +21,13 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Mapa extends FragmentActivity implements LocationProvider.LocationCallback {
+public class Mapa extends ActionBarActivity implements LocationProvider.LocationCallback {
 
     public static final String TAG = Mapa.class.getSimpleName();
     private LocationProvider mLocationProvider;
@@ -39,17 +42,18 @@ public class Mapa extends FragmentActivity implements LocationProvider.LocationC
     private String sellername;
     private String selleradd;
     TextView selleraddress;
-
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.mapa);
         Intent myIntent = getIntent();
+        setActionBar();
         infoTienda = ServerSignal.ShowSeller(Integer.toString(myIntent.getIntExtra("seller_id", 0)));
         sellername = myIntent.getStringExtra("seller_name");
         selleradd = myIntent.getStringExtra("seller_address");
         tienda = infoTienda.getLocation();
         marcadortienda = tienda;
-        setContentView(R.layout.mapa);
         selleraddress = (TextView) findViewById(R.id.textViewSellerAdd);
         mLocationProvider = new LocationProvider(this, this);
         try
@@ -60,6 +64,13 @@ public class Mapa extends FragmentActivity implements LocationProvider.LocationC
         catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setActionBar() {
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Ubicación Tiendas");
+        getSupportActionBar().setIcon(R.mipmap.ffap);
     }
 
     @Override
@@ -126,7 +137,7 @@ public class Mapa extends FragmentActivity implements LocationProvider.LocationC
     public void area() {
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(ubicacion.latitude, ubicacion.longitude), 14f));
-        selleraddress.setText("Direccion Destino: " + selleradd);
+        selleraddress.setText("Dirección Destino: " + selleradd);
     }
 
     public void handleNewLocation(Location location) {
@@ -135,7 +146,7 @@ public class Mapa extends FragmentActivity implements LocationProvider.LocationC
         currentLatitude = location.getLatitude();
         currentLongitude = location.getLongitude();
         ubicacion = new LatLng(currentLatitude, currentLongitude);
-        map.addMarker(new MarkerOptions().position(ubicacion).title("Ubicación Actual"));
+        map.addMarker(new MarkerOptions().position(ubicacion).title("Ubicación Actual").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
         map.addMarker(new MarkerOptions().position(marcadortienda).title(sellername));
         CrearRuta();
         area();

@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 public class ServerSignal {
 
 
-    //public static final String domain = "http://10.0.0.20:5000/"; //local
+    //public static final String domain = "http://10.0.0.23:5000/"; //local
     public static final String domain = "http://ffap-itt-2015.herokuapp.com/"; //web
 
     public static final String loginURL = domain + "mobile_login/";
@@ -43,6 +43,7 @@ public class ServerSignal {
     public static final String showvehicleURL = domain + "show_vehicle/";
     public static final String listvehiclesURL = domain + "list_vehicles/";
     public static final String destroyvehicleURL = domain + "destroy_vehicle/";
+    public static final String deliveryetaURL = domain + "delivery_eta/";
 
     public static final String edmunds_pt1 = "https://api.edmunds.com/api/vehicle/v2/vins/";
     public static final String edmunds_pt2 = "?&fmt=json&api_key=cpes64w9wyy4yd8anrvqz74t";
@@ -347,29 +348,14 @@ public class ServerSignal {
         return ret;
     }
 
-    public static BasicResponse Login(String username, String password){
+    public static JSONObject Login(String username, String password){
         ArrayList<NameValuePair> params = new ArrayList<>();
-        JSONObject answer = null;
-        BasicResponse ret = new BasicResponse(false, "Error no identificado al autenticarse.", "");
 
         params.add(new BasicNameValuePair(username_tag, username));
         params.add(new BasicNameValuePair(password_tag, password));
 
-        try {
-            answer = new JObjRequester().post(loginURL, params);
-            if(answer.getString(KEY_SUCCESS).equals("true")) {
-                ret = new BasicResponse(true, answer.getString(KEY_MESSAGE), "");
-            }
-            else {
-                ret = new BasicResponse(false, answer.getString(KEY_MESSAGE), "");
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return ret;
+        JSONObject json = JSONParser.postJSONFromUrl(loginURL, params);
+        return json;
     }
 
     public static BasicResponse checkout(String username){
@@ -483,6 +469,27 @@ public class ServerSignal {
 
     } */
 
+    public static BasicResponse destroyCart(String username){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject answer = null;
+        BasicResponse ret = new BasicResponse(false, "Error de comunicacion.", "");
+
+        params.add(new BasicNameValuePair(username_tag, username));
+
+        try {
+            answer = new JObjRequester().post(cartdestroyURL, params);
+            ret = new BasicResponse(true, answer.getString(KEY_MESSAGE), "");
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
     public static ArrayList<Vehicle> listVehicles(String username){
         ArrayList<NameValuePair> params = new ArrayList<>();
         JSONArray answer = null;
@@ -553,14 +560,97 @@ public class ServerSignal {
             answer = new JArrRequester().post(orderlistURL, params);
             ret = new ArrayList<>();
             for (int i=0; i<answer.length(); i++){
-                JSONObject current = answer.getJSONObject(i);
+                JSONObject current = answer.getJSONObject(i).getJSONObject("order");
+                JSONArray itemsJSON = answer.getJSONObject(i).getJSONArray("line_items");
+                ArrayList<LineItem> lineItems = new ArrayList<>();
+                for(int j=0; j<itemsJSON.length(); j++){
+                    LineItem item = new LineItem(
+                            new Product(itemsJSON.getJSONObject(j).getJSONObject(product_tag).getString("title"),
+                                    itemsJSON.getJSONObject(j).getJSONObject(brand_tag).getString("brand_name"),
+                                    itemsJSON.getJSONObject(j).getJSONObject(model_tag).getString("model_name"),
+                                    itemsJSON.getJSONObject(j).getString(image_tag),
+                                    Integer.parseInt(itemsJSON.getJSONObject(j).getJSONObject(model_tag).getString("year")),
+                                    (itemsJSON.getJSONObject(j).getJSONObject("item").getString("id"))),
+                            new Stock(itemsJSON.getJSONObject(j).getJSONObject("stock").getInt("id"),
+                                    itemsJSON.getJSONObject(j).getJSONObject("stock").getDouble("price"),
+                                    itemsJSON.getJSONObject(j).getJSONObject("stock").getInt("quantity"),
+                                    itemsJSON.getJSONObject(j).getJSONObject("seller").getString("name"),
+                                    itemsJSON.getJSONObject(j).getJSONObject("seller").getInt("id")));
+                    item.setQuantity(itemsJSON.getJSONObject(j).getJSONObject("item").getInt("quantity"));
+                    lineItems.add(item);
+                }
                 ret.add(new Order(
                         current.getInt("id"),
                         current.getString("address"),
                         current.getString("invoice"),
-                        current.getString("created_at")
+                        answer.getJSONObject(i).getInt("delivery_id"),
+                        current.getString("created_at"),
+                        lineItems
                 ));
             }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static Order showOrder(String order_id){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject answer = null;
+        Order ret = null;
+
+        try {
+            answer = new JObjRequester().get(ordershowURL + order_id, params);
+            JSONArray itemsJSON = answer.getJSONArray("line_items");
+            ArrayList<LineItem> lineItems = new ArrayList<>();
+            for(int j=0; j<itemsJSON.length(); j++){
+                LineItem item = new LineItem(
+                        new Product(itemsJSON.getJSONObject(j).getJSONObject(product_tag).getString("title"),
+                                itemsJSON.getJSONObject(j).getJSONObject(brand_tag).getString("brand_name"),
+                                itemsJSON.getJSONObject(j).getJSONObject(model_tag).getString("model_name"),
+                                itemsJSON.getJSONObject(j).getString(image_tag),
+                                Integer.parseInt(itemsJSON.getJSONObject(j).getJSONObject(model_tag).getString("year")),
+                                (itemsJSON.getJSONObject(j).getJSONObject("item").getString("id"))),
+                        new Stock(itemsJSON.getJSONObject(j).getJSONObject("stock").getInt("id"),
+                                itemsJSON.getJSONObject(j).getJSONObject("stock").getDouble("price"),
+                                itemsJSON.getJSONObject(j).getJSONObject("stock").getInt("quantity"),
+                                itemsJSON.getJSONObject(j).getJSONObject("seller").getString("name"),
+                                itemsJSON.getJSONObject(j).getJSONObject("seller").getInt("id")));
+                item.setQuantity(itemsJSON.getJSONObject(j).getJSONObject("item").getInt("quantity"));
+                lineItems.add(item);
+            }
+            ret = new Order(
+                    answer.getInt("id"),
+                    answer.getString("address"),
+                    answer.getString("invoice"),
+                    answer.getInt("delivery_id"),
+                    answer.getString("created_at"),
+                    lineItems
+            );
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static BasicResponse deliveryeta(int delivery_id){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject answer = null;
+        BasicResponse ret = new BasicResponse(false, "Error de comunicacion.", "");
+
+        try {
+            answer = new JObjRequester().get(deliveryetaURL+ delivery_id, params);
+            ret = new BasicResponse(true, answer.getString("eta"), answer.getString(KEY_STATUS));
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

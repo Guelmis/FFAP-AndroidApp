@@ -1,21 +1,34 @@
 package com.example.guelmis.ffap;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.guelmis.ffap.R;
+import com.example.guelmis.ffap.models.LineItem;
 import com.example.guelmis.ffap.models.Order;
 import com.example.guelmis.ffap.models.Vehicle;
+import com.example.guelmis.ffap.signaling.BasicResponse;
 import com.example.guelmis.ffap.signaling.ServerSignal;
 
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
 
 public class Ordenes extends ActionBarActivity {
     ListView ListaOrdenes;
@@ -24,15 +37,16 @@ public class Ordenes extends ActionBarActivity {
     ArrayList<String> datos;
     ArrayAdapter<String> adaptador;
     ArrayList<Order> ordenes;
+    private Toolbar toolbar;
+    private TextView textViewDate;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ordenes);
-        actionbar = getSupportActionBar();
-        actionbar.setDisplayShowHomeEnabled(true);
-        actionbar.setTitle("FFAP Ordenes");
-        actionbar.setIcon(R.mipmap.ffap);
+        setActionBar();
         ListaOrdenes = (ListView) findViewById(R.id.listViewOrdenes);
+        textViewDate = (TextView) findViewById(R.id.textViewDate);
+        textViewDate.setText(getCurrentDate());
         Intent myIntent = getIntent();
         usuario = myIntent.getStringExtra("usuario");
        // Toast.makeText(getApplicationContext(), "Usuario: " + usuario, Toast.LENGTH_LONG).show();
@@ -42,12 +56,59 @@ public class Ordenes extends ActionBarActivity {
         if(ordenes != null){
             for(int i=0; i<ordenes.size(); i++){
                 Order current = ordenes.get(i);
-                datos.add("Orden no. "+ current.getInvoice() + "\n" +"Fecha: " + current.getCreatedAt());
+                String dato = "Orden no: "+ current.getInvoice() + "\n" +"Fecha: " + current.getCreatedAt()
+                        + "\n"+ "Hora: " + current.getTime() + "\n";
+                for(Iterator<LineItem> iterator = current.getLineItems().iterator(); iterator.hasNext();){
+                    LineItem item = iterator.next();
+                    dato += item.getQuantity()+ " x " + item.getTitle()+ "\n";
+                }
+                datos.add(dato);
             }
 
             adaptador = new ArrayAdapter<>(this, R.layout.listviewcolor, R.id.textView14, datos);
             ListaOrdenes.setAdapter(adaptador);
         }
+
+        ListaOrdenes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                BasicResponse eta = ServerSignal.deliveryeta(ordenes.get(position).getDelivery_id());
+                AlertDialog alertDialog = new AlertDialog.Builder(Ordenes.this).create();
+                alertDialog.setTitle("Estatus de la orden");
+                if(eta.getStatus().equals("OK")){
+                    String esttime = eta.getMessage().split("\\.")[0];
+                    alertDialog.setMessage("Su orden se entregará en aproximadamente " + esttime + " minutos");
+                }
+                else{
+                    alertDialog.setMessage(eta.getMessage());
+                }
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+    }
+
+    private String getCurrentDate()
+    {
+        Calendar c = Calendar.getInstance();
+        System.out.println("Current time => " + c.getTime());
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        String formattedDate = df.format(c.getTime());
+
+        return formattedDate;
+    }
+
+    public void setActionBar() {
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Ordenes");
+        getSupportActionBar().setIcon(R.mipmap.ffap);
     }
 
     @Override

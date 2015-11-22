@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,6 +54,7 @@ public class Carrito extends ActionBarActivity {
     TextView subtotal;
     TextView ITBIS;
     TextView Total;
+    private Toolbar toolbar;
     public static LatLng ubicacion;
     Button pagar;
     LocationManager locationManager;
@@ -87,23 +89,20 @@ public class Carrito extends ActionBarActivity {
     }
 
     private void actualizaPrecios() {
-        subtotal.setText( Double.toString(calcTotal(Home.cart)) + "$");
+        subtotal.setText( "$" + Double.toString(calcTotal(Home.cart)).split("\\.")[0]);
         itbis = (calcTotal(Home.cart) * 0.18);
-        ITBIS.setText(itbis + "$".toString());
+        ITBIS.setText("$".toString() + Math.round(itbis));
         total = (calcTotal(Home.cart) + itbis);
-        Total.setText(total + "$".toString());
+        Total.setText("$".toString() + Math.round(total));
     }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.carrito);
+        setActionBar();
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         eliminar = (Button) findViewById(R.id.btnclear);
-        actionbar = getSupportActionBar();
-        actionbar.setDisplayShowHomeEnabled(true);
-        actionbar.setTitle("FFAP Carrito");
-        actionbar.setIcon(R.mipmap.ffap);
         subtotal = (TextView) findViewById(R.id.carrito_subtotal);
         ITBIS = (TextView) findViewById(R.id.carrito_itbis);
         Total = (TextView) findViewById(R.id.carrito_total);
@@ -141,6 +140,7 @@ public class Carrito extends ActionBarActivity {
             public void onClick(View view) {
                 Home.cart.clear();
                 actualizaPrecios();
+                ServerSignal.destroyCart(usuario);
                 datos.clear();
                 adaptador.notifyDataSetChanged();
             }
@@ -153,8 +153,8 @@ public class Carrito extends ActionBarActivity {
         public void onClick (View v){
             AlertDialog alertDialog = new AlertDialog.Builder(Carrito.this).create();
             alertDialog.setTitle("Gracias por su compra");
-            alertDialog.setMessage("Desea brindar su ubicacion actual como punto de entrega?");
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "SI",
+            alertDialog.setMessage("Desea brindar su ubicación actual como punto de entrega?");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Si",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -162,7 +162,7 @@ public class Carrito extends ActionBarActivity {
                             startActivityForResult(myIntent, OBTAIN_LOCATION);
                         }
                     });
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "NO",
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "No",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -179,6 +179,12 @@ public class Carrito extends ActionBarActivity {
         }
     });
 }
+    public void setActionBar() {
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Carrito");
+        getSupportActionBar().setIcon(R.mipmap.ffap);
+    }
     private void launchPayPalPayment() {
 
         PayPalPayment thingToBuy = new PayPalPayment(new BigDecimal(0.01),"USD", usuario,
@@ -198,13 +204,13 @@ public class Carrito extends ActionBarActivity {
         if (requestCode == REQUEST_CODE_PAYMENT) {
             if (resultCode == Activity.RESULT_OK) {
 
-                Toast.makeText(getApplicationContext(), "Payment done succesfully ", Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(), "Payment done succesfully ", Toast.LENGTH_LONG).show();
 
             }
 
             else if (resultCode == Activity.RESULT_CANCELED) {
 
-                Toast.makeText(getApplicationContext(), "Payment Canceled , Try again ", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "Payment Canceled , Try again ", Toast.LENGTH_LONG).show();
 
 
             } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
@@ -212,7 +218,7 @@ public class Carrito extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(), "Payment failed , Try again ", Toast.LENGTH_LONG).show();
                 AlertDialog alertDialog = new AlertDialog.Builder(Carrito.this).create();
                 alertDialog.setTitle("No se pudo realizar la compra");
-                alertDialog.setMessage("El carrito esta vacio");
+                alertDialog.setMessage("El carrito esta vacío");
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -223,13 +229,18 @@ public class Carrito extends ActionBarActivity {
             }
         }
         if(requestCode == OBTAIN_LOCATION){
-            Toast.makeText(getApplicationContext(), ubicacion.toString(), Toast.LENGTH_LONG).show();
-            BasicResponse response = ServerSignal.checkout(usuario, ubicacion);
-            if(response.success()) {
-                launchPayPalPayment();
+            if(ubicacion == null){
+                Toast.makeText(getApplicationContext(), "Accion cancelada", Toast.LENGTH_LONG).show();
             }
             else{
-                Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), ubicacion.toString(), Toast.LENGTH_LONG).show();
+                BasicResponse response = ServerSignal.checkout(usuario, ubicacion);
+                if(response.success()) {
+                    launchPayPalPayment();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         }
     }

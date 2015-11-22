@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,18 +54,13 @@ public class Home extends ActionBarActivity {
     Button chassisregistered;
     ArrayList<String> dvehiculos;
     Vehicle currentVehicle;
-
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
-        actionbar = getSupportActionBar();
-        if (actionbar != null) {
-            actionbar.setDisplayShowHomeEnabled(true);
-            actionbar.setTitle("FFAP Home");
-            actionbar.setIcon(R.mipmap.ffap);
-        }
+        setActionBar();
         busqueda = (EditText) findViewById(R.id.editTextPieza);
         datos = new ArrayList<>();
         dvehiculos = new ArrayList<>();
@@ -99,10 +95,10 @@ public class Home extends ActionBarActivity {
         spinner3 = (Spinner) findViewById(R.id.spinner3);
         spinner4 = (Spinner) findViewById(R.id.spinner4);
         adaptador = new ArrayAdapter<>(this, R.layout.listviewsmall, R.id.textView15, datos);
-        adaptsp1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, brands);
-        adaptsp2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, modelos);
-        adaptsp3 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, years);
-        adaptsp4 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, dvehiculos);
+        adaptsp1 = new ArrayAdapter<>(this, R.layout.spinnercustom, brands);
+        adaptsp2 = new ArrayAdapter<>(this, R.layout.spinnercustom, modelos);
+        adaptsp3 = new ArrayAdapter<>(this, R.layout.spinnercustom, years);
+        adaptsp4 = new ArrayAdapter<>(this, R.layout.spinnercustom, dvehiculos);
         spinner1.setAdapter(adaptsp1);
         spinner2.setAdapter(adaptsp2);
         spinner3.setAdapter(adaptsp3);
@@ -153,9 +149,9 @@ public class Home extends ActionBarActivity {
             public void onClick(View v) {
                 if(currentVehicle == null){
                     AlertDialog alertDialog = new AlertDialog.Builder(Home.this).create();
-                    alertDialog.setTitle("No se selecciono ningun vehiculo");
-                    alertDialog.setMessage("Por favor seleccione un vehiculo para la busqueda");
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                    alertDialog.setTitle("No se seleccionó ningún vehículo");
+                    alertDialog.setMessage("Por favor seleccione un vehículo para la búsqueda");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -163,7 +159,7 @@ public class Home extends ActionBarActivity {
                             });
                     alertDialog.show();
                 }
-                else{
+                else {
                     listofprod = ServerSignal.searchProducts(busqueda.getText().toString(), currentVehicle.getBrand(),
                             currentVehicle.getModel(), currentVehicle.getYear());
                     refreshList();
@@ -174,9 +170,9 @@ public class Home extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog alertDialog = new AlertDialog.Builder(Home.this).create();
-                alertDialog.setTitle("Vehiculo no encontrado");
-                alertDialog.setMessage("El chasis introducido no ha arrojado resultados.");
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                alertDialog.setTitle("Vehículo no encontrado");
+                alertDialog.setMessage("El chassis introducido no ha arrojado resultados");
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -189,16 +185,16 @@ public class Home extends ActionBarActivity {
                     alertDialog.show();
                 }
                 else{
-                    alertDialog1.setTitle("Vehiculo encontrado");
-                    alertDialog1.setMessage("Su vehiculo es: " + ref.getBrand() + " " + ref.getModel() + " " + ref.getYear());
-                    alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                    alertDialog1.setTitle("Vehículo encontrado");
+                    alertDialog1.setMessage("Su vehículo es: " + ref.getBrand() + " " + ref.getModel() + " " + ref.getYear());
+                    alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
                             });
                     alertDialog1.show();
-                    listofprod = ServerSignal.searchProducts("", ref.getBrand(), ref.getModel(), ref.getYear());
+                    listofprod = ServerSignal.searchProducts(busqueda.getText().toString(), ref.getBrand(), ref.getModel(), ref.getYear());
                     refreshList();
                 }
             }
@@ -219,7 +215,7 @@ public class Home extends ActionBarActivity {
                     AlertDialog alertDialog1 = new AlertDialog.Builder(Home.this).create();
                     alertDialog1.setTitle("Producto no encontrado");
                     alertDialog1.setMessage("No se han encontrado productos con sus especificaciones");
-                    alertDialog1.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                    alertDialog1.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -249,6 +245,13 @@ public class Home extends ActionBarActivity {
                 startActivity(myIntent);
             }
         });
+    }
+
+    public void setActionBar() {
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Home");
+        getSupportActionBar().setIcon(R.mipmap.ffap);
     }
 
     @Override
@@ -328,7 +331,7 @@ public class Home extends ActionBarActivity {
             vehiculos = new ArrayList<>();
         }
         dvehiculos.clear();
-        dvehiculos.add("Vehiculos Registrados");
+        dvehiculos.add("Mis Vehiculos");
         for(int i=0; i<vehiculos.size(); i++){
             dvehiculos.add(vehiculos.get(i).getDescription());
         }

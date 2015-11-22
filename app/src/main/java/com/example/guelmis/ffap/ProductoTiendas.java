@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,15 +31,13 @@ public class ProductoTiendas extends ActionBarActivity {
     Seller sellerdata;
     String producto;
     TextView product;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.producttienda);
-        actionbar = getSupportActionBar();
-        actionbar.setDisplayShowHomeEnabled(true);
-        actionbar.setTitle("FFAP ProductStores");
-        actionbar.setIcon(R.mipmap.ffap);
+        setActionBar();
         product = (TextView) findViewById(R.id.textView16);
         datos = new ArrayList<>();
         adaptador = new ArrayAdapter<>(this, R.layout.listviewsmall, R.id.textView15, datos);
@@ -52,7 +51,7 @@ public class ProductoTiendas extends ActionBarActivity {
 
         for(int i=0; i<productInfo.getStocklist().size(); i++){
             datos.add(productInfo.getStocklist().get(i).getSellerName() + "\n" +
-                    "Precio: " + productInfo.getStocklist().get(i).getPrice()+ "$");
+                    "Precio: " + "$" + Math.round(productInfo.getStocklist().get(i).getPrice()));
         }
             product.setText(producto);
         final Product product = productInfo;
@@ -79,6 +78,13 @@ public class ProductoTiendas extends ActionBarActivity {
                 startActivity(myIntent);
             }
         });
+    }
+
+    public void setActionBar() {
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Product & Stores");
+        getSupportActionBar().setIcon(R.mipmap.ffap);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

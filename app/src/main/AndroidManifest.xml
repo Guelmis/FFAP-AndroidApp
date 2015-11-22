@@ -48,7 +48,6 @@
         <activity android:name="Mapa"></activity>
         <activity android:name="Resenas"></activity>
         <activity android:name="ProductoTiendas"></activity>
-        <activity android:name="VerResenas"></activity>
         <activity android:name="ItemCart"></activity>
         <activity android:name="Vehiculos"></activity>
         <activity android:name="MapaCliente"></activity>

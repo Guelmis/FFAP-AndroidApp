@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -28,13 +29,11 @@ public class ListaResenas extends ActionBarActivity {
     RatingBar reviewsearch;
     TextView reviewdisplay;
     Seller seller;
+    private Toolbar toolbar;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.resena_tienda);
-        actionbar = getSupportActionBar();
-        actionbar.setDisplayShowHomeEnabled(true);
-        actionbar.setTitle("FFAP Lista De Reseñas");
-        actionbar.setIcon(R.mipmap.ffap);
+        setActionBar();
         reviewsearch = (RatingBar) findViewById(R.id.ratingBarReview);
         reviewdisplay = (TextView) findViewById(R.id.textViewReview);
         Intent intent = getIntent();
@@ -50,7 +49,10 @@ public class ListaResenas extends ActionBarActivity {
         seller = ServerSignal.ShowSeller(Integer.toString(sellerid));
 
         for(int i=0; i<seller.getReviews().size(); i++){
-            datos.add("Cliente: " + seller.getReviews().get(i).getUsername() + "\n" + "Puntuacion: " + seller.getReviews().get(i).getRating() + "/5" + " \n" + "Título: " + seller.getReviews().get(i).getTitle() + "\n" + "Comentario: " + seller.getReviews().get(i).getBody());
+            long rtg = Math.round(seller.getReviews().get(i).getRating());
+            datos.add("Cliente: " + seller.getReviews().get(i).getUsername() + "\n" + "Puntuación: " + rtg + "/5" + " \n"
+                    + "Título: " + seller.getReviews().get(i).getTitle() + "\n"
+                    + "Comentario: " + seller.getReviews().get(i).getBody());
         }
         reviewdisplay.setText(Integer.toString(datos.size()) +"/" + Integer.toString(datos.size())+ " comentarios" );
         reviewtotal = Integer.toString(datos.size());
@@ -62,36 +64,30 @@ public class ListaResenas extends ActionBarActivity {
 
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                        Toast.makeText(getApplicationContext(),  Float.toString(rating), Toast.LENGTH_LONG).show();
-                      // float epsilon = 0.00000001f;
+                        datos.clear();
                         for(int i=0; i<seller.getReviews().size(); i++){
-                            datos.clear();
-                            if(Float.compare((float)seller.getReviews().get(i).getRating().doubleValue(), rating)  == 0.0f){
-                                datos.add("Cliente: " + seller.getReviews().get(i).getUsername() + "\n" + "Puntuacion: " +
-                                        seller.getReviews().get(i).getRating() + "/5" + " \n" + "Título: " + seller.getReviews().get(i).getTitle() + "\n" +
-                                        "Comentario: " + seller.getReviews().get(i).getBody());
+                            long rt = Math.round(rating);
+                            Comment current = seller.getReviews().get(i);
+                            long cmp = Math.round(current.getRating());
+                            if(cmp == rt){
+                                datos.add("Cliente: " + current.getUsername() + "\n" + "Puntuación: " +
+                                        rt + "/5" + " \n" + "Título: " + current.getTitle() + "\n" +
+                                        "Comentario: " + current.getBody());
                             }
-                            reviewdisplay.setText(Integer.toString(datos.size()) + "/" + reviewtotal + " comentarios");
-                            adaptador.notifyDataSetChanged();
                         }
+                        reviewdisplay.setText(Integer.toString(datos.size()) + "/" + reviewtotal + " comentarios");
+                        adaptador.notifyDataSetChanged();
                     }
                 }
         );
 
         final ArrayList<Comment> verresenas = seller.getReviews();
-
-       /* List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent myIntent = new Intent(ListaResenas.this, VerResenas.class);
-                myIntent.putExtra("usuario", usuario);
-                myIntent.putExtra("title", verresenas.get(position).getTitle());
-                myIntent.putExtra("username", verresenas.get(position).getUsername());
-                myIntent.putExtra("body", verresenas.get(position).getBody());
-                myIntent.putExtra("rating", verresenas.get(position).getRating());
-                startActivity(myIntent);
-            }
-        }); */
+    }
+    public void setActionBar() {
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Lista De Reseñas");
+        getSupportActionBar().setIcon(R.mipmap.ffap);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

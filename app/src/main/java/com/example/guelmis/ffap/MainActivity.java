@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,9 @@ import android.support.v7.app.ActionBar;
 import com.example.guelmis.ffap.signaling.BasicResponse;
 import com.example.guelmis.ffap.signaling.ServerSignal;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -35,15 +39,13 @@ public class MainActivity extends ActionBarActivity {
     EditText password;
     ActionBar bar;
     ProgressDialog pDialog;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        bar = getSupportActionBar();
-        bar.setDisplayShowHomeEnabled(true);
-        bar.setTitle("FFAP LogIn");
-        bar.setIcon(R.mipmap.ffap);
+        setActionBar();
         login = (Button) findViewById(R.id.botonlogin);
         email = (EditText) findViewById(R.id.editTextEmail);
         password = (EditText) findViewById(R.id.editTextPass);
@@ -53,11 +55,12 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View view) {
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 if ((!email.getText().toString().equals("")) && (!password.getText().toString().equals(""))) {
-                    NetAsync(email.getText().toString(), password.getText().toString());
+                    // NetAsync(email.getText().toString(), password.getText().toString());
+                    NetAsync(view);
                 } else if ((!email.getText().toString().equals(""))) {
                     alertDialog.setTitle("No se pudo iniciar sesión");
                     alertDialog.setMessage("El campo de la contraseña está vacío, Por favor introduzca su contraseña");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -68,7 +71,7 @@ public class MainActivity extends ActionBarActivity {
                 } else if ((!password.getText().toString().equals(""))) {
                     alertDialog.setTitle("No se pudo iniciar sesión");
                     alertDialog.setMessage("El campo de usuario está vacío, Por favor introduzca su nombre de usuario");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -78,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
                 } else {
                     alertDialog.setTitle("No se pudo iniciar sesión");
                     alertDialog.setMessage("Campo de usuario y contraseña vacíos, Por favor introduzca su nombre de usuario y contraseña");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -121,6 +124,7 @@ public class MainActivity extends ActionBarActivity {
             nDialog.setCancelable(true);
             nDialog.show();
         }
+
         @Override
         protected Boolean doInBackground(String... args) {
 
@@ -136,12 +140,15 @@ public class MainActivity extends ActionBarActivity {
                         return true;
                     }
                 } catch (MalformedURLException e1) {
+                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 } catch (IOException e) {
+                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
             return false;
+
         }
 
         @Override
@@ -149,6 +156,7 @@ public class MainActivity extends ActionBarActivity {
 
             if (th == true) {
                 nDialog.dismiss();
+                new ProcessLogin().execute();
             } else {
                 nDialog.dismiss();
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
@@ -165,52 +173,81 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    public void NetAsync (String username, String password) {
-        BasicResponse response = null;
-        try {
-            if(new NetCheck().execute().get()){
-                response = ServerSignal.Login(username, password);
-                pDialog = new ProgressDialog(MainActivity.this);
-                pDialog.setTitle("Comunicandose con el servidor");
-                pDialog.setMessage("Autenticando usuario");
-                pDialog.setIndeterminate(false);
-                pDialog.setCancelable(true);
-                pDialog.show();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+    private class ProcessLogin extends AsyncTask<String, String, JSONObject> {
+
+
+        private ProgressDialog pDialog;
+
+        String correo, contrasena;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            email = (EditText) findViewById(R.id.editTextEmail);
+            password = (EditText) findViewById(R.id.editTextPass);
+            correo = email.getText().toString();
+            contrasena = password.getText().toString();
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setTitle("Comunicandose con el servidor");
+            pDialog.setMessage("Autenticando usuario");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
         }
-        if(response != null){
-            if (response.success()) {
-                Intent intent = new Intent(MainActivity.this, Home.class);
-                intent.putExtra("usuario", username);
-                startActivity(intent);
-            } else {
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                alertDialog.setTitle("No se pudo iniciar sesión");
-                alertDialog.setMessage(response.getMessage());
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
-            }
+
+        @Override
+        protected JSONObject doInBackground(String... args) {
+
+           // UserFunction userFunction = new UserFunction();
+            JSONObject json = ServerSignal.Login(correo, contrasena);
+            return json;
         }
-        else {
-            AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-            alertDialog.setTitle("No se pudo iniciar sesión");
-            alertDialog.setMessage("Error no identificado.");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alertDialog.show();
+
+        @Override
+        protected void onPostExecute(JSONObject json) {
+            try {
+                if (json.getString(ServerSignal.KEY_SUCCESS) != null) {
+
+                    String res = json.getString(ServerSignal.KEY_SUCCESS);
+
+                    if (res.equals("true")) {
+
+                        pDialog.dismiss();
+                        Intent intent = new Intent(MainActivity.this, Home.class);
+                        intent.putExtra("usuario", correo);
+                        startActivity(intent);
+
+                    } else {
+
+                        pDialog.dismiss();
+                        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                        alertDialog.setTitle("No se pudo iniciar sesión");
+                        alertDialog.setMessage("Nombre de usuario y/o contraseña incorrectos, Por favor intentelo de nuevo");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+    public void NetAsync(View view) {
+        new NetCheck().execute();
+    }
+
+    public void setActionBar() {
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Log In");
+        getSupportActionBar().setIcon(R.mipmap.ffap);
+    }
+
 }

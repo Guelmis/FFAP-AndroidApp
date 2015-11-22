@@ -1,112 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="#607D8B">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="#ffff"
+    android:layout_height="match_parent">
 
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar">
+
+    </include>
+
+    <LinearLayout
+        android:padding="2dp"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="com.learn2crack.CarritoActivity" >
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
 
         <TextView
-            android:id="@+id/carrito_subtotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0 RD$"
-            android:textColorHint="#FFFFFF"
-            android:textSize="20sp"
-            android:textColor="#FFFFFF"
-            android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/carrito_itbis" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Totales"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
 
-        <ListView
-            android:id="@+id/listofprod"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/carrito_pago" >
-
-        </ListView>
-
-    <Button
-            android:id="@+id/carrito_pago"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-        android:text="Proceder al pago"
-            android:textSize="14sp"
-        android:background="#D32F2F"
-        android:textColor="#FFFFFF"
-        android:layout_below="@+id/textView9"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/carrito_total" />
+    <LinearLayout
+        android:padding="2dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Sub Total: "
-            android:textColorHint="#FFFFFF"
-            android:textSize="20sp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:textColor="#FFFFFF" />
+            />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Eliminar Todo"
-        android:id="@+id/btnclear"
-        android:layout_above="@+id/listofprod"
-        android:layout_alignParentEnd="true"
-        android:textSize="14sp"
-        android:background="#D32F2F"
-        android:textColor="#FFFFFF"
-        android:padding="12sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="0 RD$"
+            android:id="@+id/carrito_subtotal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="ITBIS 18%:"
-        android:id="@+id/textView7"
-        android:layout_below="@+id/textView3"
-        android:layout_alignParentStart="true"
-        android:textColor="#FFFFFF" />
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Total:"
-        android:id="@+id/textView9"
-        android:layout_below="@+id/textView7"
-        android:layout_alignParentStart="true"
-        android:textColor="#FFFFFF" />
+    <LinearLayout
+        android:padding="2dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="0 RD$"
-        android:id="@+id/carrito_total"
-        android:textColor="#FFFFFF"
-        android:layout_below="@+id/textView7"
-        android:layout_alignStart="@+id/carrito_itbis" />
+        <TextView
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="ITBIS 18%:"
+            />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="0 RD$"
-        android:id="@+id/carrito_itbis"
-        android:textColor="#FFFFFF"
-        android:layout_above="@+id/carrito_total"
-        android:layout_centerHorizontal="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="0 RD$"
+            android:id="@+id/carrito_itbis" />
 
-</RelativeLayout>
+    </LinearLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:padding="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Total:"
+            android:id="@+id/textView19" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="0 RD$"
+            android:id="@+id/carrito_total" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:weightSum="2"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Procesar Pago"
+            android:textColor="#ffff"
+            android:background="@drawable/selector_button"
+            android:id="@+id/carrito_pago" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Eliminar Todo"
+            android:textColor="#ffff"
+            android:background="@drawable/selector_button"
+            android:id="@+id/btnclear" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:padding="5dp"
+        android:layout_height="match_parent">
+        <ListView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/listofprod"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

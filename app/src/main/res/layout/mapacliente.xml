@@ -1,23 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#ffff">>
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar">
+
+    </include>
+
+    <FrameLayout
+
+        android:id="@+id/frameLayout2"
         android:layout_width="match_parent"
-        android:layout_height="550dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_height="485dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/app_bar">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Confirmar Ubicacion"
-        android:id="@+id/btnlocation"
-        android:layout_below="@+id/map"
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="485dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:padding="10dp"
+        android:layout_alignParentStart="true"
+        android:id="@+id/frameLayout10"
         android:layout_centerHorizontal="true"
-        android:textColor="#FFFFFF"
-        android:background="#D32F2F" />
+        android:layout_below="@+id/frameLayout2">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirmar Ubicacion"
+            android:id="@+id/btnlocation"
+            android:layout_centerHorizontal="true"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/selector_button"
+            android:layout_gravity="center_horizontal|top" />
+
+    </FrameLayout>
+
+
 
 </RelativeLayout>

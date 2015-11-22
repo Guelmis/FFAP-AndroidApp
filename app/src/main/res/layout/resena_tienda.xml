@@ -1,46 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="#607D8B">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="#ffff"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Seleccione los comentarios por estrellas"
-        android:id="@+id/textView8"
-        android:textColor="#FFFFFF"
-        android:padding="4sp"
-        android:textSize="19sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Cantidad de Comentarios"
-        android:id="@+id/textViewReview"
-        android:textColor="#FFFFFF"
-        android:layout_marginTop="43dp"
-        android:layout_below="@+id/ratingBarReview"
-        android:layout_alignParentStart="true"
-        android:textSize="19sp" />
+    </include>
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listViewComments"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textViewReview" />
 
-    <RatingBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/ratingBarReview"
-        android:stepSize = "1"
-        android:layout_marginTop="27dp"
-        android:layout_below="@+id/textView8"
-        android:layout_centerHorizontal="true" />
 
-</RelativeLayout>
+    <LinearLayout
+        android:paddingTop="10dp"
+        android:padding="5dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Seleccione los comentarios por estrellas"
+            android:id="@+id/textView8"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:padding="5dp"
+        android:layout_height="wrap_content">
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ratingBarReview"
+            android:stepSize="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:padding="5dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Comentarios: "
+            android:id="@+id/textView9" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/textViewReview" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:padding="5dp"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listViewComments"
+            />
+    </LinearLayout>
+
+</LinearLayout>

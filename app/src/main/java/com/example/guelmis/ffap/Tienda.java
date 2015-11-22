@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,17 +31,15 @@ public class Tienda  extends ActionBarActivity {
     RatingBar ratingavg;
     Seller sellerdata;
     TextView telefono;
+    private Toolbar toolbar;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tienda);
+        setActionBar();
         direccion = (TextView) findViewById(R.id.textView6);
         tienda = (TextView) findViewById(R.id.textView5);
         iv = (ImageView) findViewById(R.id.imageV2);
-        actionbar = getSupportActionBar();
-        actionbar.setDisplayShowHomeEnabled(true);
-        actionbar.setTitle("FFAP Tienda");
-        actionbar.setIcon(R.mipmap.ffap);
         resena = (Button) findViewById(R.id.btnresena);
         ubicacion = (Button) findViewById(R.id.btnubicacion);
         comentario = (Button) findViewById(R.id.btncomment);
@@ -57,10 +56,10 @@ public class Tienda  extends ActionBarActivity {
 
         sellerdata = ServerSignal.ShowSeller(Integer.toString(sellerid));
         imageLoader.displayImage(sellerdata.getLogo_url(), iv, options);
-        direccion.setText("Direccion: "+ sellerdata.getAddress());
+        direccion.setText(sellerdata.getAddress());
         tienda.setText(sellerdata.getName());
         ratingavg.setRating(sellerdata.getAverageRating());
-        telefono.setText("Telefono: "+ sellerdata.getPhone());
+        telefono.setText(sellerdata.getPhone());
 
         comentario.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -86,8 +85,15 @@ public class Tienda  extends ActionBarActivity {
                 startActivity(myIntent);
             }
         });
-
     }
+
+    public void setActionBar() {
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Tienda");
+        getSupportActionBar().setIcon(R.mipmap.ffap);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

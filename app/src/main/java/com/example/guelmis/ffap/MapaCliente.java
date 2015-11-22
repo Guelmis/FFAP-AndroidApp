@@ -9,6 +9,7 @@ import com.example.guelmis.ffap.signaling.ServerSignal;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -20,12 +21,14 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-    public class MapaCliente extends FragmentActivity implements LocationProvider.LocationCallback {
+    public class MapaCliente extends ActionBarActivity implements LocationProvider.LocationCallback{
 
         public static final String TAG = MapaCliente.class.getSimpleName();
         private LocationProvider mLocationProvider;
@@ -33,12 +36,14 @@ import android.widget.Toast;
         private static LatLng ubicacion = new LatLng(0,0);
         private double currentLatitude,currentLongitude;
         Button confirm;
+        private Toolbar toolbar;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            Intent myIntent = getIntent();
             setContentView(R.layout.mapacliente);
+            setActionBar();
+            Intent myIntent = getIntent();
             confirm = (Button) findViewById(R.id.btnlocation);
             mLocationProvider = new LocationProvider(this, this);
             try {
@@ -54,6 +59,13 @@ import android.widget.Toast;
                     finish();
                 }
             });
+        }
+
+        public void setActionBar() {
+            toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setTitle("Confirmar Ubicacion");
+            getSupportActionBar().setIcon(R.mipmap.ffap);
         }
 
         @Override
@@ -93,7 +105,7 @@ import android.widget.Toast;
             currentLatitude = location.getLatitude();
             currentLongitude = location.getLongitude();
             ubicacion = new LatLng(currentLatitude, currentLongitude);
-            map.addMarker(new MarkerOptions().position(ubicacion).title("Ubicación Actual"));
+            map.addMarker(new MarkerOptions().position(ubicacion).title("Ubicación Actual").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
             area();
         }
     }
