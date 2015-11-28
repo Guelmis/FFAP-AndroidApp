@@ -16,25 +16,43 @@ public class Order {
     private LatLng location;
     private String address;
     private ArrayList<LineItem> lineItems;
+    private boolean delivered;
+    private boolean confirmed;
 
-    public Order(int _id, String _address, String _invoice, int did, String _createdat, ArrayList<LineItem> items){
+    public Order(int _id, String _address, String _invoice, int did, boolean _delivered, boolean _confirmed, String _createdat, ArrayList<LineItem> items){
         id = _id;
         address = _address;
         invoice = _invoice;
         createdAt = _createdat;
         location = null;
         delivery_id = did;
+        delivered =_delivered;
+        confirmed = _confirmed;
         lineItems = items;
     }
 
-    public Order(int _id, LatLng _loca, String _invoice, int did, String _createdat, ArrayList<LineItem> items){
+    public Order(int _id, LatLng _loca, String _invoice, int did, boolean _delivered, boolean _confirmed, String _createdat, ArrayList<LineItem> items){
         id = _id;
         address = null;
         invoice = _invoice;
         createdAt = _createdat;
         location= _loca;
         delivery_id = did;
+        confirmed = _confirmed;
+        delivered =_delivered;
         lineItems = items;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public boolean wasDelivered() {
+        return delivered;
+    }
+
+    public boolean isConfirmed() {
+        return confirmed;
     }
 
     public int getDelivery_id() {

@@ -66,25 +66,88 @@ public class Ordenes extends ActionBarActivity {
         ListaOrdenes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                BasicResponse eta = ServerSignal.deliveryeta(ordenes.get(position).getDelivery_id());
-                AlertDialog alertDialog = new AlertDialog.Builder(Ordenes.this).create();
-                alertDialog.setTitle("Estatus de la orden");
-                if(eta.getStatus().equals("OK")){
-                    String esttime = eta.getMessage().split("\\.")[0];
-                    alertDialog.setMessage("Su orden se entregará en aproximadamente " + esttime + " minutos");
+                Order selected;
+                if (ordenes.get(position).isConfirmed()){
+                    return;
                 }
                 else{
-                    alertDialog.setMessage(eta.getMessage());
+                    selected = ServerSignal.showOrder((ordenes.get(position).getId()));
+                    if (selected.isConfirmed()) {
+                        ordenes.get(position).setConfirmed(true);
+                        return;
+                    }
                 }
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
+
+                if (selected.wasDelivered()) {
+                    confirm(selected);
+                } else {
+                    showEta(selected);
+                }
             }
         });
+    }
+
+    private void confirm(final Order input){
+        AlertDialog alertDialog = new AlertDialog.Builder(Ordenes.this).create();
+        alertDialog.setTitle("Confirmar orden");
+        alertDialog.setMessage("¿Su pedido fue entregado satisfactoriamente?");
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        sendConfirmation(input.getId(), false);
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "SI",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        sendConfirmation(input.getId(), true);
+                       // input.setConfirmed(true);
+                    }
+                });
+        alertDialog.show();
+    }
+
+    private void sendConfirmation(int order_id, boolean value){
+        final AlertDialog result = new AlertDialog.Builder(Ordenes.this).create();
+        result.setTitle("Confirmar orden");
+        result.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        BasicResponse res = ServerSignal.confirmOrder(order_id, value);
+        if(res.success()){
+            result.setMessage("Gracias por notificarnos.");
+        }
+        else {
+            result.setTitle("Error");
+            result.setMessage(res.getMessage());
+        }
+        result.show();
+    }
+
+    private void showEta(Order input){
+        BasicResponse eta = ServerSignal.deliveryeta(input.getDelivery_id());
+        AlertDialog alertDialog = new AlertDialog.Builder(Ordenes.this).create();
+        alertDialog.setTitle("Estatus de la orden");
+        if(eta.getStatus().equals("OK")){
+            String esttime = eta.getMessage().split("\\.")[0];
+            alertDialog.setMessage("Su orden se entregará en aproximadamente " + esttime + " minutos");
+        }
+        else{
+            alertDialog.setMessage(eta.getMessage());
+        }
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 
     private String getCurrentDate()

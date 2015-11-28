@@ -38,6 +38,7 @@ public class ServerSignal {
     public static final String cartdestroyURL = domain + "cart_destroy/";
     public static final String ordercreateURL = domain + "order_api/create/";
     public static final String ordershowURL = domain + "order_api/";
+    public static final String orderconfirmURL = domain + "orders/confirm/";
     public static final String orderlistURL = domain + "order_api/list/";
     public static final String regvehicleURL = domain + "register_vehicle/";
     public static final String showvehicleURL = domain + "show_vehicle/";
@@ -465,11 +466,6 @@ public class ServerSignal {
         return ret;
     }
 
-    /*
-    public static showVehicle(){
-
-    } */
-
     public static BasicResponse destroyCart(String username){
         ArrayList<NameValuePair> params = new ArrayList<>();
         JSONObject answer = null;
@@ -585,6 +581,8 @@ public class ServerSignal {
                         current.getString("address"),
                         current.getString("invoice"),
                         answer.getJSONObject(i).getInt("delivery_id"),
+                        current.getBoolean("delivered"),
+                        false,
                         current.getString("created_at"),
                         lineItems
                 ));
@@ -600,7 +598,7 @@ public class ServerSignal {
         return ret;
     }
 
-    public static Order showOrder(String order_id){
+    public static Order showOrder(int order_id){
         ArrayList<NameValuePair> params = new ArrayList<>();
         JSONObject answer = null;
         Order ret = null;
@@ -625,14 +623,50 @@ public class ServerSignal {
                 item.setQuantity(itemsJSON.getJSONObject(j).getJSONObject("item").getInt("quantity"));
                 lineItems.add(item);
             }
+            boolean confirmed;
+            if(answer.get("confirmed").equals(null)){
+                confirmed = false;
+            }
+            else {
+                confirmed = answer.getBoolean("confirmed");
+            }
             ret = new Order(
                     answer.getInt("id"),
                     answer.getString("address"),
                     answer.getString("invoice"),
                     answer.getInt("delivery_id"),
+                    answer.getBoolean("delivered"),
+                    confirmed,
                     answer.getString("created_at"),
                     lineItems
             );
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static BasicResponse confirmOrder(int order_id, Boolean confrim){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject answer = null;
+        BasicResponse ret = new BasicResponse(false, "Error de comunicacion.", "");
+
+        params.add(new BasicNameValuePair("id", Integer.toString(order_id)));
+        params.add(new BasicNameValuePair("confirm", confrim.toString()));
+
+        try {
+            answer = new JObjRequester().post(orderconfirmURL, params);
+            if(answer.getString(KEY_SUCCESS).equals("true")){
+                ret = new BasicResponse(true, answer.getString(KEY_MESSAGE), "");
+            }
+            else{
+                ret = new BasicResponse(false, answer.getString(KEY_MESSAGE), "");
+            }
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
