@@ -51,6 +51,7 @@
         <activity android:name="ItemCart"></activity>
         <activity android:name="Vehiculos"></activity>
         <activity android:name="MapaCliente"></activity>
+        <activity android:name="QueueOrders"></activity>
 
         <service
             android:name="com.paypal.android.sdk.payments.PayPalService"

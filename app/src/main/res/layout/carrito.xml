@@ -103,7 +103,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Procesar Pago"
+            android:text="Ordenar"
             android:textColor="#ffff"
             android:background="@drawable/selector_button"
             android:id="@+id/carrito_pago" />

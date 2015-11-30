@@ -55,30 +55,11 @@ public class Carrito extends ActionBarActivity {
     TextView ITBIS;
     TextView Total;
     private Toolbar toolbar;
-    public static LatLng ubicacion;
+    //public static LatLng ubicacion;
     Button pagar;
-    LocationManager locationManager;
-    Location location;
-    private static final int REQUEST_CODE_PAYMENT = 1;
+    public static LatLng ubicacion;
+
     private static final int OBTAIN_LOCATION = 2;
-
-    private static final String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_SANDBOX;
-    // note that these credentials will differ between live & sandbox environments.
-    private static final String CONFIG_CLIENT_ID = "AYwh-1ZAG-hgLPdiAdDGXNpQhLPZjQ7NdsQVpIVC1EIi2z9zF-eqPFI2oi2ls9oSh3mJYzqDWj21WSru";
-    // when testing in sandbox, this is likely the -facilitator email address.
-    private static final String CONFIG_RECEIVER_EMAIL = "ml.vizard-facilitator@email.com";
-
-    private static PayPalConfiguration paypalConfig = new PayPalConfiguration()
-            .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
-            .clientId(CONFIG_CLIENT_ID)
-            .acceptCreditCards(true)
-// The following are only used in PayPalFuturePaymentActivity.
-            .merchantName("Code_Crash")
-            .merchantPrivacyPolicyUri(
-                    Uri.parse("https://www.paypal.com/webapps/mpp/ua/privacy-full"))
-            .merchantUserAgreementUri(
-                    Uri.parse("https://www.paypal.com/webapps/mpp/ua/useragreement-full"));
-
 
     private double calcTotal(ArrayList<LineItem> cart) {
         double res = 0;
@@ -100,8 +81,8 @@ public class Carrito extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.carrito);
         setActionBar();
-        locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        /*locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); */
         eliminar = (Button) findViewById(R.id.btnclear);
         subtotal = (TextView) findViewById(R.id.carrito_subtotal);
         ITBIS = (TextView) findViewById(R.id.carrito_itbis);
@@ -113,9 +94,9 @@ public class Carrito extends ActionBarActivity {
         actualizaPrecios();
         List = (ListView) findViewById(R.id.listofprod);
         datos = new ArrayList<>();
-        final Intent intent = new Intent(this, PayPalService.class);
+       /* final Intent intent = new Intent(this, PayPalService.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, paypalConfig);
-        startService(intent);
+        startService(intent); */
 
         Home.cart = ServerSignal.ShowCart(usuario);
         actualizaPrecios();
@@ -145,89 +126,39 @@ public class Carrito extends ActionBarActivity {
                 adaptador.notifyDataSetChanged();
             }
         });
-
-    pagar.setOnClickListener(new View.OnClickListener()
-
-    {
-        @Override
-        public void onClick (View v){
-            AlertDialog alertDialog = new AlertDialog.Builder(Carrito.this).create();
-            alertDialog.setTitle("Gracias por su compra");
-            alertDialog.setMessage("Desea brindar su ubicación actual como punto de entrega?");
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Si",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            Intent myIntent = new Intent(Carrito.this, MapaCliente.class);
-                            startActivityForResult(myIntent, OBTAIN_LOCATION);
-                        }
-                    });
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "No",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            BasicResponse response = ServerSignal.checkout(usuario);
-                            if(response.success()) {
-                                launchPayPalPayment();
-                            }
-                            else{
-                                Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-            alertDialog.show();
-        }
-    });
-}
-    public void setActionBar() {
-        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Carrito");
-        getSupportActionBar().setIcon(R.mipmap.ffap);
-    }
-    private void launchPayPalPayment() {
-
-        PayPalPayment thingToBuy = new PayPalPayment(new BigDecimal(0.01),"USD", usuario,
-                PayPalPayment.PAYMENT_INTENT_SALE);
-
-        Intent intent = new Intent(Carrito.this, PaymentActivity.class);
-
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, paypalConfig);
-
-        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, thingToBuy);
-
-        startActivityForResult(intent, REQUEST_CODE_PAYMENT);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_PAYMENT) {
-            if (resultCode == Activity.RESULT_OK) {
-
-               // Toast.makeText(getApplicationContext(), "Payment done succesfully ", Toast.LENGTH_LONG).show();
-
-            }
-
-            else if (resultCode == Activity.RESULT_CANCELED) {
-
-                //Toast.makeText(getApplicationContext(), "Payment Canceled , Try again ", Toast.LENGTH_LONG).show();
-
-
-            } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
-
-                Toast.makeText(getApplicationContext(), "Payment failed , Try again ", Toast.LENGTH_LONG).show();
+        pagar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 AlertDialog alertDialog = new AlertDialog.Builder(Carrito.this).create();
-                alertDialog.setTitle("No se pudo realizar la compra");
-                alertDialog.setMessage("El carrito esta vacío");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                alertDialog.setTitle("Gracias por su compra");
+                alertDialog.setMessage("Desea brindar su ubicación actual como punto de entrega?");
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Si",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                Intent myIntent = new Intent(Carrito.this, MapaCliente.class);
+                                startActivityForResult(myIntent, OBTAIN_LOCATION);
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                BasicResponse response = ServerSignal.checkout(usuario);
+                                if(response.success()) {
+                                }
+                                else{
+                                    Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
+                                }
                             }
                         });
                 alertDialog.show();
             }
-        }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == OBTAIN_LOCATION){
             if(ubicacion == null){
                 Toast.makeText(getApplicationContext(), "Accion cancelada", Toast.LENGTH_LONG).show();
@@ -236,7 +167,6 @@ public class Carrito extends ActionBarActivity {
                 //Toast.makeText(getApplicationContext(), ubicacion.toString(), Toast.LENGTH_LONG).show();
                 BasicResponse response = ServerSignal.checkout(usuario, ubicacion);
                 if(response.success()) {
-                    launchPayPalPayment();
                 }
                 else{
                     Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
@@ -244,6 +174,14 @@ public class Carrito extends ActionBarActivity {
             }
         }
     }
+
+    public void setActionBar() {
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Carrito");
+        getSupportActionBar().setIcon(R.mipmap.ffap);
+    }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -275,7 +213,7 @@ public class Carrito extends ActionBarActivity {
                 startActivity(intent);
                 return true;
             case R.id.id_carrito:
-                Intent myIntent  = new Intent(this, Carrito.class);
+                Intent myIntent = new Intent(this, Carrito.class);
                 myIntent.putExtra("usuario", usuario);
                 startActivity(myIntent);
                 return true;
@@ -294,12 +232,17 @@ public class Carrito extends ActionBarActivity {
                 intent3.putExtra("usuario", usuario);
                 startActivity(intent3);
                 return true;
+            case R.id.id_ordersqueue:
+                Intent intent4  = new Intent(this, QueueOrders.class);
+                intent4.putExtra("usuario", usuario);
+                startActivity(intent4);
+                return true;
             case R.id.id_logout:
                 finishAffinity();
                 startActivity(new Intent(this, MainActivity.class));
                 return true;
-        default:
-        return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

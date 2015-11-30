@@ -3,10 +3,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_home">Home</string>
     <string name="action_carrito">Carrito</string>
-    <string name="action_logout">LogOut</string>
+    <string name="action_logout">Log Out</string>
     <string name="action_ordenes">Mis Ordenes</string>
     <string name="action_vehiculos">Mis Vehículos</string>
     <string name="action_chassis">Registrar Vehículos</string>
+    <string name="action_ordersqueue">Ordenes en Espera</string>
 
     <string name="vehicle_prompt">Vehiculo</string>
 </resources>

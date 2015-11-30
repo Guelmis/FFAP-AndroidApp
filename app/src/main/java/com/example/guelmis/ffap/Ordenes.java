@@ -45,7 +45,7 @@ public class Ordenes extends ActionBarActivity {
         Intent myIntent = getIntent();
         usuario = myIntent.getStringExtra("usuario");
         datos = new ArrayList<>();
-        ordenes = ServerSignal.listOrders(usuario);
+        ordenes = ServerSignal.listOrders(usuario, "");
 
         if(ordenes != null){
             for(int i=0; i<ordenes.size(); i++){
@@ -92,14 +92,14 @@ public class Ordenes extends ActionBarActivity {
         alertDialog.setTitle("Confirmar orden");
         alertDialog.setMessage("¿Su pedido fue entregado satisfactoriamente?");
 
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "NO",
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "No",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         sendConfirmation(input.getId(), false);
                     }
                 });
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "SI",
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Si",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -183,12 +183,12 @@ public class Ordenes extends ActionBarActivity {
         switch (item.getItemId()) {
             // Caso
             case R.id.id_home:
-                Intent intent  = new Intent(Ordenes.this, Home.class);
+                Intent intent  = new Intent(this, Home.class);
                 intent.putExtra("usuario", usuario);
                 startActivity(intent);
                 return true;
             case R.id.id_carrito:
-                Intent myIntent  = new Intent(this, Carrito.class);
+                Intent myIntent = new Intent(this, Carrito.class);
                 myIntent.putExtra("usuario", usuario);
                 startActivity(myIntent);
                 return true;
@@ -206,6 +206,11 @@ public class Ordenes extends ActionBarActivity {
                 Intent intent3  = new Intent(this, Chassis.class);
                 intent3.putExtra("usuario", usuario);
                 startActivity(intent3);
+                return true;
+            case R.id.id_ordersqueue:
+                Intent intent4  = new Intent(this, QueueOrders.class);
+                intent4.putExtra("usuario", usuario);
+                startActivity(intent4);
                 return true;
             case R.id.id_logout:
                 finishAffinity();

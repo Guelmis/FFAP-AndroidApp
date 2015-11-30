@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutionException;
 public class ServerSignal {
 
 
-    public static final String domain = "http://10.0.0.23:5000/"; //local
+    public static final String domain = "http://10.0.0.6:5000/"; //local
     //public static final String domain = "http://ffap-itt-2015.herokuapp.com/"; //web
 
     public static final String loginURL = domain + "mobile_login/";
@@ -45,6 +45,7 @@ public class ServerSignal {
     public static final String listvehiclesURL = domain + "list_vehicles/";
     public static final String destroyvehicleURL = domain + "destroy_vehicle/";
     public static final String deliveryetaURL = domain + "delivery_eta/";
+    public static final String hook = domain + "hook/";
 
     public static final String edmunds_pt1 = "https://api.edmunds.com/api/vehicle/v2/vins/";
     public static final String edmunds_pt2 = "?&fmt=json&api_key=cpes64w9wyy4yd8anrvqz74t";
@@ -546,12 +547,13 @@ public class ServerSignal {
         return ret;
     }
 
-    public static ArrayList<Order> listOrders(String username){
+    public static ArrayList<Order> listOrders(String username, String processed){
         ArrayList<NameValuePair> params = new ArrayList<>();
         JSONArray answer = null;
         ArrayList<Order> ret = null;
 
         params.add(new BasicNameValuePair(username_tag, username));
+        params.add(new BasicNameValuePair("processed", processed));
 
         try {
             answer = new JArrRequester().post(orderlistURL, params);
@@ -583,8 +585,10 @@ public class ServerSignal {
                         answer.getJSONObject(i).getInt("delivery_id"),
                         current.getBoolean("delivered"),
                         false,
+                        current.getBoolean("processed"),
                         current.getString("created_at"),
-                        lineItems
+                        lineItems,
+                        current.getString("status")
                 ));
             }
         } catch (ExecutionException e) {
@@ -636,9 +640,11 @@ public class ServerSignal {
                     answer.getString("invoice"),
                     answer.getInt("delivery_id"),
                     answer.getBoolean("delivered"),
+                    answer.getBoolean("processed"),
                     confirmed,
                     answer.getString("created_at"),
-                    lineItems
+                    lineItems,
+                    answer.getString("status")
             );
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -691,6 +697,27 @@ public class ServerSignal {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static BasicResponse postHook(String invoice){
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        JSONObject answer = null;
+        BasicResponse ret = new BasicResponse(false, "Error de comunicacion.", "");
+
+        params.add(new BasicNameValuePair("invoice", invoice));
+        params.add(new BasicNameValuePair("txn_id", invoice));
+        params.add(new BasicNameValuePair("payment_status", "Completed"));
+
+        try {
+            answer = new JObjRequester().post(hook, params);
+            ret = new BasicResponse(true, "", "");
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 

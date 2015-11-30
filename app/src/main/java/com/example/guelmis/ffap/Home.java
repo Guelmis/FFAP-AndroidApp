@@ -326,14 +326,19 @@ public class Home extends ActionBarActivity {
                 intent3.putExtra("usuario", usuario);
                 startActivity(intent3);
                 return true;
-            case R.id.id_logout:
-                finishAffinity();
-                startActivity(new Intent(this, MainActivity.class));
+            case R.id.id_ordersqueue:
+                Intent intent4  = new Intent(this, QueueOrders.class);
+                intent4.putExtra("usuario", usuario);
+                startActivity(intent4);
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+    case R.id.id_logout:
+    finishAffinity();
+    startActivity(new Intent(this, MainActivity.class));
+    return true;
+    default:
+            return super.onOptionsItemSelected(item);
+}
+}
 
     private void refreshList(){
         datos.clear();

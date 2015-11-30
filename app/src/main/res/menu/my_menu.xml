@@ -11,6 +11,8 @@
         app:showAsAction="never"/>
     <item android:id="@+id/id_chassis" android:title="@string/action_chassis"
         app:showAsAction="never"/>
+    <item android:id="@+id/id_ordersqueue" android:title="@string/action_ordersqueue"
+        app:showAsAction="never"/>
     <item android:id="@+id/id_logout" android:title="@string/action_logout"
         app:showAsAction="never" />
 </menu>
